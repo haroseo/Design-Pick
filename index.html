@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
+    <meta name="theme-color" content="#ffffff">
+    <title>Design Pick</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="improved.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">Design Pick</div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="picker">Color Picker</button>
+            <button class="nav-tab" data-tab="inspiration">Design Inspiration</button>
+            <button class="nav-tab" data-tab="colors">더 많은 색 보기</button>
+        </div>
+    </nav>
+
+    <!-- Color Picker Tab -->
+    <div id="picker" class="tab-content active">
+        <div class="wrapper">
+            <div class="main">
+                <!-- 왼쪽: 색상 박스 -->
+                <div class="color-box" id="colorDisplay"></div>
+
+                <!-- 오른쪽: 정보 패널 -->
+                <div class="info-panel">
+                    <!-- R, G, B 값 -->
+                    <div class="rgb-values">
+                        <div class="rgb-item">
+                            <span class="rgb-label">R</span>
+                            <span class="rgb-value" id="rValue">0</span>
+                        </div>
+                        <div class="rgb-item">
+                            <span class="rgb-label">G</span>
+                            <span class="rgb-value" id="gValue">0</span>
+                        </div>
+                        <div class="rgb-item">
+                            <span class="rgb-label">B</span>
+                            <span class="rgb-value" id="bValue">0</span>
+                        </div>
+                    </div>
+
+                    <!-- HEX 코드 -->
+                    <div class="code-box">
+                        <div class="code-item">
+                            <span class="code-label">HEX</span>
+                            <span class="code-value" id="hexValue">#000000</span>
+                        </div>
+                    </div>
+
+                    <!-- 버튼 섹션 -->
+                    <div class="button-section">
+                        <button id="resetBtn" class="btn btn-reset">리셋</button>
+                        <button id="hexCopyBtn" class="btn btn-copy">HEX 복사</button>
+                        <button id="rgbCopyBtn" class="btn btn-copy">RGB 복사</button>
+                    </div>
+
+                    <!-- 키보드 가이드 -->
+                    <div class="keyboard-guide">
+                        <p class="guide-title">조작 방법</p>
+                        <p class="guide-text">스페이스바: 다음 색상</p>
+                        <p class="guide-text">← →: 미세 조정</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Similar Colors -->
+            <div class="similar-colors">
+                <p class="similar-title">비슷한 색상</p>
+                <div class="similar-colors-list" id="similarColors"></div>
+            </div>
+
+            <!-- Color Search -->
+            <div class="color-search">
+                <input 
+                    type="text" 
+                    id="colorInput" 
+                    class="color-input" 
+                    placeholder="색상 이름을 입력하세요 (예: 빨강, 파랑)"
+                >
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Inspiration Tab -->
+    <div id="inspiration" class="tab-content">
+        <div class="wrapper">
+            <div class="inspiration-wrapper">
+                <h2>Design Inspiration</h2>
+                <p class="inspiration-subtitle">스페이스바로 멈추면 디자인 팔레트를 선택할 수 있습니다</p>
+                
+                <div class="inspiration-carousel" id="inspirationCarousel">
+                    <div class="inspiration-item" id="designName">
+                        <p>디자인 팔레트</p>
+                    </div>
+                </div>
+
+                <div class="inspiration-palette" id="inspirationPalette"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Colors Tab (More Colors) -->
+    <div id="colors" class="tab-content">
+        <div class="wrapper">
+            <div class="colors-wrapper">
+                <h2>더 많은 색 보기</h2>
+                <p class="colors-subtitle">자주 쓰이는 색상들을 카테고리별로 살펴보세요</p>
+                
+                <div class="color-library-container">
+                    <div class="color-library" id="colorLibrary"></div>
+                </div>
+                
+                <button class="btn btn-load-more" id="loadMoreBtn">더 로드</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
+    <meta name="theme-color" content="#ffffff">
+    <title>Design Pick</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="improved.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">Design Pick</div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="picker">Color Picker</button>
+            <button class="nav-tab" data-tab="inspiration">Design Inspiration</button>
+            <button class="nav-tab" data-tab="colors">더 많은 색 보기</button>
+        </div>
+    </nav>
+
+    <!-- Color Picker Tab -->
+    <div id="picker" class="tab-content active">
+        <div class="wrapper">
+            <div class="main">
+                <!-- 왼쪽: 색상 박스 -->
+                <div class="color-box" id="colorDisplay"></div>
+
+                <!-- 오른쪽: 정보 패널 -->
+                <div class="info-panel">
+                    <!-- R, G, B 값 -->
+                    <div class="rgb-values">
+                        <div class="rgb-item">
+                            <span class="rgb-label">R</span>
+                            <span class="rgb-value" id="rValue">0</span>
+                        </div>
+                        <div class="rgb-item">
+                            <span class="rgb-label">G</span>
+                            <span class="rgb-value" id="gValue">0</span>
+                        </div>
+                        <div class="rgb-item">
+                            <span class="rgb-label">B</span>
+                            <span class="rgb-value" id="bValue">0</span>
+                        </div>
+                    </div>
+
+                    <!-- HEX 코드 -->
+                    <div class="code-box">
+                        <div class="code-label">HEX</div>
+                        <div class="code-value" id="hexValue">#000000</div>
+                    </div>
+
+                    <!-- RGB 코드 -->
+                    <div class="code-box">
+                        <div class="code-label">RGB</div>
+                        <div class="code-value" id="rgbValue">rgb(0, 0, 0)</div>
+                    </div>
+
+                    <!-- 가이드 텍스트 -->
+                    <div class="guide-section">
+                        <p class="guide-text">💡 <strong>스페이스바</strong>를 3번 눌러 R → G → B를 선택하세요</p>
+                        <p class="guide-tiny">각 값은 0~255에서 랜덤으로 생성됩니다</p>
+                    </div>
+
+                    <!-- 컨트롤 버튼 -->
+                    <div class="control-buttons">
+                        <button class="btn-reset" id="resetBtn">리셋</button>
+                        <button class="btn-copy" id="copyHexBtn">HEX 복사</button>
+                        <button class="btn-copy" id="copyRgbBtn">RGB 복사</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 비슷한 색 추천 -->
+            <div class="similar-colors-section">
+                <h3>비슷한 색 추천</h3>
+                <div class="similar-colors" id="similarColors"></div>
+            </div>
+
+            <!-- 색 이름 검색 -->
+            <div class="color-search-section">
+                <div class="search-guide">
+                    <h3>🎨 색 이름으로 검색</h3>
+                    <p>원하는 색의 이름을 입력해서 바로 적용하세요</p>
+                </div>
+                <input 
+                    type="text" 
+                    id="colorSearch" 
+                    class="color-search-input" 
+                    placeholder="색 이름 검색 (스카이, 로즈, 민트, 네이비, 골드 등...)"
+                    autocomplete="off"
+                >
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Inspiration Tab -->
+    <div id="inspiration" class="tab-content">
+        <div class="inspiration-wrapper">
+            <div class="inspiration-header">
+                <h2>오늘의 디자인 추천</h2>
+                <p class="inspiration-subtitle">스페이스바로 멈추면 디자인 팔레트를 선택할 수 있습니다</p>
+            </div>
+            <div class="roulette-inspiration-container" id="inspirationRoulette">
+                <div class="designs-roulette" id="designsList"></div>
+            </div>
+            <div class="inspiration-info">
+                <p>💡 디자인을 클릭하거나 스페이스바로 선택하면 Color Picker로 이동합니다</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- More Colors Tab -->
+    <div id="colors" class="tab-content">
+        <div class="colors-wrapper">
+            <div class="colors-header">
+                <h2>디자이너 색상 라이브러리</h2>
+                <p class="colors-subtitle">자주 쓰이는 색상들을 카테고리별로 살펴보세요</p>
+            </div>
+            <div id="colorLibraryContainer" class="color-library-container">
+                <div id="colorLibrary" class="color-library"></div>
+                <div id="loadMoreContainer" class="load-more-container">
+                    <button id="loadMoreBtn" class="btn-load-more">더 로드</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
