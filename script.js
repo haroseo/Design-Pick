@@ -53,7 +53,8 @@ class ColorPalette {
 
     updateColor() {
         const hex = this.rgbToHex(this.r, this.g, this.b);
-        this.colorDisplay.style.backgroundColor = hex;
+        // rgb()로 직접 설정 — 가장 확실한 방법
+        this.colorDisplay.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
         this.hexValue.textContent = hex;
         this.rValue.textContent = this.r;
         this.gValue.textContent = this.g;
