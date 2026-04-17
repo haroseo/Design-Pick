@@ -108,7 +108,7 @@ body {
     border-radius: 16px;
     background-color: rgb(0, 0, 0);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.1s ease;
+    transition: background-color 0.15s ease;
 }
 
 .info-panel {
@@ -276,9 +276,10 @@ body {
 }
 
 .similar-colors-list {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     gap: 1rem;
-    flex-wrap: wrap;
+    max-width: 600px;
 }
 
 .similar-color-item {
