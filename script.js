@@ -45,22 +45,13 @@ class ColorPalette {
         this.selectedFamily   = 'all';
         this.isRouletting     = false;
 
-        // ─── Reel state
-        this.reelRunning      = false;
-        this.reelDecelerating = false;
-        this.reelOffset       = 0;
-        this.reelRAF          = null;
-        this.reelCurrentSpeed = 0;
-        this.reelItemHeight   = 100;
-        this.totalDesigns     = designInspiration.length;
-        this.currentDesignIdx = 0;
-        this.inspirationStopped = false;
+        // ─── Inspiration card state
+        this.inspoIndex = 0;
 
         this.init();
     }
 
     init() {
-        this.buildInspirationReel();
         this.buildColorLibrary();
         this.updateColor();
         this.displaySimilarColors();
@@ -84,21 +75,30 @@ class ColorPalette {
             chip.addEventListener('click', () => this.setSelectedFamily(chip.dataset.family));
         });
 
-        // Touch — inspiration reel
-        const reelWrapper = document.getElementById('reelWrapper');
-        if (reelWrapper) {
-            reelWrapper.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                const activeId = document.querySelector('.tab-content.active')?.id;
-                if (activeId !== 'inspiration') return;
-                if (this.reelRunning) {
-                    this.stopInspirationReel();
-                } else if (!this.reelDecelerating && this.inspirationStopped) {
-                    this.inspirationStopped = false;
-                    this.startInspirationReel();
+        // Inspiration card navigation
+        const prevBtn = document.getElementById('inspoPrev');
+        const nextBtn = document.getElementById('inspoNext');
+        if (prevBtn) prevBtn.addEventListener('click', () => this.inspoPrev());
+        if (nextBtn) nextBtn.addEventListener('click', () => this.inspoNext());
+
+        // Touch swipe on inspo card
+        const inspoCard = document.getElementById('inspoCard');
+        if (inspoCard) {
+            let touchStartX = 0;
+            inspoCard.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            inspoCard.addEventListener('touchend', (e) => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(dx) > 40) {
+                    if (dx < 0) this.inspoNext();
+                    else        this.inspoPrev();
                 }
-            }, { passive: false });
+            }, { passive: true });
         }
+
+        // Init inspiration card
+        this.showInspoCard(0);
 
         // Auto-start roulette
         setTimeout(() => this.startRoulette(), 400);
@@ -268,105 +268,73 @@ class ColorPalette {
     //  Design Inspiration Reel
     // ═══════════════════════════════════════════════════════════
 
-    buildInspirationReel() {
-        if (!this.inspirationReel) return;
-        const items = [...designInspiration, ...designInspiration];
-        this.inspirationReel.innerHTML = items
-            .map(d => `<div class="reel-item">${d.name}</div>`)
-            .join('');
+    // ═══════════════════════════════════════════════════════════
+    //  Design Inspiration Card
+    // ═══════════════════════════════════════════════════════════
+
+    showInspoCard(index) {
+        const d = designInspiration[index];
+        if (!d) return;
+
+        // Text
+        const numEl  = document.getElementById('inspoNumber');
+        const catEl  = document.getElementById('inspoCategory');
+        const titEl  = document.getElementById('inspoTitle');
+        const desEl  = document.getElementById('inspoDesc');
+        if (numEl) numEl.textContent = d.id;
+        if (catEl) catEl.textContent = d.category;
+        if (titEl) titEl.textContent = d.name;
+        if (desEl) desEl.textContent = d.description;
+
+        // Swatches
+        const c0 = d.colors[0] || {};
+        const c1 = d.colors[1] || {};
+        const back  = document.getElementById('swatchBack');
+        const front = document.getElementById('swatchFront');
+        const nbk = document.getElementById('swNameBack');
+        const hbk = document.getElementById('swHexBack');
+        const nfr = document.getElementById('swNameFront');
+        const hfr = document.getElementById('swHexFront');
+
+        if (back)  { back.style.backgroundColor  = c0.hex || '#fff'; }
+        if (front) { front.style.backgroundColor = c1.hex || '#000'; }
+        if (nbk) nbk.textContent = c0.name || '';
+        if (hbk) hbk.textContent = c0.hex  || '';
+        if (nfr) nfr.textContent = c1.name || '';
+        if (hfr) hfr.textContent = c1.hex  || '';
+
+        // Text color based on brightness
+        [{ el: back,  hex: c0.hex }, { el: front, hex: c1.hex }].forEach(({ el, hex }) => {
+            if (!el || !hex) return;
+            const rgb = this.hexToRgb(hex);
+            if (!rgb) return;
+            const lum = (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b) / 255;
+            el.style.color = lum > 0.55 ? '#111' : '#fff';
+        });
+
+        // Animate
+        const card = document.getElementById('inspoCard');
+        if (card) {
+            card.classList.remove('inspo-anim');
+            void card.offsetWidth;
+            card.classList.add('inspo-anim');
+        }
     }
 
-    startInspirationReel() {
-        if (this.reelRunning || this.reelDecelerating) return;
-        this.reelRunning = true;
-        this.reelDecelerating = false;
-        this.inspirationStopped = false;
-        this.reelCurrentSpeed = 120;
-        this.inspirationPalette.innerHTML = '';
-        if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE / 탭으로 멈추기';
-
-        const maxOffset = this.reelItemHeight * this.totalDesigns;
-        const spin = () => {
-            if (!this.reelRunning) return;
-            this.reelOffset += this.reelCurrentSpeed;
-            if (this.reelOffset >= maxOffset) this.reelOffset -= maxOffset;
-            this.inspirationReel.style.transform = `translateY(-${this.reelOffset}px)`;
-            this.reelRAF = requestAnimationFrame(spin);
-        };
-        this.reelRAF = requestAnimationFrame(spin);
+    inspoNext() {
+        this.inspoIndex = (this.inspoIndex + 1) % designInspiration.length;
+        this.showInspoCard(this.inspoIndex);
     }
 
-    stopInspirationReel() {
-        if (!this.reelRunning) return;
-        this.reelRunning = false;
-        this.reelDecelerating = true;
-        cancelAnimationFrame(this.reelRAF);
-        if (this.spaceHint) this.spaceHint.textContent = '◼ 멈추는 중...';
-
-        const maxOffset = this.reelItemHeight * this.totalDesigns;
-        let speed = this.reelCurrentSpeed;
-
-        const decelerate = () => {
-            if (!this.reelDecelerating) return;
-            speed *= 0.88;
-            this.reelOffset += speed;
-            if (this.reelOffset >= maxOffset) this.reelOffset -= maxOffset;
-            this.inspirationReel.style.transform = `translateY(-${this.reelOffset}px)`;
-
-            if (speed < 0.8) {
-                this.reelDecelerating = false;
-                const rawIndex = Math.round(this.reelOffset / this.reelItemHeight);
-                this.currentDesignIdx = rawIndex % this.totalDesigns;
-                const snapOffset = (rawIndex * this.reelItemHeight) % maxOffset;
-                this.reelOffset = snapOffset;
-
-                this.inspirationReel.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
-                this.inspirationReel.style.transform  = `translateY(-${snapOffset}px)`;
-
-                setTimeout(() => {
-                    this.inspirationReel.style.transition = '';
-                    this.inspirationStopped = true;
-                    this.showInspirationPalette(this.currentDesignIdx);
-                    if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE / 탭으로 다시 돌리기';
-                }, 330);
-            } else {
-                this.reelRAF = requestAnimationFrame(decelerate);
-            }
-        };
-        this.reelRAF = requestAnimationFrame(decelerate);
+    inspoPrev() {
+        this.inspoIndex = (this.inspoIndex - 1 + designInspiration.length) % designInspiration.length;
+        this.showInspoCard(this.inspoIndex);
     }
 
-    showInspirationPalette(index) {
-        const design = designInspiration[index];
-        if (!design) return;
-
-        this.inspirationPalette.innerHTML = `
-            <p class="palette-name-label">${design.name}</p>
-            <div class="palette-colors-row">
-                ${design.colors.map(c => {
-                    const rgb  = this.hexToRgb(c);
-                    const name = rgb ? this.findColorName(rgb.r, rgb.g, rgb.b) : c;
-                    const tags = (name && colorNameReferences[name]?.tags) || [];
-                    const desc = tags.slice(0, 3).join(' · ') || '색상 팔레트';
-                    return `
-                        <div class="palette-color"
-                             style="background-color:${c}"
-                             onclick="app.selectInspirationColor('${c}')">
-                            <div class="palette-color-tooltip">
-                                <span class="pal-name">${name || c}</span>
-                                <span class="pal-hex">${c}</span>
-                                <span class="pal-desc">${desc}</span>
-                            </div>
-                            <span class="palette-mobile-label">${name || c}</span>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        `;
-    }
-
-    selectInspirationColor(hex) {
-        this.setColorFromHex(hex);
+    inspoPickColor(colorIdx) {
+        const d = designInspiration[this.inspoIndex];
+        if (!d || !d.colors[colorIdx]) return;
+        this.setColorFromHex(d.colors[colorIdx].hex);
         this.switchTab('picker');
     }
 
@@ -385,11 +353,7 @@ class ColorPalette {
         if (btn) btn.classList.add('active');
 
         if (tabName === 'inspiration') {
-            if (!this.inspirationStopped) this.startInspirationReel();
-        } else {
-            this.reelRunning = false;
-            this.reelDecelerating = false;
-            cancelAnimationFrame(this.reelRAF);
+            this.showInspoCard(this.inspoIndex);
         }
     }
 
@@ -542,25 +506,18 @@ class ColorPalette {
     }
 
     handleKeyPress(e) {
+        const activeId = document.querySelector('.tab-content.active')?.id;
         if (e.code === 'Space') {
             e.preventDefault();
-            const activeId = document.querySelector('.tab-content.active')?.id;
-            if (activeId === 'inspiration') {
-                if (this.reelRunning) {
-                    this.stopInspirationReel();
-                } else if (!this.reelDecelerating) {
-                    this.inspirationStopped = false;
-                    this.startInspirationReel();
-                }
-            } else if (activeId === 'picker') {
-                if (!this.isRouletting) this.startRoulette();
-            }
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            if (activeId === 'picker' && !this.isRouletting) this.startRoulette();
+        } else if (e.key === 'ArrowLeft') {
             e.preventDefault();
-            const isPickerActive = document.querySelector('[data-tab="picker"]')?.classList.contains('active');
-            if (isPickerActive && !this.isRouletting) {
-                this.adjustColor(e.key === 'ArrowLeft' ? -1 : 1);
-            }
+            if (activeId === 'inspiration') this.inspoPrev();
+            else if (activeId === 'picker' && !this.isRouletting) this.adjustColor(-1);
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            if (activeId === 'inspiration') this.inspoNext();
+            else if (activeId === 'picker' && !this.isRouletting) this.adjustColor(1);
         }
     }
 

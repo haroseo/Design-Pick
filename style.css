@@ -606,173 +606,170 @@ body {
 .search-result-name { font-weight: 600; color: #111; font-size: 14px; }
 .search-result-hex  { font-size: 11px; color: #888; font-family: 'Monaco', monospace; margin-top: 2px; }
 
-/* ─── Design Inspiration Tab ──────────────────── */
-.inspiration-wrapper {
-    padding: 40px 0;
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.inspiration-wrapper h2 {
-    font-size: 26px;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 6px;
-    letter-spacing: -0.5px;
-}
-
-.inspiration-subtitle {
-    font-size: 13px;
-    color: #999;
-    margin-bottom: 28px;
-}
-
-/* 릴 */
-.inspiration-reel-wrapper {
-    position: relative;
-    height: 100px;
+/* ─── Design Inspiration Card ──────────────────── */
+.inspo-tab {
     overflow: hidden;
-    background: #fff;
-    border-radius: 18px;
-    border: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    margin-bottom: 14px;
-    cursor: pointer;
-    touch-action: none;
-    user-select: none;
+    padding: 0;
 }
 
-.reel-overlay {
-    position: absolute;
-    left: 0; right: 0;
-    height: 36px;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.reel-top { top: 0; background: linear-gradient(to bottom, rgba(255,255,255,0.95), transparent); }
-.reel-bottom { bottom: 0; background: linear-gradient(to top, rgba(255,255,255,0.95), transparent); }
-
-.inspiration-reel { will-change: transform; }
-
-.reel-item {
-    height: 100px;
+.inspo-card {
+    height: calc(100dvh - 60px);
+    background: #000;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 700;
-    color: #111;
-    letter-spacing: -0.5px;
-    user-select: none;
-}
-
-.space-hint {
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 24px;
-    font-weight: 500;
-}
-
-/* 팔레트 */
-.inspiration-palette { min-height: 50px; }
-
-.palette-name-label {
-    font-size: 17px;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 18px;
-    letter-spacing: -0.3px;
-}
-
-.palette-colors-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    overflow: visible;
-}
-
-.palette-color {
-    width: 82px;
-    height: 82px;
-    border-radius: 16px;
-    cursor: pointer;
+    align-items: stretch;
     position: relative;
-    overflow: visible;
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.14);
-    border: 2px solid rgba(255,255,255,0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    touch-action: manipulation;
+    overflow: hidden;
+    animation: inspoFade 0.4s ease;
 }
 
-.palette-color:hover, .palette-color:active {
-    transform: scale(1.1) translateY(-5px);
-    box-shadow: 0 10px 26px rgba(0,0,0,0.2);
+@keyframes inspoFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
-/* 호버 툴팁 */
-.palette-color-tooltip {
+.inspo-card.inspo-anim {
+    animation: inspoSlide 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes inspoSlide {
+    from { opacity: 0; transform: translateX(24px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Nav buttons */
+.inspo-nav-btn {
     position: absolute;
-    bottom: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    background: rgba(20,20,20,0.92);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
     color: #fff;
-    padding: 9px 13px;
-    border-radius: 10px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 30;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    backdrop-filter: blur(6px);
+}
+
+.inspo-nav-btn:hover { background: rgba(255,255,255,0.22); }
+.inspo-nav-btn:active { transform: translateY(-50%) scale(0.93); }
+
+.inspo-prev { left: 18px; }
+.inspo-next { right: 18px; }
+
+/* Text section */
+.inspo-text {
+    flex: 0 0 42%;
+    padding: 60px 52px 60px 80px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+.inspo-number {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.75);
+    display: flex;
     align-items: center;
-    gap: 3px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
 }
 
-.palette-color-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%; left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: rgba(20,20,20,0.92);
+.inspo-category {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 10px;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
 }
 
-.palette-color:hover .palette-color-tooltip {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+.inspo-title {
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1.05;
+    margin-bottom: 20px;
 }
 
-.pal-name { font-size: 12px; font-weight: 700; }
-.pal-hex  { font-size: 10px; font-family: 'Monaco', monospace; opacity: 0.75; }
-.pal-desc { font-size: 10px; opacity: 0.6; margin-top: 2px; }
+.inspo-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.75;
+    white-space: pre-line;
+}
 
-/* 모바일 팔레트 라벨 (tooltip 대신 항상 표시) */
-.palette-mobile-label {
-    font-size: 9px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.9);
-    background: rgba(0,0,0,0.4);
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    display: none;
-    max-width: 72px;
+/* Swatches section */
+.inspo-swatches {
+    flex: 1;
+    position: relative;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    backdrop-filter: blur(4px);
 }
+
+.inspo-swatch {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 24px 28px;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease;
+    border-radius: 20px 0 0 20px;
+}
+
+.inspo-swatch:hover { filter: brightness(1.08); }
+.inspo-swatch:active { transform: scale(0.98); }
+
+/* Back card — upper right (secondary color) */
+.swatch-back {
+    top: 6%;
+    right: 0;
+    left: 22%;
+    bottom: 40%;
+    z-index: 1;
+    border-radius: 16px 0 0 16px;
+}
+
+/* Front card — lower left (primary color), bleeds to bottom */
+.swatch-front {
+    top: 38%;
+    right: 0;
+    left: 8%;
+    bottom: 0;
+    z-index: 2;
+    border-radius: 16px 0 0 0;
+}
+
+.sw-name {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+
+.sw-hex {
+    font-size: 13px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    opacity: 0.8;
+}
+
+
 
 /* ─── Color Library ───────────────────────────── */
 .colors-wrapper {
@@ -964,10 +961,43 @@ body {
 
     .palette-color { width: 72px; height: 72px; border-radius: 14px; }
 
-    .reel-item { font-size: 20px; }
+    /* inspo card mobile — vertical stack */
+    .inspo-card {
+        height: calc(100dvh - 54px);
+        flex-direction: column;
+    }
 
-    .inspiration-wrapper { padding: 24px 0; }
-    .inspiration-wrapper h2 { font-size: 22px; }
+    .inspo-text {
+        flex: 0 0 auto;
+        padding: 48px 24px 20px 24px;
+    }
+
+    .inspo-title { font-size: clamp(26px, 8vw, 40px); }
+
+    .inspo-swatches {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .swatch-back {
+        top: 4%;
+        left: 15%;
+        right: 0;
+        bottom: 45%;
+    }
+
+    .swatch-front {
+        top: 42%;
+        left: 5%;
+        right: 0;
+        bottom: 0;
+    }
+
+    .inspo-prev { left: 12px; }
+    .inspo-next { right: 12px; }
+
+    .sw-name { font-size: 15px; }
+    .sw-hex  { font-size: 11px; }
 
     .colors-wrapper { padding: 20px 0; }
     .color-library-container { max-height: calc(100dvh - 160px); }

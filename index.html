@@ -121,24 +121,38 @@
     </div>
 
     <!-- Design Inspiration Tab -->
-    <div id="inspiration" class="tab-content">
-        <div class="wrapper">
-            <div class="inspiration-wrapper">
-                <h2>Design Inspiration</h2>
-                <p class="inspiration-subtitle">멈추면 팔레트가 나타납니다 • 색을 클릭하면 Color Picker로 이동</p>
+    <div id="inspiration" class="tab-content inspo-tab">
+        <div class="inspo-card" id="inspoCard">
+            <!-- Prev -->
+            <button class="inspo-nav-btn inspo-prev" id="inspoPrev" aria-label="이전">&#8249;</button>
 
-                <div class="inspiration-reel-wrapper" id="reelWrapper">
-                    <div class="reel-overlay reel-top"></div>
-                    <div class="inspiration-reel" id="inspirationReel"></div>
-                    <div class="reel-overlay reel-bottom"></div>
-                </div>
-
-                <p class="space-hint" id="spaceHint">▶ SPACE / 탭으로 멈추기</p>
-
-                <div class="inspiration-palette" id="inspirationPalette"></div>
+            <!-- Text section -->
+            <div class="inspo-text">
+                <div class="inspo-number" id="inspoNumber">01</div>
+                <p class="inspo-category" id="inspoCategory"></p>
+                <h2 class="inspo-title" id="inspoTitle"></h2>
+                <p class="inspo-desc" id="inspoDesc"></p>
             </div>
+
+            <!-- Swatches -->
+            <div class="inspo-swatches" id="inspoSwatches">
+                <div class="inspo-swatch swatch-back" id="swatchBack"
+                     onclick="app.inspoPickColor(0)">
+                    <span class="sw-name" id="swNameBack"></span>
+                    <span class="sw-hex"  id="swHexBack"></span>
+                </div>
+                <div class="inspo-swatch swatch-front" id="swatchFront"
+                     onclick="app.inspoPickColor(1)">
+                    <span class="sw-name" id="swNameFront"></span>
+                    <span class="sw-hex"  id="swHexFront"></span>
+                </div>
+            </div>
+
+            <!-- Next -->
+            <button class="inspo-nav-btn inspo-next" id="inspoNext" aria-label="다음">&#8250;</button>
         </div>
     </div>
+
 
     <!-- Colors Tab -->
     <div id="colors" class="tab-content">
