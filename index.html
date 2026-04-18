@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
-    <meta name="theme-color" content="#ffffff">
     <title>Design Pick</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="improved.css">
@@ -32,19 +30,22 @@
                 <div class="info-panel">
                     <!-- R, G, B 값 -->
                     <div class="rgb-values">
-                        <div class="rgb-item">
+                        <div class="rgb-item" id="rItem">
                             <span class="rgb-label">R</span>
                             <span class="rgb-value" id="rValue">0</span>
                         </div>
-                        <div class="rgb-item">
+                        <div class="rgb-item" id="gItem">
                             <span class="rgb-label">G</span>
                             <span class="rgb-value" id="gValue">0</span>
                         </div>
-                        <div class="rgb-item">
+                        <div class="rgb-item" id="bItem">
                             <span class="rgb-label">B</span>
                             <span class="rgb-value" id="bValue">0</span>
                         </div>
                     </div>
+
+                    <!-- 색상 이름 -->
+                    <div class="color-name-display" id="colorNameDisplay"></div>
 
                     <!-- HEX 코드 -->
                     <div class="code-box">
@@ -64,25 +65,25 @@
                     <!-- 키보드 가이드 -->
                     <div class="keyboard-guide">
                         <p class="guide-title">조작 방법</p>
-                        <p class="guide-text">스페이스바: 다음 색상</p>
+                        <p class="guide-text">스페이스바: RGB 룰렛 재시작</p>
                         <p class="guide-text">← →: 미세 조정</p>
                     </div>
                 </div>
             </div>
 
             <!-- Similar Colors -->
-            <div class="similar-colors">
+            <div class="similar-colors-section">
                 <p class="similar-title">비슷한 색상</p>
                 <div class="similar-colors-list" id="similarColors"></div>
             </div>
 
             <!-- Color Search -->
             <div class="color-search">
-                <input 
-                    type="text" 
-                    id="colorInput" 
-                    class="color-input" 
-                    placeholder="색상 이름을 입력하세요 (예: 빨강, 파랑)"
+                <input
+                    type="text"
+                    id="colorInput"
+                    class="color-input"
+                    placeholder="색상 이름을 입력하세요 (예: 빨강, 파랑, 민트)"
                 >
                 <div class="search-results" id="searchResults"></div>
             </div>
@@ -94,36 +95,36 @@
         <div class="wrapper">
             <div class="inspiration-wrapper">
                 <h2>Design Inspiration</h2>
-                <p class="inspiration-subtitle">스페이스바로 멈추면 디자인 팔레트를 선택할 수 있습니다</p>
-                
-                <div class="inspiration-carousel" id="inspirationCarousel">
-                    <div class="inspiration-item" id="designName">
-                        <p>디자인 팔레트</p>
-                    </div>
+                <p class="inspiration-subtitle">스페이스바로 멈추기 • 색상을 클릭하면 Color Picker로 이동</p>
+
+                <!-- 슬롯머신 릴 -->
+                <div class="inspiration-reel-wrapper">
+                    <div class="reel-overlay reel-top"></div>
+                    <div class="inspiration-reel" id="inspirationReel"></div>
+                    <div class="reel-overlay reel-bottom"></div>
                 </div>
+
+                <p class="space-hint" id="spaceHint">▶ SPACE 로 멈추기</p>
 
                 <div class="inspiration-palette" id="inspirationPalette"></div>
             </div>
         </div>
     </div>
 
-    <!-- Colors Tab (More Colors) -->
+    <!-- Colors Tab -->
     <div id="colors" class="tab-content">
         <div class="wrapper">
             <div class="colors-wrapper">
                 <h2>더 많은 색 보기</h2>
-                <p class="colors-subtitle">자주 쓰이는 색상들을 카테고리별로 살펴보세요</p>
-                
+                <p class="colors-subtitle">용도별로 분류된 컬러 라이브러리</p>
                 <div class="color-library-container">
                     <div class="color-library" id="colorLibrary"></div>
                 </div>
-                
-                <button class="btn btn-load-more" id="loadMoreBtn">더 로드</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script src="data.js"></script>
