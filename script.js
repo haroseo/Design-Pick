@@ -139,6 +139,14 @@ class ColorPalette {
         this.loadStorage();
 
         // Premium events
+        document.body.addEventListener('pointerdown', () => {
+            if (this.audioCtx && this.audioCtx.state === 'suspended') {
+                this.audioCtx.resume();
+            } else if (!this.audioCtx && this.volume > 0) {
+                this.initAudio();
+            }
+        }, { once: true });
+
         const volSlider = document.getElementById('volumeSlider');
         if (volSlider) {
             volSlider.addEventListener('input', (e) => {
@@ -255,10 +263,10 @@ class ColorPalette {
             
             if (now - lastTick >= delay) {
                 lastTick = now;
-                // delay grows exponentially from 30ms to ~200ms
-                delay = 30 + Math.pow(progress, 3) * 200;
+                // delay grows exponentially from 20ms to ~450ms for realistic deceleration
+                delay = 20 + Math.pow(progress, 2.8) * 430;
                 
-                const val = progress < 0.95 ? Math.floor(Math.random() * 256) : target;
+                const val = progress < 1 ? Math.floor(Math.random() * 256) : target;
                 if (this[channel] !== val) {
                     try { this.playTickSound(); } catch(e) {}
                 }
@@ -660,8 +668,37 @@ class ColorPalette {
         const text = type === 'hex'
             ? this.hexValue.textContent
             : `rgb(${this.r}, ${this.g}, ${this.b})`;
-        navigator.clipboard.writeText(text).then(() =>
-            this.showToast(type === 'hex' ? 'HEX 복사됨' : 'RGB 복사됨'));
+        this.fallbackCopy(text, type === 'hex' ? 'HEX 복사됨' : 'RGB 복사됨');
+    }
+
+    fallbackCopy(text, msg) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.showToast(msg);
+                try { this.playSuccessSound(); } catch(e) {}
+            }).catch(() => {
+                this.forceExecCopy(text, msg);
+            });
+        } else {
+            this.forceExecCopy(text, msg);
+        }
+    }
+    
+    forceExecCopy(text, msg) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            this.showToast(msg);
+            try { this.playSuccessSound(); } catch(e) {}
+        } catch (e) {
+            this.showToast('복사 실패');
+        }
+        document.body.removeChild(textarea);
     }
 
     searchColor() {
@@ -924,10 +961,7 @@ class ColorPalette {
     copyExport(type) {
         const el = document.getElementById(type === 'css' ? 'exportCssCode' : 'exportTwCode');
         if (!el) return;
-        navigator.clipboard.writeText(el.textContent).then(() => {
-            this.showToast('코드가 복사되었습니다!');
-            this.playSuccessSound();
-        });
+        this.fallbackCopy(el.textContent, '코드가 복사되었습니다!');
     }
 }
 
