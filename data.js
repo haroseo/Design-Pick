@@ -176,6 +176,22 @@ const colorNameReferences = {
 
 // ─── Design Inspiration Palettes ────────────────────────────────────────────
 const designInspiration = [
+    { name: '미니멀 모던',    colors: ['#000000', '#FFFFFF', '#8B8B8B', '#E8E8E8'] },
+    { name: '네온 나이트',    colors: ['#FF10F0', '#FFE600', '#00B4FF', '#7B00FF'] },
+    { name: '해양 휴가',      colors: ['#005377', '#00A8E8', '#00D9FF', '#B5EAD7'] },
+    { name: '서로운 일몰',    colors: ['#FF6B35', '#FFB627', '#C27A54', '#4E2623'] },
+    { name: '숲의 꿈',        colors: ['#228B22', '#8A9A5B', '#DEB887', '#006994'] },
+    { name: '리퀴드 글래스',  colors: ['#E0F7FF', '#AED6F1', '#5DADE2', '#1A5276'] },
+    { name: '다크 엘리건스',  colors: ['#000000', '#212121', '#424242', '#9E9E9E'] },
+    { name: '코랄 선셋',      colors: ['#FF7F50', '#FF6B9D', '#FFD1DC', '#FFCBA4'] },
+    { name: '어반 테크',      colors: ['#0070F3', '#212121', '#E0E0E0', '#FAFAFA'] },
+    { name: '파스텔 드림',    colors: ['#FFD1DC', '#B5EAD7', '#AED6F1', '#FFF0AA'] },
+    { name: '브랜드 파워',    colors: ['#E50914', '#1DB954', '#5865F2', '#FF9900'] },
+    { name: '어스 톤',        colors: ['#C27A54', '#A0522D', '#DEB887', '#6B7C3A'] },
+];
+
+// ─── Today\'s Design Pick (Cards) ────────────────────────────────────────────
+const designCards = [
     {
         id: '01',
         name: 'Night × Kiwi',

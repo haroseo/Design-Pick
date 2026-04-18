@@ -15,7 +15,8 @@
         <div class="nav-brand">Design Pick</div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="picker">Color Picker</button>
-            <button class="nav-tab" data-tab="inspiration">Inspiration</button>
+            <button class="nav-tab" data-tab="inspiration">동적 인스퍼레이션</button>
+            <button class="nav-tab" data-tab="today">오늘의 추천</button>
             <button class="nav-tab" data-tab="colors">색 보기</button>
         </div>
     </nav>
@@ -121,7 +122,27 @@
     </div>
 
     <!-- Design Inspiration Tab -->
-    <div id="inspiration" class="tab-content inspo-tab">
+    <div id="inspiration" class="tab-content">
+        <div class="wrapper">
+            <div class="inspiration-wrapper">
+                <h2>Design Inspiration</h2>
+                <p class="inspiration-subtitle">멈추면 팔레트가 나타납니다 • 색을 클릭하면 Color Picker로 이동</p>
+
+                <div class="inspiration-reel-wrapper" id="reelWrapper">
+                    <div class="reel-overlay reel-top"></div>
+                    <div class="inspiration-reel" id="inspirationReel"></div>
+                    <div class="reel-overlay reel-bottom"></div>
+                </div>
+
+                <p class="space-hint" id="spaceHint">▶ SPACE / 탭으로 멈추기</p>
+
+                <div class="inspiration-palette" id="inspirationPalette"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Pick Tab -->
+    <div id="today" class="tab-content inspo-tab">
         <div class="inspo-card" id="inspoCard">
             <!-- Prev -->
             <button class="inspo-nav-btn inspo-prev" id="inspoPrev" aria-label="이전">&#8249;</button>
@@ -152,7 +173,6 @@
             <button class="inspo-nav-btn inspo-next" id="inspoNext" aria-label="다음">&#8250;</button>
         </div>
     </div>
-
 
     <!-- Colors Tab -->
     <div id="colors" class="tab-content">
