@@ -59,6 +59,12 @@ class ColorPalette {
         // ─── Today's Pick Card state
         this.todayIndex = 0;
 
+        // ─── Premium Features state
+        this.soundEnabled = true;
+        this.history = [];
+        this.favorites = [];
+        this.audioCtx = null;
+
         this.init();
     }
 
@@ -128,6 +134,18 @@ class ColorPalette {
 
         // Auto-start roulette
         setTimeout(() => this.startRoulette(), 400);
+
+        // Load premium storage
+        this.loadStorage();
+
+        // Premium events
+        document.getElementById('soundToggleBtn')?.addEventListener('click', () => this.toggleSound());
+        document.getElementById('favBtn')?.addEventListener('click', () => this.toggleFavorite());
+        document.getElementById('imageUpload')?.addEventListener('change', (e) => this.extractImageColors(e));
+        document.getElementById('exportCssBtn')?.addEventListener('click', () => this.openExportModal());
+        document.getElementById('closeExportBtn')?.addEventListener('click', () => {
+            document.getElementById('exportModal')?.classList.remove('show');
+        });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -228,6 +246,9 @@ class ColorPalette {
 
             // 80% 이후에는 목표값으로 수렴
             const val = progress > 0.80 ? target : Math.floor(Math.random() * 256);
+            if (this[channel] !== val) {
+                try { this.playTickSound(); } catch(e) {}
+            }
             el.textContent   = val;
             this[channel]    = val;
             this.colorDisplay.style.backgroundColor =
@@ -263,6 +284,13 @@ class ColorPalette {
             this.setColorNameText(name || '');
         }
         this.displaySimilarColors();
+
+        // Premium hooks
+        try {
+            this.updateAccessibility();
+            this.addToHistory(hex);
+            this.updateFavBtnState(hex);
+        } catch(e) {}
     }
 
     setColorNameText(text) {
@@ -593,11 +621,15 @@ class ColorPalette {
     }
 
     setColorFromHex(hex) {
+        if (!hex) return;
+        try { this.playClickSound(); } catch(e) {}
         const rgb = this.hexToRgb(hex);
         if (rgb) {
             this.r = rgb.r;
             this.g = rgb.g;
             this.b = rgb.b;
+            if (this.selectedChannel) this.selectedChannel = null;
+            this.isRouletting = false;
             this.updateColor();
         }
     }
@@ -706,6 +738,254 @@ class ColorPalette {
         this.toast.classList.add('show');
         clearTimeout(this._toastTimer);
         this._toastTimer = setTimeout(() => this.toast.classList.remove('show'), 2200);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  Premium Features Additions
+    // ═══════════════════════════════════════════════════════════
+
+    // 1. Accessibility Preview
+    updateAccessibility() {
+        const rgb = { r: this.r, g: this.g, b: this.b };
+        const lum = (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b) / 255;
+        
+        const whiteCR = this.getContrast(rgb, {r:255,g:255,b:255});
+        const blackCR = this.getContrast(rgb, {r:0,g:0,b:0});
+
+        const blackB = document.getElementById('a11yTextBlack');
+        const whiteB = document.getElementById('a11yTextWhite');
+        if (blackB) blackB.innerHTML = `검은색 텍스트 <span class="a11y-badge ${blackCR >= 4.5 ? 'a11y-pass' : 'a11y-fail'}">${blackCR >= 4.5 ? '✓ Pass' : '✕ Fail'}</span>`;
+        if (whiteB) whiteB.innerHTML = `흰색 텍스트 <span class="a11y-badge ${whiteCR >= 4.5 ? 'a11y-pass' : 'a11y-fail'}">${whiteCR >= 4.5 ? '✓ Pass' : '✕ Fail'}</span>`;
+    }
+
+    getContrast(rgb1, rgb2) {
+        const lum1 = this.relLuminance(rgb1);
+        const lum2 = this.relLuminance(rgb2);
+        return (Math.max(lum1, lum2) + 0.05) / (Math.min(lum1, lum2) + 0.05);
+    }
+    
+    relLuminance(rgb) {
+        const a = [rgb.r, rgb.g, rgb.b].map(v => {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    }
+
+    // 2. Sound Framework
+    initAudio() {
+        if (!this.audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.audioCtx = new AudioContext();
+        }
+    }
+    toggleSound() {
+        this.soundEnabled = !this.soundEnabled;
+        document.getElementById('soundIconOn').style.display = this.soundEnabled ? 'block' : 'none';
+        document.getElementById('soundIconOff').style.display = !this.soundEnabled ? 'block' : 'none';
+        if (this.soundEnabled) {
+            this.initAudio();
+            this.playClickSound();
+        }
+    }
+    playSound(type) {
+        if (!this.soundEnabled) return;
+        this.initAudio();
+        if (!this.audioCtx || this.audioCtx.state === 'suspended') return;
+        
+        try {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            
+            const now = this.audioCtx.currentTime;
+            
+            if (type === 'tick') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.05);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, now);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'success') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(500, now);
+                osc.frequency.setValueAtTime(800, now + 0.1);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+        } catch(e) {}
+    }
+    playTickSound() { this.playSound('tick'); }
+    playClickSound() { this.playSound('click'); }
+    playSuccessSound() { this.playSound('success'); }
+
+    // 3. Storage (Fav & History)
+    loadStorage() {
+        try {
+            const f = localStorage.getItem('designpick_favs');
+            if (f) this.favorites = JSON.parse(f);
+            const h = localStorage.getItem('designpick_history');
+            if (h) this.history = JSON.parse(h);
+        } catch(e) {}
+        this.renderFavorites();
+        this.renderHistory();
+    }
+    saveStorage() {
+        try {
+            localStorage.setItem('designpick_favs', JSON.stringify(this.favorites));
+            localStorage.setItem('designpick_history', JSON.stringify(this.history));
+        } catch(e) {}
+    }
+
+    addToHistory(hex) {
+        if (this.isRouletting || this.reelRunning) return; // Don't save transient
+        if (this.history[0] === hex) return;
+        this.history.unshift(hex);
+        if (this.history.length > 20) this.history.pop();
+        this.saveStorage();
+        this.renderHistory();
+    }
+    renderHistory() {
+        const tr = document.getElementById('historyTray');
+        if (!tr) return;
+        if (this.history.length === 0) {
+            tr.innerHTML = '<span style="font-size:11px; color:#999; padding:0 8px;">최근 방문한 색상이 없습니다.</span>';
+            return;
+        }
+        tr.innerHTML = this.history.map(hex => `
+            <div class="history-item" style="background:${hex}" 
+                 onclick="app.setColorFromHex('${hex}')" title="${hex}"></div>
+        `).join('');
+    }
+
+    toggleFavorite() {
+        const hex = this.rgbToHex(this.r, this.g, this.b);
+        const idx = this.favorites.findIndex(f => f.hex === hex);
+        if (idx !== -1) {
+            this.favorites.splice(idx, 1);
+            this.showToast('보관함에서 삭제되었습니다.');
+        } else {
+            const nameEl = document.getElementById('colorNameDisplay');
+            const name = nameEl && nameEl.textContent ? nameEl.textContent : 'Custom Color';
+            this.favorites.unshift({ hex, name });
+            this.showToast('보관함에 저장되었습니다. (♥)');
+            this.playSuccessSound();
+        }
+        this.saveStorage();
+        this.updateFavBtnState(hex);
+        this.renderFavorites();
+    }
+    updateFavBtnState(hex) {
+        const btn = document.getElementById('favBtn');
+        if (!btn) return;
+        if (this.favorites.some(f => f.hex === hex)) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    }
+    renderFavorites() {
+        const list = document.getElementById('myPalettesList');
+        if (!list) return;
+        if (this.favorites.length === 0) {
+            list.innerHTML = '<div class="my-pal-empty">스크랩한 색상이 없습니다.<br>Color Picker에서 마음에 드는 색상을 ♥ 눌러 찜해보세요!</div>';
+            return;
+        }
+        list.innerHTML = this.favorites.map(f => `
+            <div class="my-pal-card" onclick="app.switchTab('picker'); app.setColorFromHex('${f.hex}')">
+                <div class="my-pal-color" style="background:${f.hex}"></div>
+                <div class="my-pal-name">${f.name}</div>
+                <div class="my-pal-hex">${f.hex}</div>
+            </div>
+        `).join('');
+    }
+
+    // 4. Image Extractions
+    extractImageColors(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 100;
+                canvas.height = 100;
+                ctx.drawImage(img, 0, 0, 100, 100);
+                
+                const data = ctx.getImageData(0, 0, 100, 100).data;
+                const colors = {};
+                for (let i = 0; i < data.length; i += 16) {
+                    const rgb = Math.floor(data[i]/16)*16 + ',' + Math.floor(data[i+1]/16)*16 + ',' + Math.floor(data[i+2]/16)*16;
+                    colors[rgb] = (colors[rgb] || 0) + 1;
+                }
+                const sorted = Object.keys(colors).sort((a,b) => colors[b]-colors[a]).slice(0,5);
+                const dominantHexes = sorted.map(c => {
+                    const [r,g,b] = c.split(',').map(Number);
+                    return this.rgbToHex(r,g,b);
+                });
+                
+                const pal = document.getElementById('extractedPalette');
+                if (pal) {
+                    pal.style.display = 'flex';
+                    pal.innerHTML = dominantHexes.map(hex => `
+                        <div class="ext-swatch" style="background:${hex}" 
+                             onclick="app.setColorFromHex('${hex}')" title="${hex}"></div>
+                    `).join('');
+                }
+                
+                if (dominantHexes[0]) this.setColorFromHex(dominantHexes[0]);
+                this.playSuccessSound();
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // 5. Code Export
+    openExportModal() {
+        const hex = this.rgbToHex(this.r, this.g, this.b);
+        const nameEl = document.getElementById('colorNameDisplay');
+        let rawName = nameEl && nameEl.textContent ? nameEl.textContent : 'primary';
+        // Convert to kebab case
+        let kebab = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        if (!kebab) kebab = 'primary';
+        
+        const cssOut = document.getElementById('exportCssCode');
+        const twOut  = document.getElementById('exportTwCode');
+        
+        if (cssOut) {
+            cssOut.textContent = `:root {\n  --color-${kebab}: ${hex};\n  --color-${kebab}-rgb: ${this.r}, ${this.g}, ${this.b};\n}`;
+        }
+        if (twOut) {
+            twOut.textContent = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        ${kebab}: '${hex}',\n      }\n    }\n  }\n}`;
+        }
+        
+        const mod = document.getElementById('exportModal');
+        if (mod) mod.classList.add('show');
+    }
+    
+    copyExport(type) {
+        const el = document.getElementById(type === 'css' ? 'exportCssCode' : 'exportTwCode');
+        if (!el) return;
+        navigator.clipboard.writeText(el.textContent).then(() => {
+            this.showToast('코드가 복사되었습니다!');
+            this.playSuccessSound();
+        });
     }
 }
 
