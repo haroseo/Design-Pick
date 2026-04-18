@@ -244,32 +244,43 @@ class ColorPalette {
 
         item.classList.add('spinning');
         const startTime = Date.now();
-
-        const interval = setInterval(() => {
-            const elapsed  = Date.now() - startTime;
-            const progress = elapsed / duration;
-
-            // 80% 이후에는 목표값으로 수렴
-            const val = progress > 0.80 ? target : Math.floor(Math.random() * 256);
-            if (this[channel] !== val) {
-                try { this.playTickSound(); } catch(e) {}
+        
+        let lastTick = startTime;
+        let delay = 30; // starting tick delay
+        
+        const tick = () => {
+            const now = Date.now();
+            const elapsed = now - startTime;
+            const progress = Math.min(1, elapsed / duration);
+            
+            if (now - lastTick >= delay) {
+                lastTick = now;
+                // delay grows exponentially from 30ms to ~200ms
+                delay = 30 + Math.pow(progress, 3) * 200;
+                
+                const val = progress < 0.95 ? Math.floor(Math.random() * 256) : target;
+                if (this[channel] !== val) {
+                    try { this.playTickSound(); } catch(e) {}
+                }
+                
+                el.textContent   = val;
+                this[channel]    = val;
+                this.colorDisplay.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
+                this.hexValue.textContent = this.rgbToHex(this.r, this.g, this.b);
             }
-            el.textContent   = val;
-            this[channel]    = val;
-            this.colorDisplay.style.backgroundColor =
-                `rgb(${this.r}, ${this.g}, ${this.b})`;
-            this.hexValue.textContent = this.rgbToHex(this.r, this.g, this.b);
 
-            if (elapsed >= duration) {
-                clearInterval(interval);
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
                 this[channel] = target;
                 el.textContent = target;
                 item.classList.remove('spinning');
                 item.classList.add('landed');
                 setTimeout(() => item.classList.remove('landed'), 700);
-                onDone();
+                if (onDone) onDone();
             }
-        }, 40);
+        };
+        requestAnimationFrame(tick);
     }
 
     // ═══════════════════════════════════════════════════════════
