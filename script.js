@@ -30,12 +30,17 @@ class ColorPalette {
         // ─── Roulette state
         this.isRouletting = false;
 
+        // ─── Channel selection (미세조정)
+        this.selectedChannel = null;
+
         // ─── Inspiration reel state
-        this.reelRunning     = false;
-        this.reelOffset      = 0;
-        this.reelRAF         = null;
-        this.reelItemHeight  = 100; // px — matches CSS
-        this.totalDesigns    = designInspiration.length;
+        this.reelRunning      = false;
+        this.reelDecelerating = false;
+        this.reelOffset       = 0;
+        this.reelRAF          = null;
+        this.reelCurrentSpeed = 0;
+        this.reelItemHeight   = 100; // px — matches CSS
+        this.totalDesigns     = designInspiration.length;
         this.currentDesignIdx = 0;
         this.inspirationStopped = false;
 
@@ -54,6 +59,13 @@ class ColorPalette {
         this.rgbCopyBtn.addEventListener('click',  () => this.copyToClipboard('rgb'));
         this.colorInput.addEventListener('input',  () => this.searchColor());
         document.addEventListener('keydown', (e)  => this.handleKeyPress(e));
+
+        // R/G/B 채널 클릭 → 미세조정 채널 선택
+        [['r', this.rItem], ['g', this.gItem], ['b', this.bItem]].forEach(([ch, el]) => {
+            if (el) el.addEventListener('click', () => {
+                if (!this.isRouletting) this.setSelectedChannel(ch);
+            });
+        });
 
         // Auto-start RGB roulette on load
         setTimeout(() => this.startRoulette(), 400);
@@ -167,18 +179,19 @@ class ColorPalette {
     }
 
     startInspirationReel() {
-        if (this.reelRunning) return;
+        if (this.reelRunning || this.reelDecelerating) return;
         this.reelRunning = true;
+        this.reelDecelerating = false;
         this.inspirationStopped = false;
+        this.reelCurrentSpeed = 120; // 빠른 속도
         this.inspirationPalette.innerHTML = '';
         if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE 로 멈추기';
 
         const maxOffset = this.reelItemHeight * this.totalDesigns;
-        const speed = 45;
 
         const spin = () => {
             if (!this.reelRunning) return;
-            this.reelOffset += speed;
+            this.reelOffset += this.reelCurrentSpeed;
             if (this.reelOffset >= maxOffset) this.reelOffset -= maxOffset;
             this.inspirationReel.style.transform = `translateY(-${this.reelOffset}px)`;
             this.reelRAF = requestAnimationFrame(spin);
@@ -189,23 +202,42 @@ class ColorPalette {
     stopInspirationReel() {
         if (!this.reelRunning) return;
         this.reelRunning = false;
+        this.reelDecelerating = true;
         cancelAnimationFrame(this.reelRAF);
+        if (this.spaceHint) this.spaceHint.textContent = '◼ 멈추는 중...';
 
-        // 가장 가까운 항목 snap
-        const rawIndex   = Math.round(this.reelOffset / this.reelItemHeight);
-        this.currentDesignIdx = rawIndex % this.totalDesigns;
-        const snapOffset = rawIndex * this.reelItemHeight;
-        this.reelOffset  = snapOffset % (this.reelItemHeight * this.totalDesigns);
+        const maxOffset = this.reelItemHeight * this.totalDesigns;
+        let speed = this.reelCurrentSpeed;
 
-        this.inspirationReel.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1)';
-        this.inspirationReel.style.transform  = `translateY(-${this.reelOffset}px)`;
+        const decelerate = () => {
+            if (!this.reelDecelerating) return;
+            speed *= 0.88; // 마찰계수 — 작을수록 빠르게 멈춤
+            this.reelOffset += speed;
+            if (this.reelOffset >= maxOffset) this.reelOffset -= maxOffset;
+            this.inspirationReel.style.transform = `translateY(-${this.reelOffset}px)`;
 
-        setTimeout(() => {
-            this.inspirationReel.style.transition = '';
-            this.inspirationStopped = true;
-            this.showInspirationPalette(this.currentDesignIdx);
-            if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE 로 다시 돌리기';
-        }, 380);
+            if (speed < 0.8) {
+                // 완전 정지 → 가장 가까운 항목으로 snap
+                this.reelDecelerating = false;
+                const rawIndex = Math.round(this.reelOffset / this.reelItemHeight);
+                this.currentDesignIdx = rawIndex % this.totalDesigns;
+                const snapOffset = (rawIndex * this.reelItemHeight) % maxOffset;
+                this.reelOffset = snapOffset;
+
+                this.inspirationReel.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
+                this.inspirationReel.style.transform  = `translateY(-${snapOffset}px)`;
+
+                setTimeout(() => {
+                    this.inspirationReel.style.transition = '';
+                    this.inspirationStopped = true;
+                    this.showInspirationPalette(this.currentDesignIdx);
+                    if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE 로 다시 돌리기';
+                }, 330);
+            } else {
+                this.reelRAF = requestAnimationFrame(decelerate);
+            }
+        };
+        this.reelRAF = requestAnimationFrame(decelerate);
     }
 
     showInspirationPalette(index) {
@@ -215,14 +247,23 @@ class ColorPalette {
         this.inspirationPalette.innerHTML = `
             <p class="palette-name-label">${design.name}</p>
             <div class="palette-colors-row">
-                ${design.colors.map(c => `
-                    <div class="palette-color"
-                         style="background-color:${c}"
-                         onclick="app.selectInspirationColor('${c}')"
-                         title="${c}">
-                        <span class="palette-hex-label">${c}</span>
-                    </div>
-                `).join('')}
+                ${design.colors.map(c => {
+                    const rgb  = this.hexToRgb(c);
+                    const name = rgb ? this.findColorName(rgb.r, rgb.g, rgb.b) : c;
+                    const tags = (name && colorNameReferences[name]?.tags) || [];
+                    const desc = tags.slice(0, 3).join(' · ') || '색상 팔레트';
+                    return `
+                        <div class="palette-color"
+                             style="background-color:${c}"
+                             onclick="app.selectInspirationColor('${c}')">
+                            <div class="palette-color-tooltip">
+                                <span class="pal-name">${name || c}</span>
+                                <span class="pal-hex">${c}</span>
+                                <span class="pal-desc">${desc}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
             </div>
         `;
     }
@@ -250,8 +291,9 @@ class ColorPalette {
         if (tabName === 'inspiration') {
             if (!this.inspirationStopped) this.startInspirationReel();
         } else {
-            // 다른 탭으로 가면 릴 멈춤
+            // 다른 탭으로 가면 릴 즉시 정지
             this.reelRunning = false;
+            this.reelDecelerating = false;
             cancelAnimationFrame(this.reelRAF);
         }
     }
@@ -410,7 +452,7 @@ class ColorPalette {
             if (activeId === 'inspiration') {
                 if (this.reelRunning) {
                     this.stopInspirationReel();
-                } else {
+                } else if (!this.reelDecelerating) {
                     this.inspirationStopped = false;
                     this.startInspirationReel();
                 }
@@ -428,10 +470,24 @@ class ColorPalette {
 
     adjustColor(step) {
         const clamp = v => Math.max(0, Math.min(255, v));
-        if (this.r + step >= 0 && this.r + step <= 255)      this.r = clamp(this.r + step);
-        else if (this.g + step >= 0 && this.g + step <= 255) this.g = clamp(this.g + step);
-        else if (this.b + step >= 0 && this.b + step <= 255) this.b = clamp(this.b + step);
+        if (this.selectedChannel) {
+            // 선택된 채널만 조정
+            this[this.selectedChannel] = clamp(this[this.selectedChannel] + step);
+        } else {
+            // 기본: R → G → B 순
+            if      (this.r + step >= 0 && this.r + step <= 255) this.r = clamp(this.r + step);
+            else if (this.g + step >= 0 && this.g + step <= 255) this.g = clamp(this.g + step);
+            else if (this.b + step >= 0 && this.b + step <= 255) this.b = clamp(this.b + step);
+        }
         this.updateColor();
+    }
+
+    setSelectedChannel(channel) {
+        // 같은 채널 다시 클릭하면 해제
+        this.selectedChannel = this.selectedChannel === channel ? null : channel;
+        [['r', this.rItem], ['g', this.gItem], ['b', this.bItem]].forEach(([ch, el]) => {
+            if (el) el.classList.toggle('channel-selected', this.selectedChannel === ch);
+        });
     }
 
     showToast(message) {
