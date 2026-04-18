@@ -251,23 +251,29 @@ class ColorPalette {
         const item = itemMap[channel];
 
         item.classList.add('spinning');
-        const startTime = Date.now();
         
-        let lastTick = startTime;
-        let delay = 30; // starting tick delay
+        let current = this[channel];
+        let distance = target - current;
+        while (distance < 0) distance += 256;
+        // Add 3~5 extra rotations so it spins satisfyingly
+        distance += 256 * (3 + Math.floor(Math.random() * 3)); 
         
+        let position = current;
+        const friction = 0.95; // 0.95 gives a nice ~1.5 sec deceleration
+        let speed = distance * (1 - friction);
+        let lastTickVal = current;
+
         const tick = () => {
-            const now = Date.now();
-            const elapsed = now - startTime;
-            const progress = Math.min(1, elapsed / duration);
+            position += speed;
+            speed *= friction;
             
-            if (now - lastTick >= delay) {
-                lastTick = now;
-                // delay grows exponentially from 20ms to ~450ms for realistic deceleration
-                delay = 20 + Math.pow(progress, 2.8) * 430;
-                
-                const val = progress < 1 ? Math.floor(Math.random() * 256) : target;
-                if (this[channel] !== val) {
+            let val = Math.floor(position) % 256;
+            if (val < 0) val += 256;
+            
+            if (val !== lastTickVal) {
+                lastTickVal = val;
+                // Play tick sound every ~10 units to avoid sound flood
+                if (val % 7 === 0) {
                     try { this.playTickSound(); } catch(e) {}
                 }
                 
@@ -277,11 +283,13 @@ class ColorPalette {
                 this.hexValue.textContent = this.rgbToHex(this.r, this.g, this.b);
             }
 
-            if (progress < 1) {
+            if (speed > 0.5) {
                 requestAnimationFrame(tick);
             } else {
                 this[channel] = target;
                 el.textContent = target;
+                this.colorDisplay.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
+                this.hexValue.textContent = this.rgbToHex(this.r, this.g, this.b);
                 item.classList.remove('spinning');
                 item.classList.add('landed');
                 setTimeout(() => item.classList.remove('landed'), 700);
