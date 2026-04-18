@@ -174,7 +174,7 @@ class ColorPalette {
         if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE 로 멈추기';
 
         const maxOffset = this.reelItemHeight * this.totalDesigns;
-        const speed = 4.5;
+        const speed = 45;
 
         const spin = () => {
             if (!this.reelRunning) return;
