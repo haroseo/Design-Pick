@@ -45,10 +45,11 @@
     <nav class="navbar">
         <div class="nav-brand">Design Pick</div>
         <div class="nav-actions">
-            <button class="icon-action-btn" id="soundToggleBtn" aria-label="사운드 켜기/끄기">
+            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.5" aria-label="볼륨 조절">
+            <div class="icon-indicator">
                 <svg class="icon-svg" id="soundIconOn"><use href="#icon-volume"/></svg>
                 <svg class="icon-svg" id="soundIconOff" style="display:none;"><use href="#icon-volume-off"/></svg>
-            </button>
+            </div>
         </div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="picker">
@@ -77,13 +78,7 @@
 
             <div class="main">
                 <!-- 색상 박스 -->
-                <div class="color-box" id="colorDisplay">
-                    <!-- 접근성 피드백 배지 -->
-                    <div class="accessibility-preview">
-                        <span class="preview-text" id="a11yTextBlack" style="color:#000;">Design Pick</span>
-                        <span class="preview-text" id="a11yTextWhite" style="color:#fff;">Design Pick</span>
-                    </div>
-                </div>
+                <div class="color-box" id="colorDisplay"></div>
 
                 <!-- 정보 패널 -->
                 <div class="info-panel">
@@ -117,14 +112,7 @@
                             <span class="code-label">HEX</span>
                             <span class="code-value" id="hexValue">#000000</span>
                         </div>
-                        <label class="btn btn-image" for="imageUpload" title="이미지에서 색상 추출">
-                            <svg class="icon-svg"><use href="#icon-image"/></svg> 추출
-                        </label>
-                        <input type="file" id="imageUpload" accept="image/*" hidden>
                     </div>
-                    
-                    <!-- 추출된 미니 팔레트 -->
-                    <div class="extracted-palette" id="extractedPalette" style="display:none;"></div>
 
                     <!-- 버튼 -->
                     <div class="button-section">

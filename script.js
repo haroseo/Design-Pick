@@ -60,7 +60,7 @@ class ColorPalette {
         this.todayIndex = 0;
 
         // ─── Premium Features state
-        this.soundEnabled = true;
+        this.volume = 0.5; // default volume
         this.history = [];
         this.favorites = [];
         this.audioCtx = null;
@@ -139,9 +139,14 @@ class ColorPalette {
         this.loadStorage();
 
         // Premium events
-        document.getElementById('soundToggleBtn')?.addEventListener('click', () => this.toggleSound());
+        const volSlider = document.getElementById('volumeSlider');
+        if (volSlider) {
+            volSlider.addEventListener('input', (e) => {
+                this.volume = parseFloat(e.target.value);
+                this.updateVolumeIcon();
+            });
+        }
         document.getElementById('favBtn')?.addEventListener('click', () => this.toggleFavorite());
-        document.getElementById('imageUpload')?.addEventListener('change', (e) => this.extractImageColors(e));
         document.getElementById('exportCssBtn')?.addEventListener('click', () => this.openExportModal());
         document.getElementById('closeExportBtn')?.addEventListener('click', () => {
             document.getElementById('exportModal')?.classList.remove('show');
@@ -287,7 +292,6 @@ class ColorPalette {
 
         // Premium hooks
         try {
-            this.updateAccessibility();
             this.addToHistory(hex);
             this.updateFavBtnState(hex);
         } catch(e) {}
@@ -744,52 +748,23 @@ class ColorPalette {
     //  Premium Features Additions
     // ═══════════════════════════════════════════════════════════
 
-    // 1. Accessibility Preview
-    updateAccessibility() {
-        const rgb = { r: this.r, g: this.g, b: this.b };
-        const lum = (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b) / 255;
-        
-        const whiteCR = this.getContrast(rgb, {r:255,g:255,b:255});
-        const blackCR = this.getContrast(rgb, {r:0,g:0,b:0});
-
-        const blackB = document.getElementById('a11yTextBlack');
-        const whiteB = document.getElementById('a11yTextWhite');
-        if (blackB) blackB.innerHTML = `검은색 텍스트 <span class="a11y-badge ${blackCR >= 4.5 ? 'a11y-pass' : 'a11y-fail'}">${blackCR >= 4.5 ? '✓ Pass' : '✕ Fail'}</span>`;
-        if (whiteB) whiteB.innerHTML = `흰색 텍스트 <span class="a11y-badge ${whiteCR >= 4.5 ? 'a11y-pass' : 'a11y-fail'}">${whiteCR >= 4.5 ? '✓ Pass' : '✕ Fail'}</span>`;
-    }
-
-    getContrast(rgb1, rgb2) {
-        const lum1 = this.relLuminance(rgb1);
-        const lum2 = this.relLuminance(rgb2);
-        return (Math.max(lum1, lum2) + 0.05) / (Math.min(lum1, lum2) + 0.05);
-    }
-    
-    relLuminance(rgb) {
-        const a = [rgb.r, rgb.g, rgb.b].map(v => {
-            v /= 255;
-            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-        });
-        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
-    }
-
-    // 2. Sound Framework
+    // 1. Sound Framework (Volume Control)
     initAudio() {
         if (!this.audioCtx) {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (AudioContext) this.audioCtx = new AudioContext();
         }
     }
-    toggleSound() {
-        this.soundEnabled = !this.soundEnabled;
-        document.getElementById('soundIconOn').style.display = this.soundEnabled ? 'block' : 'none';
-        document.getElementById('soundIconOff').style.display = !this.soundEnabled ? 'block' : 'none';
-        if (this.soundEnabled) {
-            this.initAudio();
-            this.playClickSound();
+    updateVolumeIcon() {
+        const on = document.getElementById('soundIconOn');
+        const off = document.getElementById('soundIconOff');
+        if (on && off) {
+            on.style.display = this.volume > 0 ? 'block' : 'none';
+            off.style.display = this.volume > 0 ? 'none' : 'block';
         }
     }
     playSound(type) {
-        if (!this.soundEnabled) return;
+        if (this.volume <= 0) return;
         this.initAudio();
         if (!this.audioCtx || this.audioCtx.state === 'suspended') return;
         
@@ -805,14 +780,14 @@ class ColorPalette {
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(800, now);
                 osc.frequency.exponentialRampToValueAtTime(100, now + 0.05);
-                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.setValueAtTime(0.3 * this.volume, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
                 osc.start(now);
                 osc.stop(now + 0.05);
             } else if (type === 'click') {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(1200, now);
-                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.setValueAtTime(0.2 * this.volume, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                 osc.start(now);
                 osc.stop(now + 0.1);
@@ -820,7 +795,7 @@ class ColorPalette {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(500, now);
                 osc.frequency.setValueAtTime(800, now + 0.1);
-                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.setValueAtTime(0.2 * this.volume, now);
                 gain.gain.linearRampToValueAtTime(0, now + 0.3);
                 osc.start(now);
                 osc.stop(now + 0.3);
@@ -831,7 +806,7 @@ class ColorPalette {
     playClickSound() { this.playSound('click'); }
     playSuccessSound() { this.playSound('success'); }
 
-    // 3. Storage (Fav & History)
+    // 2. Storage (Fav & History)
     loadStorage() {
         try {
             const f = localStorage.getItem('designpick_favs');
@@ -912,51 +887,7 @@ class ColorPalette {
         `).join('');
     }
 
-    // 4. Image Extractions
-    extractImageColors(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = 100;
-                canvas.height = 100;
-                ctx.drawImage(img, 0, 0, 100, 100);
-                
-                const data = ctx.getImageData(0, 0, 100, 100).data;
-                const colors = {};
-                for (let i = 0; i < data.length; i += 16) {
-                    const rgb = Math.floor(data[i]/16)*16 + ',' + Math.floor(data[i+1]/16)*16 + ',' + Math.floor(data[i+2]/16)*16;
-                    colors[rgb] = (colors[rgb] || 0) + 1;
-                }
-                const sorted = Object.keys(colors).sort((a,b) => colors[b]-colors[a]).slice(0,5);
-                const dominantHexes = sorted.map(c => {
-                    const [r,g,b] = c.split(',').map(Number);
-                    return this.rgbToHex(r,g,b);
-                });
-                
-                const pal = document.getElementById('extractedPalette');
-                if (pal) {
-                    pal.style.display = 'flex';
-                    pal.innerHTML = dominantHexes.map(hex => `
-                        <div class="ext-swatch" style="background:${hex}" 
-                             onclick="app.setColorFromHex('${hex}')" title="${hex}"></div>
-                    `).join('');
-                }
-                
-                if (dominantHexes[0]) this.setColorFromHex(dominantHexes[0]);
-                this.playSuccessSound();
-            };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // 5. Code Export
+    // 3. Code Export
     openExportModal() {
         const hex = this.rgbToHex(this.r, this.g, this.b);
         const nameEl = document.getElementById('colorNameDisplay');
