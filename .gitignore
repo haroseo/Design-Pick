@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables (Crucial!)
+.env
+
+# Local Databases / User data
+users_palettes.json
+feedback.json
+
+# Image uploads
+public/uploads/*
+!public/uploads/.gitkeep
+
+# IDE / OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

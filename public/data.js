@@ -293,3 +293,12 @@ function findSimilarColors(r, g, b, count = 8) {
     }
     return distances.sort((a, b) => a.distance - b.distance).slice(0, count);
 }
+
+// ─── Design Guides ──────────────────────────────────────────
+const designGuides = [
+    { title: '보색 대비 (Complementary)', desc: '색상환에서 서로 마주 보는 두 색상을 조합하는 방식입니다. 강한 스포트라이트와 생동감을 주어 중요한 버튼이나 강조 부분에 적합합니다.', colors: ['#FF3B30', '#34C759'] },
+    { title: '유사색 (Analogous)', desc: '색상환에서 서로 인접한 3색을 사용합니다. 눈이 편안하고 조화로우며, 자연이나 평온한 테마를 표현할 때 주로 사용됩니다.', colors: ['#007AFF', '#5856D6', '#AF52DE'] },
+    { title: '톤온톤 (Tone-on-Tone)', desc: '동일한 색상에서 채도와 명도만 다르게 조합하는 배치입니다. 굉장히 안정적이고 깔끔하며 일관성 있는 브랜드 이미지를 만듭니다.', colors: ['#0A84FF', '#64D2FF', '#B0E2FF'] },
+    { title: '60-30-10 규칙', desc: '가장 많이 쓰이는 UI 컬러 비율입니다. 60%는 배경(주조색), 30%는 보조색, 나머지 10%는 강조(Accent)색으로 배분하여 안정감을 줍니다.', colors: ['#F5F5F7', '#D1D1D6', '#FF9500'] },
+    { title: '모노크롬 (Monochrome)', desc: '하나의 색상을 베이스로 두고 검정, 흰색, 회색을 섞어 명도를 조절합니다. 극강의 심플함과 모던함을 주기 좋은 무채색 배열입니다.', colors: ['#111111', '#888888', '#EEEEEE'] }
+];

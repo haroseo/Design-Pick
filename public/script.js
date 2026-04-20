@@ -69,8 +69,9 @@ class ColorPalette {
     }
 
     init() {
+        if (typeof designGuides !== 'undefined') this.buildGuide();
         this.buildInspirationReel();
-        this.buildColorLibrary();
+        this.buildColorLibrary('all');
         this.updateColor();
         this.displaySimilarColors();
 
@@ -158,6 +159,19 @@ class ColorPalette {
         document.getElementById('exportCssBtn')?.addEventListener('click', () => this.openExportModal());
         document.getElementById('closeExportBtn')?.addEventListener('click', () => {
             document.getElementById('exportModal')?.classList.remove('show');
+        });
+
+        // Authentication & Feedback
+        this.initAuthUI();
+        this.initFeedbackUI();
+
+        // ─── Document click to close dropdowns
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('profileDropdown');
+            const trigger  = document.getElementById('profileTrigger');
+            if (dropdown && dropdown.classList.contains('show') && !trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
         });
     }
 
@@ -561,7 +575,7 @@ class ColorPalette {
     //  Color Library
     // ═══════════════════════════════════════════════════════════
 
-    buildColorLibrary() {
+    buildColorLibrary(filterCat = 'all') {
         if (!this.colorLibrary) return;
 
         const categoryMeta = {
@@ -574,8 +588,30 @@ class ColorPalette {
             monochrome:   { label: '모노크롬',       icon: '⬜' },
         };
 
+        // Render chips
+        const chipsContainer = document.getElementById('libFilterChips');
+        if (chipsContainer) {
+            chipsContainer.innerHTML = `
+                <button class="lib-filter-chip ${filterCat === 'all' ? 'active' : ''}" onclick="app.buildColorLibrary('all')">전체보기</button>
+                <button class="lib-filter-chip ${filterCat === 'ui_web' ? 'active' : ''}" onclick="app.buildColorLibrary('ui_web')">UI/웹</button>
+                <button class="lib-filter-chip ${filterCat === 'brand_global' ? 'active' : ''}" onclick="app.buildColorLibrary('brand_global')">브랜드</button>
+                <button class="lib-filter-chip ${filterCat === 'nature' ? 'active' : ''}" onclick="app.buildColorLibrary('nature')">자연/어스</button>
+                <button class="lib-filter-chip ${filterCat === 'pastel' ? 'active' : ''}" onclick="app.buildColorLibrary('pastel')">감성/파스텔</button>
+                <button class="lib-filter-chip ${filterCat === 'neon_modern' ? 'active' : ''}" onclick="app.buildColorLibrary('neon_modern')">네온/모던</button>
+            `;
+        }
+
         let html = '';
         for (const [key, colors] of Object.entries(designerColors)) {
+            // 필터 로직
+            if (filterCat !== 'all') {
+                if (filterCat === 'nature' && !(key === 'nature' || key === 'earth')) continue;
+                if (filterCat === 'pastel' && key !== 'pastel') continue;
+                if (filterCat === 'ui_web' && key !== 'ui_web') continue;
+                if (filterCat === 'brand_global' && key !== 'brand_global') continue;
+                if (filterCat === 'neon_modern' && !(key === 'neon_modern' || key === 'monochrome')) continue;
+            }
+
             const meta = categoryMeta[key] || { label: key, icon: '🎨' };
             html += `
                 <div class="color-category-section">
@@ -598,10 +634,25 @@ class ColorPalette {
                 </div>
             `;
         }
-        this.colorLibrary.innerHTML = html;
+        this.colorLibrary.innerHTML = html || '<div style="padding:40px;text-align:center;color:#999;">결과가 없습니다.</div>';
+    }
 
-        const btn = document.getElementById('loadMoreBtn');
-        if (btn) btn.style.display = 'none';
+    // ═══════════════════════════════════════════════════════════
+    //  Guide Tab Build
+    // ═══════════════════════════════════════════════════════════
+    buildGuide() {
+        const grid = document.getElementById('guideGrid');
+        if (!grid || typeof designGuides === 'undefined') return;
+
+        grid.innerHTML = designGuides.map(g => `
+            <div class="guide-card">
+                <div class="guide-card-title">${g.title}</div>
+                <div class="guide-card-desc">${g.desc}</div>
+                <div class="guide-card-visual">
+                    ${g.colors.map(c => `<div class="gc-box" style="background-color:${c}"></div>`).join('')}
+                </div>
+            </div>
+        `).join('');
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -863,29 +914,46 @@ class ColorPalette {
     playSuccessSound() { this.playSound('success'); }
 
     // 2. Storage (Fav & History)
-    loadStorage() {
+    async loadStorage() {
+        this.history = [];
+        this.favorites = [];
         try {
-            const f = localStorage.getItem('designpick_favs');
-            if (f) this.favorites = JSON.parse(f);
             const h = localStorage.getItem('designpick_history');
             if (h) this.history = JSON.parse(h);
+            const f = localStorage.getItem('designpick_favs');
+            if (f) this.favorites = JSON.parse(f);
         } catch(e) {}
-        this.renderFavorites();
         this.renderHistory();
-    }
-    saveStorage() {
+
+        // Check Server Session
         try {
-            localStorage.setItem('designpick_favs', JSON.stringify(this.favorites));
-            localStorage.setItem('designpick_history', JSON.stringify(this.history));
-        } catch(e) {}
+            const res = await fetch('/api/auth/session');
+            const data = await res.json();
+            if (data.loggedIn) {
+                this.isLoggedIn = true;
+                this.updateAuthUI(data.user);
+                await this.fetchServerPalettes();
+            } else {
+                this.renderFavorites();
+            }
+        } catch(e) {
+            this.renderFavorites();
+        }
+    }
+    
+    saveLocalHistory() {
+        try { localStorage.setItem('designpick_history', JSON.stringify(this.history)); } catch(e) {}
+    }
+    saveLocalFavorites() {
+        try { localStorage.setItem('designpick_favs', JSON.stringify(this.favorites)); } catch(e) {}
     }
 
     addToHistory(hex) {
-        if (this.isRouletting || this.reelRunning) return; // Don't save transient
+        if (this.isRouletting || this.reelRunning) return; 
         if (this.history[0] === hex) return;
         this.history.unshift(hex);
         if (this.history.length > 20) this.history.pop();
-        this.saveStorage();
+        this.saveLocalHistory();
         this.renderHistory();
     }
     renderHistory() {
@@ -901,22 +969,52 @@ class ColorPalette {
         `).join('');
     }
 
-    toggleFavorite() {
+    async toggleFavorite() {
         const hex = this.rgbToHex(this.r, this.g, this.b);
-        const idx = this.favorites.findIndex(f => f.hex === hex);
-        if (idx !== -1) {
-            this.favorites.splice(idx, 1);
-            this.showToast('보관함에서 삭제되었습니다.');
+        const nameEl = document.getElementById('colorNameDisplay');
+        const name = nameEl && nameEl.textContent ? nameEl.textContent : 'Custom Color';
+
+        if (this.isLoggedIn) {
+            const isFav = this.favorites.find(f => f.hex === hex);
+            if (isFav) {
+                await fetch(`/api/palettes/${hex.replace('#', '')}`, { method: 'DELETE' });
+                this.showToast('보관함에서 삭제되었습니다.');
+            } else {
+                await fetch('/api/palettes', { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ hex, name })
+                });
+                this.showToast('클라우드 보관함에 저장되었습니다. (♥)');
+                this.playSuccessSound();
+            }
+            await this.fetchServerPalettes();
         } else {
-            const nameEl = document.getElementById('colorNameDisplay');
-            const name = nameEl && nameEl.textContent ? nameEl.textContent : 'Custom Color';
-            this.favorites.unshift({ hex, name });
-            this.showToast('보관함에 저장되었습니다. (♥)');
-            this.playSuccessSound();
+            const idx = this.favorites.findIndex(f => f.hex === hex);
+            if (idx !== -1) {
+                this.favorites.splice(idx, 1);
+                this.showToast('로컬 보관함에서 삭제되었습니다.');
+            } else {
+                this.favorites.unshift({ hex, name });
+                this.showToast('로컬에 임시 저장되었습니다.\n(로그인시 클라우드와 병합됩니다)');
+                this.playSuccessSound();
+            }
+            this.saveLocalFavorites();
+            this.updateFavBtnState(hex);
+            this.renderFavorites();
         }
-        this.saveStorage();
-        this.updateFavBtnState(hex);
-        this.renderFavorites();
+    }
+
+    async fetchServerPalettes() {
+        try {
+            const res = await fetch('/api/palettes');
+            if (res.ok) {
+                this.favorites = await res.json();
+                this.renderFavorites();
+                const currentHex = this.rgbToHex(this.r, this.g, this.b);
+                this.updateFavBtnState(currentHex);
+            }
+        } catch(e) {}
     }
     updateFavBtnState(hex) {
         const btn = document.getElementById('favBtn');
@@ -930,8 +1028,12 @@ class ColorPalette {
     renderFavorites() {
         const list = document.getElementById('myPalettesList');
         if (!list) return;
+
         if (this.favorites.length === 0) {
-            list.innerHTML = '<div class="my-pal-empty">스크랩한 색상이 없습니다.<br>Color Picker에서 마음에 드는 색상을 ♥ 눌러 찜해보세요!</div>';
+            const loginPrompt = this.isLoggedIn 
+                ? '스크랩한 색상이 없습니다.<br>Color Picker에서 마음에 드는 색상을 ♥ 눌러 찜해보세요!' 
+                : '스크랩한 색상이 없습니다.<br>구글 로그인을 하시면 기기 간 동기화가 가능합니다!';
+            list.innerHTML = `<div class="my-pal-empty">${loginPrompt}</div>`;
             return;
         }
         list.innerHTML = this.favorites.map(f => `
@@ -948,18 +1050,19 @@ class ColorPalette {
         const hex = this.rgbToHex(this.r, this.g, this.b);
         const nameEl = document.getElementById('colorNameDisplay');
         let rawName = nameEl && nameEl.textContent ? nameEl.textContent : 'primary';
-        // Convert to kebab case
         let kebab = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         if (!kebab) kebab = 'primary';
         
         const cssOut = document.getElementById('exportCssCode');
-        const twOut  = document.getElementById('exportTwCode');
+        const hexOut = document.getElementById('exportHexCode');
         
         if (cssOut) {
             cssOut.textContent = `:root {\n  --color-${kebab}: ${hex};\n  --color-${kebab}-rgb: ${this.r}, ${this.g}, ${this.b};\n}`;
         }
-        if (twOut) {
-            twOut.textContent = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        ${kebab}: '${hex}',\n      }\n    }\n  }\n}`;
+        if (hexOut) {
+            // 현재 내 보관함의 색상을 콤마로 연결
+            const fHexList = this.favorites.map(f => f.hex).join(', ');
+            hexOut.textContent = fHexList || hex;
         }
         
         const mod = document.getElementById('exportModal');
@@ -967,9 +1070,363 @@ class ColorPalette {
     }
     
     copyExport(type) {
-        const el = document.getElementById(type === 'css' ? 'exportCssCode' : 'exportTwCode');
+        if (type === 'figma') {
+            const size = 100;
+            let rects = '';
+            if (this.favorites.length > 0) {
+                rects = this.favorites.map((f, i) => `<rect x="${i*(size+20)}" y="0" width="${size}" height="${size}" fill="${f.hex}" rx="12"/>`).join('');
+                this.fallbackCopy(`<svg width="${this.favorites.length*(size+20)}" height="${size}" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`, 'Figma 도형(SVG)이 복사되었습니다.');
+            } else {
+                const hex = this.rgbToHex(this.r, this.g, this.b);
+                rects = `<rect x="0" y="0" width="${size}" height="${size}" fill="${hex}" rx="12"/>`;
+                this.fallbackCopy(`<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`, 'Figma 도형(SVG)이 복사되었습니다.');
+            }
+            return;
+        }
+
+        const el = document.getElementById(type === 'css' ? 'exportCssCode' : type === 'tw' ? 'exportTwCode' : 'exportHexCode');
         if (!el) return;
         this.fallbackCopy(el.textContent, '코드가 복사되었습니다!');
+    }
+
+    // 4. Feedback Flow
+    initFeedbackUI() {
+        const fab = document.getElementById('fabFeedback');
+        const modal = document.getElementById('feedbackModal');
+        const closeBtn = document.getElementById('closeFeedbackBtn');
+        const form = document.getElementById('feedbackForm');
+        const stars = document.querySelectorAll('.rating-star');
+        const ratingInput = document.getElementById('fbRating');
+
+        if (fab && modal) {
+            fab.addEventListener('click', () => modal.classList.add('show'));
+        }
+        if (closeBtn && modal) {
+            closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+        }
+
+        stars.forEach(s => {
+            s.addEventListener('click', () => {
+                const val = s.getAttribute('data-val');
+                ratingInput.value = val;
+                stars.forEach(si => {
+                    si.classList.toggle('active', parseInt(si.getAttribute('data-val')) <= parseInt(val));
+                });
+            });
+        });
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const rating = ratingInput.value;
+                const feedback = document.getElementById('fbText').value;
+                const hex = this.rgbToHex(this.r, this.g, this.b);
+
+                try {
+                    const res = await fetch('/api/feedback', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ rating, feedback, hex })
+                    });
+                    if (res.ok) {
+                        this.showToast('피드백이 성공적으로 전송되었습니다! 감사합니다.');
+                        this.playSuccessSound();
+                        form.reset();
+                        ratingInput.value = 0;
+                        stars.forEach(si => si.classList.remove('active'));
+                        modal.classList.remove('show');
+                    } else {
+                        this.showToast('전송에 실패했습니다.');
+                    }
+                } catch(e) {
+                    this.showToast('네트워크 오류가 발생했습니다.');
+                }
+            });
+        }
+    }
+
+    // 5. Integrated Authentication & Profile Management
+    initAuthUI() {
+        const modal = document.getElementById('authModal');
+        const setModal = document.getElementById('settingsModal');
+        const reactModal = document.getElementById('reactivateModal');
+        
+        const trigger = document.getElementById('profileTrigger');
+        const dropdown = document.getElementById('profileDropdown');
+        
+        const menuLogin = document.getElementById('menuLogin');
+        const menuSettings = document.getElementById('menuSettings');
+        const menuLogout = document.getElementById('menuLogout');
+        
+        const closeAuth = document.getElementById('closeAuthBtn');
+        const closeSettings = document.getElementById('closeSettingsBtn');
+        const closeReactivate = document.getElementById('closeReactivateBtn');
+        
+        const authForm = document.getElementById('authForm');
+        const reactivateForm = document.getElementById('reactivateForm');
+        
+        this.authMode = 'login';
+
+        // ─── Dropdown & Trigger Logic
+        if (trigger) {
+            trigger.addEventListener('click', () => {
+                if (!this.isLoggedIn) {
+                    modal.classList.add('show');
+                } else {
+                    dropdown.classList.toggle('show');
+                }
+            });
+        }
+
+        if (menuLogin) menuLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdown.classList.remove('show');
+            modal.classList.add('show');
+        });
+
+        if (menuSettings) menuSettings.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdown.classList.remove('show');
+            this.openSettingsModal();
+        });
+
+        if (menuLogout) menuLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            dropdown.classList.remove('show');
+            if (confirm('로그아웃 하시겠습니까?')) {
+                const res = await fetch('/api/auth/logout', { method: 'POST' });
+                if (res.ok) {
+                    this.isLoggedIn = false;
+                    this.favorites = [];
+                    this.updateFavBtnState(this.rgbToHex(this.r, this.g, this.b));
+                    this.updateAuthUI(null);
+                    this.renderFavorites();
+                    this.showToast('로그아웃 되었습니다.');
+                }
+            }
+        });
+
+        // ─── Modal Close Buttons
+        if (closeAuth) closeAuth.addEventListener('click', () => modal.classList.remove('show'));
+        if (closeSettings) closeSettings.addEventListener('click', () => setModal.classList.remove('show'));
+        if (closeReactivate) closeReactivate.addEventListener('click', () => reactModal.classList.remove('show'));
+
+        // ─── Tab/Form Events
+        const tabLogin = document.getElementById('tabLoginBtn');
+        const tabRegister = document.getElementById('tabRegisterBtn');
+        if (tabLogin) tabLogin.addEventListener('click', () => this.switchAuthTab('login'));
+        if (tabRegister) tabRegister.addEventListener('click', () => this.switchAuthTab('register'));
+
+        if (authForm) authForm.addEventListener('submit', (e) => this.handleAuthSubmit(e));
+        if (reactivateForm) reactivateForm.addEventListener('submit', (e) => this.handleReactivateSubmit(e));
+
+        // ─── Account Settings Actions
+        const updProf = document.getElementById('btnUpdateProfile');
+        if (updProf) updProf.addEventListener('click', () => this.updateProfile());
+
+        const updPass = document.getElementById('btnUpdatePassword');
+        if (updPass) updPass.addEventListener('click', () => this.updatePassword());
+
+        const imgInput = document.getElementById('profileImgInput');
+        if (imgInput) imgInput.addEventListener('change', (e) => this.uploadProfileImage(e));
+
+        const btnDisable = document.getElementById('btnDisableAccount');
+        const btnDelete = document.getElementById('btnDeleteAccount');
+        if (btnDisable) btnDisable.addEventListener('click', () => this.changeAccountStatus('disable'));
+        if (btnDelete) btnDelete.addEventListener('click', () => this.deleteAccount());
+
+        // ─── URL Parameters Check
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('login') === 'success') {
+            this.showToast('로그인 성공!');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (params.get('error') === 'disabled') {
+            const email = params.get('email') || '';
+            const reactModal = document.getElementById('reactivateModal');
+            document.getElementById('reactivateEmail').value = email;
+            if (reactModal) reactModal.classList.add('show');
+            this.showToast('비활성화된 계정입니다. 활성화를 진행하세요.');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (params.has('error')) {
+            this.showToast('오류: ' + params.get('error'));
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // ─── Initial Session Fetch
+        this.fetchSession();
+    }
+
+    async fetchSession() {
+        try {
+            const res = await fetch('/api/auth/session');
+            const data = await res.json();
+            if (data.loggedIn) {
+                this.isLoggedIn = true;
+                this.currentUser = data.user;
+                this.updateAuthUI(data.user);
+                await this.fetchServerPalettes();
+            } else {
+                this.updateAuthUI(null);
+            }
+        } catch(e) {}
+    }
+
+    updateAuthUI(user) {
+        const avatarImg = document.getElementById('userAvatar');
+        const avatarDefault = document.getElementById('userAvatarDefault');
+        const menuLogin = document.getElementById('menuLogin');
+        const menuSettings = document.getElementById('menuSettings');
+        const menuLogout = document.getElementById('menuLogout');
+        const drpName = document.getElementById('dropdownUserName');
+        const drpEmail = document.getElementById('dropdownUserEmail');
+
+        if (user) {
+            this.isLoggedIn = true;
+            this.currentUser = user;
+            if (user.picture) {
+                avatarImg.src = user.picture;
+                avatarImg.style.display = 'block';
+                avatarDefault.style.display = 'none';
+            } else {
+                avatarImg.style.display = 'none';
+                avatarDefault.style.display = 'block';
+            }
+            drpName.textContent = user.name;
+            drpEmail.textContent = user.email || '인증된 사용자';
+            if (menuLogin) menuLogin.style.display = 'none';
+            if (menuSettings) menuSettings.style.display = 'flex';
+            if (menuLogout) menuLogout.style.display = 'flex';
+        } else {
+            this.isLoggedIn = false;
+            this.currentUser = null;
+            avatarImg.style.display = 'none';
+            avatarDefault.style.display = 'block';
+            drpName.textContent = '방문자';
+            drpEmail.textContent = '로그인이 필요합니다';
+            if (menuLogin) menuLogin.style.display = 'flex';
+            if (menuSettings) menuSettings.style.display = 'none';
+            if (menuLogout) menuLogout.style.display = 'none';
+        }
+    }
+
+    openSettingsModal() {
+        if (!this.currentUser) return;
+        document.getElementById('settingsName').value = this.currentUser.name || '';
+        document.getElementById('settingsAvatarPreview').src = this.currentUser.picture || '';
+        
+        // Hide password section for Social users
+        const pwArea = document.getElementById('settingsPwArea');
+        if (pwArea) pwArea.style.display = this.currentUser.isLocal ? 'block' : 'none';
+
+        document.getElementById('settingsModal').classList.add('show');
+    }
+
+    async updateProfile() {
+        const name = document.getElementById('settingsName').value.trim();
+        if (!name) return alert('이름을 입력하세요.');
+        try {
+            const res = await fetch('/api/user/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                this.currentUser.name = data.user.name;
+                this.updateAuthUI(this.currentUser);
+                this.showToast('프로필 정보가 수정되었습니다.');
+            }
+        } catch(e) {}
+    }
+
+    async uploadProfileImage(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('profileImg', file);
+
+        try {
+            const res = await fetch('/api/user/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (res.ok) {
+                this.currentUser.picture = data.picture;
+                this.updateAuthUI(this.currentUser);
+                document.getElementById('settingsAvatarPreview').src = data.picture;
+                this.showToast('이미지가 업로드되었습니다.');
+            } else {
+                alert(data.error || '업로드 실패');
+            }
+        } catch(e) {}
+    }
+
+    async updatePassword() {
+        const cur = document.getElementById('curPassword').value;
+        const n1 = document.getElementById('newPassword').value;
+        if (!cur || !n1) return alert('모든 필드를 입력하세요.');
+        try {
+            const res = await fetch('/api/user/password', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentPassword: cur, newPassword: n1 })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                this.showToast('비밀번호가 변경되었습니다.');
+                document.getElementById('curPassword').value = '';
+                document.getElementById('newPassword').value = '';
+            } else {
+                alert(data.error);
+            }
+        } catch(e) {}
+    }
+
+    async changeAccountStatus(action) {
+        if (!confirm(`정말로 계정을 ${action === 'disable' ? '비활성화' : '활성화'} 하시겠습니까?`)) return;
+        try {
+            const res = await fetch('/api/user/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action })
+            });
+            if (res.ok) {
+                this.showToast('계정 상태가 변경되었습니다.');
+                location.reload();
+            }
+        } catch(e) {}
+    }
+
+    async deleteAccount() {
+        if (!confirm('정말로 탈퇴하시겠습니까? 모든 데이터가 즉시 삭제되며 복구할 수 없습니다.')) return;
+        try {
+            const res = await fetch('/api/user/account', { method: 'DELETE' });
+            if (res.ok) {
+                alert('탈퇴가 완료되었습니다.');
+                location.reload();
+            }
+        } catch(e) {}
+    }
+
+    async handleReactivateSubmit(e) {
+        e.preventDefault();
+        const email = document.getElementById('reactivateEmail').value;
+        const password = document.getElementById('reactivatePassword').value;
+        try {
+            const res = await fetch('/api/user/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'enable', email, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert('계정이 활성화되었습니다. 이제 로그인해주세요.');
+                location.reload();
+            } else {
+                alert(data.error || '활성화 실패');
+            }
+        } catch(e) {}
     }
 }
 
@@ -981,3 +1438,4 @@ document.querySelectorAll('.nav-tab').forEach(btn => {
         app.switchTab(this.getAttribute('data-tab'));
     });
 });
+
