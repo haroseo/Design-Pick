@@ -431,45 +431,11 @@ app.delete('/api/user/account', (req, res) => {
     });
 });
 
-// ─── PALETTES API ───────────────────────────────
-app.get('/api/palettes', (req, res) => {
-    if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
-    const db = readUsersDB();
-    const user = db[req.user.id];
-    res.json(user ? user.palettes : []);
-});
+// Palette APIs removed, switched to localStorage
 
-app.post('/api/palettes', (req, res) => {
-    if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
-    const { hex, name } = req.body;
-    if (!hex) return res.status(400).json({ error: 'Hex required' });
 
-    const db = readUsersDB();
-    const user = db[req.user.id];
-    const exists = user.palettes.find(p => p.hex === hex);
-    
-    if (!exists) {
-        user.palettes.unshift({ hex, name, addedAt: new Date().toISOString() });
-        writeUsersDB(db);
-        res.json({ success: true, message: '보관함에 저장되었습니다.' });
-    } else {
-        res.json({ success: true, message: '이미 저장되어 있습니다.' });
-    }
-});
 
-app.delete('/api/palettes/:hex', (req, res) => {
-    if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
-    const hex = '#' + req.params.hex;
-    
-    const db = readUsersDB();
-    const user = db[req.user.id];
-    
-    const initialLen = user.palettes.length;
-    user.palettes = user.palettes.filter(p => !p.hex || (p.hex.toLowerCase() !== hex.toLowerCase() && p.hex.toLowerCase() !== req.params.hex.toLowerCase()));
-    
-    if (user.palettes.length < initialLen) writeUsersDB(db);
-    res.json({ success: true });
-});
+
 
 // ─── FEEDBACK API ──────────────────────────
 app.post('/api/feedback', (req, res) => {

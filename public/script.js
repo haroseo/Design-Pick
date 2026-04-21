@@ -924,21 +924,17 @@ class ColorPalette {
             if (f) this.favorites = JSON.parse(f);
         } catch(e) {}
         this.renderHistory();
+        this.renderFavorites();
 
-        // Check Server Session
+        // Check Server Session (Only for Profile UI)
         try {
             const res = await fetch('/api/auth/session');
             const data = await res.json();
             if (data.loggedIn) {
                 this.isLoggedIn = true;
                 this.updateAuthUI(data.user);
-                await this.fetchServerPalettes();
-            } else {
-                this.renderFavorites();
             }
-        } catch(e) {
-            this.renderFavorites();
-        }
+        } catch(e) {}
     }
     
     saveLocalHistory() {
@@ -974,48 +970,22 @@ class ColorPalette {
         const nameEl = document.getElementById('colorNameDisplay');
         const name = nameEl && nameEl.textContent ? nameEl.textContent : 'Custom Color';
 
-        if (this.isLoggedIn) {
-            const isFav = this.favorites.find(f => f.hex === hex);
-            if (isFav) {
-                await fetch(`/api/palettes/${hex.replace('#', '')}`, { method: 'DELETE' });
-                this.showToast('보관함에서 삭제되었습니다.');
-            } else {
-                await fetch('/api/palettes', { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ hex, name })
-                });
-                this.showToast('클라우드 보관함에 저장되었습니다. (♥)');
-                this.playSuccessSound();
-            }
-            await this.fetchServerPalettes();
+        const idx = this.favorites.findIndex(f => f.hex === hex);
+        if (idx !== -1) {
+            this.favorites.splice(idx, 1);
+            this.showToast('보관함에서 삭제되었습니다.');
         } else {
-            const idx = this.favorites.findIndex(f => f.hex === hex);
-            if (idx !== -1) {
-                this.favorites.splice(idx, 1);
-                this.showToast('로컬 보관함에서 삭제되었습니다.');
-            } else {
-                this.favorites.unshift({ hex, name });
-                this.showToast('로컬에 임시 저장되었습니다.\n(로그인시 클라우드와 병합됩니다)');
-                this.playSuccessSound();
-            }
-            this.saveLocalFavorites();
-            this.updateFavBtnState(hex);
-            this.renderFavorites();
+            this.favorites.unshift({ hex, name });
+            this.showToast('보관함에 저장되었습니다. (♥)');
+            this.playSuccessSound();
         }
+        this.saveLocalFavorites();
+        this.updateFavBtnState(hex);
+        this.renderFavorites();
     }
 
-    async fetchServerPalettes() {
-        try {
-            const res = await fetch('/api/palettes');
-            if (res.ok) {
-                this.favorites = await res.json();
-                this.renderFavorites();
-                const currentHex = this.rgbToHex(this.r, this.g, this.b);
-                this.updateFavBtnState(currentHex);
-            }
-        } catch(e) {}
-    }
+    // (Server synchronization disabled for now)
+    // async fetchServerPalettes() { ... }
     updateFavBtnState(hex) {
         const btn = document.getElementById('favBtn');
         if (!btn) return;
@@ -1030,10 +1000,7 @@ class ColorPalette {
         if (!list) return;
 
         if (this.favorites.length === 0) {
-            const loginPrompt = this.isLoggedIn 
-                ? '스크랩한 색상이 없습니다.<br>Color Picker에서 마음에 드는 색상을 ♥ 눌러 찜해보세요!' 
-                : '스크랩한 색상이 없습니다.<br>구글 로그인을 하시면 기기 간 동기화가 가능합니다!';
-            list.innerHTML = `<div class="my-pal-empty">${loginPrompt}</div>`;
+            list.innerHTML = `<div class="my-pal-empty">스크랩한 색상이 없습니다.<br>Color Picker에서 마음에 드는 색상을 ♥ 눌러 찜해보세요!</div>`;
             return;
         }
         list.innerHTML = this.favorites.map(f => `
@@ -1197,10 +1164,8 @@ class ColorPalette {
                 const res = await fetch('/api/auth/logout', { method: 'POST' });
                 if (res.ok) {
                     this.isLoggedIn = false;
-                    this.favorites = [];
-                    this.updateFavBtnState(this.rgbToHex(this.r, this.g, this.b));
+                    // Note: We keep local favorites even after logout
                     this.updateAuthUI(null);
-                    this.renderFavorites();
                     this.showToast('로그아웃 되었습니다.');
                 }
             }
