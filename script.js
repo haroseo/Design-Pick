@@ -65,10 +65,8 @@ class ColorPalette {
         this.favorites = [];
         this.audioCtx = null;
 
-        // ─── Supabase Initialization
-        const SUPABASE_URL = 'https://zluewlatcfawndimssmo.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWV3bGF0Y2Zhd25kaW1zc21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkxMTksImV4cCI6MjA5MjM0NTExOX0.4ouEBY1Nti24pYW_dXmVUb0VbNQ9H35N8ISehrKd9vc';
-        this.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        this.init();
+    }
 
         this.init();
     }
@@ -930,7 +928,6 @@ class ColorPalette {
         this.renderHistory();
         this.renderFavorites();
 
-        // Initial session check is handled by onAuthStateChange in initAuthUI
     }
     
     saveLocalHistory() {
@@ -967,57 +964,16 @@ class ColorPalette {
         const name = nameEl && nameEl.textContent ? nameEl.textContent : 'Custom Color';
 
         const idx = this.favorites.findIndex(f => f.hex === hex);
-        if (idx !== -1) {
-            // Remove from local and DB
+        if (idx > -1) {
             this.favorites.splice(idx, 1);
-            if (this.isLoggedIn && this.currentUser) {
-                await this.supabase
-                    .from('favorites')
-                    .delete()
-                    .eq('user_id', this.currentUser.id)
-                    .eq('hex', hex);
-            }
-            this.showToast('보관함에서 삭제되었습니다.');
         } else {
-            // Add to local and DB
-            const newFav = { hex, name };
-            this.favorites.unshift(newFav);
-            if (this.isLoggedIn && this.currentUser) {
-                await this.supabase
-                    .from('favorites')
-                    .insert([{ user_id: this.currentUser.id, hex, name }]);
-            }
-            this.showToast('보관함에 저장되었습니다. (♥)');
-            this.playSuccessSound();
+            this.favorites.unshift({ hex, name });
         }
         this.saveLocalFavorites();
         this.updateFavBtnState(hex);
         this.renderFavorites();
     }
 
-    async fetchServerPalettes() {
-        if (!this.isLoggedIn || !this.currentUser) return;
-        try {
-            const { data, error } = await this.supabase
-                .from('favorites')
-                .select('hex, name')
-                .eq('user_id', this.currentUser.id)
-                .order('created_at', { ascending: false });
-            
-            if (!error && data) {
-                // Merge DB palettes with local ones (unique by hex)
-                const merged = [...data];
-                this.favorites.forEach(local => {
-                    if (!merged.some(m => m.hex === local.hex)) {
-                        merged.push(local);
-                    }
-                });
-                this.favorites = merged;
-                this.renderFavorites();
-                this.updateFavBtnState(this.rgbToHex(this.r, this.g, this.b));
-            }
-        } catch(e) {}
-    }
     updateFavBtnState(hex) {
         const btn = document.getElementById('favBtn');
         if (!btn) return;
@@ -1044,7 +1000,6 @@ class ColorPalette {
         `).join('');
     }
 
-    // 3. Code Export
     openExportModal() {
         const hex = this.rgbToHex(this.r, this.g, this.b);
         const nameEl = document.getElementById('colorNameDisplay');
@@ -1053,16 +1008,21 @@ class ColorPalette {
         if (!kebab) kebab = 'primary';
         
         const cssOut = document.getElementById('exportCssCode');
-        const hexOut = document.getElementById('exportHexCode');
-        
         if (cssOut) {
-            cssOut.textContent = `:root {\n  --color-${kebab}: ${hex};\n  --color-${kebab}-rgb: ${this.r}, ${this.g}, ${this.b};\n}`;
+            cssOut.textContent = `:root {\n  --${kebab}: ${hex};\n  --${kebab}-rgb: ${this.r}, ${this.g}, ${this.b};\n}`;
         }
+
+        const twOut = document.getElementById('exportTwCode');
+        if (twOut) {
+            twOut.textContent = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '${kebab}': '${hex}',\n      }\n    }\n  }\n}`;
+        }
+
+        const hexOut = document.getElementById('exportHexCode');
         if (hexOut) {
-            // 현재 내 보관함의 색상을 콤마로 연결
-            const fHexList = this.favorites.map(f => f.hex).join(', ');
-            hexOut.textContent = fHexList || hex;
+            const hexList = this.favorites.length > 0 ? this.favorites.map(f => f.hex).join(', ') : hex;
+            hexOut.textContent = hexList;
         }
+
         const mod = document.getElementById('exportModal');
         if (mod) mod.classList.add('show');
     }
@@ -1070,254 +1030,15 @@ class ColorPalette {
     copyExport(type) {
         if (type === 'figma') {
             const size = 100;
-            let rects = '';
-            if (this.favorites.length > 0) {
-                rects = this.favorites.map((f, i) => `<rect x="${i*(size+20)}" y="0" width="${size}" height="${size}" fill="${f.hex}" rx="12"/>`).join('');
-                this.fallbackCopy(`<svg width="${this.favorites.length*(size+20)}" height="${size}" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`, 'Figma 도형(SVG)이 복사되었습니다.');
-            } else {
-                const hex = this.rgbToHex(this.r, this.g, this.b);
-                rects = `<rect x="0" y="0" width="${size}" height="${size}" fill="${hex}" rx="12"/>`;
-                this.fallbackCopy(`<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`, 'Figma 도형(SVG)이 복사되었습니다.');
-            }
+            const list = this.favorites.length > 0 ? this.favorites : [{hex: this.rgbToHex(this.r, this.g, this.b)}];
+            const rects = list.map((f, i) => `<rect x="${i*(size+20)}" y="0" width="${size}" height="${size}" fill="${f.hex}" rx="12"/>`).join('');
+            this.fallbackCopy(`<svg width="${list.length*(size+20)}" height="${size}" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`, 'Figma 도형(SVG)이 복사되었습니다.');
             return;
         }
 
         const el = document.getElementById(type === 'css' ? 'exportCssCode' : type === 'tw' ? 'exportTwCode' : 'exportHexCode');
         if (!el) return;
         this.fallbackCopy(el.textContent, '코드가 복사되었습니다!');
-    }
-
-    initAuthUI() {
-        const modal = document.getElementById('authModal');
-        const setModal = document.getElementById('settingsModal');
-        const drp = document.getElementById('profileDropdown');
-        const trigger = document.getElementById('profileTrigger');
-
-        const closeAuth = document.getElementById('closeAuthBtn');
-        const closeSettings = document.getElementById('closeSettingsBtn');
-
-        const menuLogin = document.getElementById('menuLogin');
-        const menuSettings = document.getElementById('menuSettings');
-        const menuLogout = document.getElementById('menuLogout');
-
-        const tabLogin = document.getElementById('tabLoginBtn');
-        const tabRegister = document.getElementById('tabRegisterBtn');
-        const authForm = document.getElementById('authForm');
-
-        this.authMode = 'login';
-
-        // ─── Supabase Auth State Change Listener
-        this.supabase.auth.onAuthStateChange(async (event, session) => {
-            if (session) {
-                this.isLoggedIn = true;
-                // Fetch public profile from 'profiles' table
-                const { data: profile } = await this.supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', session.user.id)
-                    .single();
-                
-                const user = {
-                    id: session.user.id,
-                    email: session.user.email,
-                    name: (profile && profile.name) || session.user.user_metadata.full_name || session.user.email.split('@')[0],
-                    picture: (profile && profile.picture) || session.user.user_metadata.avatar_url || null,
-                    isLocal: session.user.app_metadata.provider === 'email'
-                };
-                this.currentUser = user;
-                this.updateAuthUI(user);
-                await this.fetchServerPalettes();
-            } else {
-                this.isLoggedIn = false;
-                this.currentUser = null;
-                this.updateAuthUI(null);
-            }
-        });
-
-        // ─── Dropdown Interaction
-        if (trigger) {
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (!this.isLoggedIn) {
-                    modal.classList.add('show');
-                } else {
-                    drp.classList.toggle('show');
-                }
-            });
-        }
-        document.addEventListener('click', () => { if(drp) drp.classList.remove('show'); });
-
-        if (menuLogin) menuLogin.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.classList.add('show');
-        });
-
-        if (menuSettings) menuSettings.addEventListener('click', (e) => {
-            e.preventDefault();
-            drp.classList.remove('show');
-            this.openSettingsModal();
-        });
-
-        if (menuLogout) menuLogout.addEventListener('click', async (e) => {
-            e.preventDefault();
-            drp.classList.remove('show');
-            if (confirm('로그아웃 하시겠습니까?')) {
-                await this.supabase.auth.signOut();
-                this.showToast('로그아웃 되었습니다.');
-            }
-        });
-
-        // ─── Form & Tab Events
-        if (closeAuth) closeAuth.addEventListener('click', () => modal.classList.remove('show'));
-        if (closeSettings) closeSettings.addEventListener('click', () => setModal.classList.remove('show'));
-
-        if (tabLogin) tabLogin.addEventListener('click', () => this.switchAuthTab('login'));
-        if (tabRegister) tabRegister.addEventListener('click', () => this.switchAuthTab('register'));
-        if (authForm) authForm.addEventListener('submit', (e) => this.handleAuthSubmit(e));
-
-        // ─── OAuth Buttons
-        const googleBtn = document.getElementById('googleLoginBtn');
-        const githubBtn = document.getElementById('githubLoginBtn');
-        if (googleBtn) googleBtn.addEventListener('click', () => {
-            this.supabase.auth.signInWithOAuth({ 
-                provider: 'google', 
-                options: { 
-                    redirectTo: window.location.origin + window.location.pathname,
-                    flowType: 'implicit'
-                } 
-            });
-        });
-        if (githubBtn) githubBtn.addEventListener('click', () => {
-            this.supabase.auth.signInWithOAuth({ 
-                provider: 'github', 
-                options: { 
-                    redirectTo: window.location.origin + window.location.pathname,
-                    flowType: 'implicit'
-                } 
-            });
-        });
-
-        // ─── Settings Actions
-        const btnUpdProf = document.getElementById('btnUpdateProfile');
-        if (btnUpdProf) btnUpdProf.addEventListener('click', () => this.updateProfile());
-        
-        const imgInput = document.getElementById('profileImgInput');
-        if (imgInput) imgInput.addEventListener('change', (e) => this.uploadProfileImage(e));
-    }
-
-    updateAuthUI(user) {
-        const avatarImg = document.getElementById('userAvatar');
-        const avatarDefault = document.getElementById('userAvatarDefault');
-        const menuLogin = document.getElementById('menuLogin');
-        const menuSettings = document.getElementById('menuSettings');
-        const menuLogout = document.getElementById('menuLogout');
-        const drpName = document.getElementById('dropdownUserName');
-        const drpEmail = document.getElementById('dropdownUserEmail');
-
-        if (user) {
-            if (user.picture) {
-                avatarImg.src = user.picture;
-                avatarImg.style.display = 'block';
-                avatarDefault.style.display = 'none';
-            } else {
-                avatarImg.style.display = 'none';
-                avatarDefault.style.display = 'block';
-            }
-            drpName.textContent = user.name;
-            drpEmail.textContent = user.email;
-            if (menuLogin) menuLogin.style.display = 'none';
-            if (menuSettings) menuSettings.style.display = 'flex';
-            if (menuLogout) menuLogout.style.display = 'flex';
-        } else {
-            avatarImg.style.display = 'none';
-            avatarDefault.style.display = 'block';
-            drpName.textContent = '방문자';
-            drpEmail.textContent = '로그인이 필요합니다';
-            if (menuLogin) menuLogin.style.display = 'flex';
-            if (menuSettings) menuSettings.style.display = 'none';
-            if (menuLogout) menuLogout.style.display = 'none';
-        }
-    }
-
-    openSettingsModal() {
-        if (!this.currentUser) return;
-        document.getElementById('settingsName').value = this.currentUser.name || '';
-        document.getElementById('settingsAvatarPreview').src = this.currentUser.picture || '';
-        document.getElementById('settingsModal').classList.add('show');
-    }
-
-    async updateProfile() {
-        if (!this.currentUser) return;
-        const name = document.getElementById('settingsName').value.trim();
-        if (!name) return alert('이름을 입력하세요.');
-        
-        const { error } = await this.supabase.from('profiles').upsert({ id: this.currentUser.id, name });
-        if (error) return alert('프로필 수정 실패: ' + error.message);
-        
-        this.currentUser.name = name;
-        this.updateAuthUI(this.currentUser);
-        this.showToast('프로필이 수정되었습니다.');
-    }
-
-    async uploadProfileImage(e) {
-        if (!this.currentUser) return;
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const path = `avatars/${this.currentUser.id}-${Date.now()}.${file.name.split('.').pop()}`;
-        const { error: uploadError } = await this.supabase.storage.from('avatars').upload(path, file);
-        if (uploadError) return alert('업로드 실패: ' + uploadError.message);
-
-        const { data } = this.supabase.storage.from('avatars').getPublicUrl(path);
-        const { error: dbError } = await this.supabase.from('profiles').upsert({ id: this.currentUser.id, picture: data.publicUrl });
-        if (dbError) return alert('DB 업데이트 실패: ' + dbError.message);
-
-        this.currentUser.picture = data.publicUrl;
-        this.updateAuthUI(this.currentUser);
-        document.getElementById('settingsAvatarPreview').src = data.publicUrl;
-        this.showToast('프로필 이미지가 변경되었습니다.');
-    }
-
-    switchAuthTab(mode) {
-        this.authMode = mode;
-        const loginBtn = document.getElementById('tabLoginBtn');
-        const regBtn = document.getElementById('tabRegisterBtn');
-        const nameArea = document.getElementById('authNameArea');
-        const submitBtn = document.getElementById('authSubmitBtn');
-
-        if (mode === 'login') {
-            loginBtn.classList.add('active');
-            regBtn.classList.remove('active');
-            nameArea.style.display = 'none';
-            submitBtn.textContent = '로그인';
-        } else {
-            loginBtn.classList.remove('active');
-            regBtn.classList.add('active');
-            nameArea.style.display = 'block';
-            submitBtn.textContent = '회원가입';
-        }
-    }
-
-    async handleAuthSubmit(e) {
-        e.preventDefault();
-        const email = document.getElementById('authEmail').value;
-        const password = document.getElementById('authPassword').value;
-        const name = document.getElementById('authName').value;
-
-        if (this.authMode === 'login') {
-            const { error } = await this.supabase.auth.signInWithPassword({ email, password });
-            if (error) return alert('로그인 실패: ' + error.message);
-            document.getElementById('authModal').classList.remove('show');
-            this.showToast('반갑습니다!');
-        } else {
-            const { data, error } = await this.supabase.auth.signUp({ email, password, options: { data: { full_name: name } } });
-            if (error) return alert('회원가입 실패: ' + error.message);
-            if (data.user) {
-                await this.supabase.from('profiles').upsert({ id: data.user.id, name });
-            }
-            alert('회원가입 성공! 메일함을 확인하거나 바로 로그인하세요.');
-            this.switchAuthTab('login');
-        }
     }
 }
 
