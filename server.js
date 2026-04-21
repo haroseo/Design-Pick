@@ -16,7 +16,7 @@ const app = express();
 
 // Multer Storage Setup
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'public/uploads/'),
+    destination: (req, file, cb) => cb(null, 'uploads/'),
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
         cb(null, `profile-${req.user ? req.user.id : Date.now()}${ext}`);
@@ -36,7 +36,8 @@ const USERS_FILE = path.join(__dirname, 'users_palettes.json');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Session Setup
 app.use(session({
