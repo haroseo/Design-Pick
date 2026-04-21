@@ -65,6 +65,11 @@ class ColorPalette {
         this.favorites = [];
         this.audioCtx = null;
 
+        // ─── Supabase Initialization
+        const SUPABASE_URL = 'https://zluewlatcfawndimssmo.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWV3bGF0Y2Zhd25kaW1zc21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkxMTksImV4cCI6MjA5MjM0NTExOX0.4ouEBY1Nti24pYW_dXmVUb0VbNQ9H35N8ISehrKd9vc';
+        this.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         this.init();
     }
 
@@ -913,7 +918,6 @@ class ColorPalette {
     playClickSound() { this.playSound('click'); }
     playSuccessSound() { this.playSound('success'); }
 
-    // 2. Storage (Fav & History)
     async loadStorage() {
         this.history = [];
         this.favorites = [];
@@ -926,15 +930,7 @@ class ColorPalette {
         this.renderHistory();
         this.renderFavorites();
 
-        // Check Server Session (Only for Profile UI)
-        try {
-            const res = await fetch('/api/auth/session');
-            const data = await res.json();
-            if (data.loggedIn) {
-                this.isLoggedIn = true;
-                this.updateAuthUI(data.user);
-            }
-        } catch(e) {}
+        // Initial session check is handled by onAuthStateChange in initAuthUI
     }
     
     saveLocalHistory() {
@@ -972,10 +968,25 @@ class ColorPalette {
 
         const idx = this.favorites.findIndex(f => f.hex === hex);
         if (idx !== -1) {
+            // Remove from local and DB
             this.favorites.splice(idx, 1);
+            if (this.isLoggedIn && this.currentUser) {
+                await this.supabase
+                    .from('favorites')
+                    .delete()
+                    .eq('user_id', this.currentUser.id)
+                    .eq('hex', hex);
+            }
             this.showToast('보관함에서 삭제되었습니다.');
         } else {
-            this.favorites.unshift({ hex, name });
+            // Add to local and DB
+            const newFav = { hex, name };
+            this.favorites.unshift(newFav);
+            if (this.isLoggedIn && this.currentUser) {
+                await this.supabase
+                    .from('favorites')
+                    .insert([{ user_id: this.currentUser.id, hex, name }]);
+            }
             this.showToast('보관함에 저장되었습니다. (♥)');
             this.playSuccessSound();
         }
@@ -984,8 +995,29 @@ class ColorPalette {
         this.renderFavorites();
     }
 
-    // (Server synchronization disabled for now)
-    // async fetchServerPalettes() { ... }
+    async fetchServerPalettes() {
+        if (!this.isLoggedIn || !this.currentUser) return;
+        try {
+            const { data, error } = await this.supabase
+                .from('favorites')
+                .select('hex, name')
+                .eq('user_id', this.currentUser.id)
+                .order('created_at', { ascending: false });
+            
+            if (!error && data) {
+                // Merge DB palettes with local ones (unique by hex)
+                const merged = [...data];
+                this.favorites.forEach(local => {
+                    if (!merged.some(m => m.hex === local.hex)) {
+                        merged.push(local);
+                    }
+                });
+                this.favorites = merged;
+                this.renderFavorites();
+                this.updateFavBtnState(this.rgbToHex(this.r, this.g, this.b));
+            }
+        } catch(e) {}
+    }
     updateFavBtnState(hex) {
         const btn = document.getElementById('favBtn');
         if (!btn) return;
@@ -1031,7 +1063,6 @@ class ColorPalette {
             const fHexList = this.favorites.map(f => f.hex).join(', ');
             hexOut.textContent = fHexList || hex;
         }
-        
         const mod = document.getElementById('exportModal');
         if (mod) mod.classList.add('show');
     }
@@ -1056,184 +1087,110 @@ class ColorPalette {
         this.fallbackCopy(el.textContent, '코드가 복사되었습니다!');
     }
 
-    // 4. Feedback Flow
-    initFeedbackUI() {
-        const fab = document.getElementById('fabFeedback');
-        const modal = document.getElementById('feedbackModal');
-        const closeBtn = document.getElementById('closeFeedbackBtn');
-        const form = document.getElementById('feedbackForm');
-        const stars = document.querySelectorAll('.rating-star');
-        const ratingInput = document.getElementById('fbRating');
-
-        if (fab && modal) {
-            fab.addEventListener('click', () => modal.classList.add('show'));
-        }
-        if (closeBtn && modal) {
-            closeBtn.addEventListener('click', () => modal.classList.remove('show'));
-        }
-
-        stars.forEach(s => {
-            s.addEventListener('click', () => {
-                const val = s.getAttribute('data-val');
-                ratingInput.value = val;
-                stars.forEach(si => {
-                    si.classList.toggle('active', parseInt(si.getAttribute('data-val')) <= parseInt(val));
-                });
-            });
-        });
-
-        if (form) {
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const rating = ratingInput.value;
-                const feedback = document.getElementById('fbText').value;
-                const hex = this.rgbToHex(this.r, this.g, this.b);
-
-                try {
-                    const res = await fetch('/api/feedback', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ rating, feedback, hex })
-                    });
-                    if (res.ok) {
-                        this.showToast('피드백이 성공적으로 전송되었습니다! 감사합니다.');
-                        this.playSuccessSound();
-                        form.reset();
-                        ratingInput.value = 0;
-                        stars.forEach(si => si.classList.remove('active'));
-                        modal.classList.remove('show');
-                    } else {
-                        this.showToast('전송에 실패했습니다.');
-                    }
-                } catch(e) {
-                    this.showToast('네트워크 오류가 발생했습니다.');
-                }
-            });
-        }
-    }
-
-    // 5. Integrated Authentication & Profile Management
     initAuthUI() {
         const modal = document.getElementById('authModal');
         const setModal = document.getElementById('settingsModal');
-        const reactModal = document.getElementById('reactivateModal');
-        
+        const drp = document.getElementById('profileDropdown');
         const trigger = document.getElementById('profileTrigger');
-        const dropdown = document.getElementById('profileDropdown');
-        
+
+        const closeAuth = document.getElementById('closeAuthBtn');
+        const closeSettings = document.getElementById('closeSettingsBtn');
+
         const menuLogin = document.getElementById('menuLogin');
         const menuSettings = document.getElementById('menuSettings');
         const menuLogout = document.getElementById('menuLogout');
-        
-        const closeAuth = document.getElementById('closeAuthBtn');
-        const closeSettings = document.getElementById('closeSettingsBtn');
-        const closeReactivate = document.getElementById('closeReactivateBtn');
-        
+
+        const tabLogin = document.getElementById('tabLoginBtn');
+        const tabRegister = document.getElementById('tabRegisterBtn');
         const authForm = document.getElementById('authForm');
-        const reactivateForm = document.getElementById('reactivateForm');
-        
+
         this.authMode = 'login';
 
-        // ─── Dropdown & Trigger Logic
+        // ─── Supabase Auth State Change Listener
+        this.supabase.auth.onAuthStateChange(async (event, session) => {
+            if (session) {
+                this.isLoggedIn = true;
+                // Fetch public profile from 'profiles' table
+                const { data: profile } = await this.supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                const user = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    name: (profile && profile.name) || session.user.user_metadata.full_name || session.user.email.split('@')[0],
+                    picture: (profile && profile.picture) || session.user.user_metadata.avatar_url || null,
+                    isLocal: session.user.app_metadata.provider === 'email'
+                };
+                this.currentUser = user;
+                this.updateAuthUI(user);
+                await this.fetchServerPalettes();
+            } else {
+                this.isLoggedIn = false;
+                this.currentUser = null;
+                this.updateAuthUI(null);
+            }
+        });
+
+        // ─── Dropdown Interaction
         if (trigger) {
-            trigger.addEventListener('click', () => {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
                 if (!this.isLoggedIn) {
                     modal.classList.add('show');
                 } else {
-                    dropdown.classList.toggle('show');
+                    drp.classList.toggle('show');
                 }
             });
         }
+        document.addEventListener('click', () => { if(drp) drp.classList.remove('show'); });
 
         if (menuLogin) menuLogin.addEventListener('click', (e) => {
             e.preventDefault();
-            dropdown.classList.remove('show');
             modal.classList.add('show');
         });
 
         if (menuSettings) menuSettings.addEventListener('click', (e) => {
             e.preventDefault();
-            dropdown.classList.remove('show');
+            drp.classList.remove('show');
             this.openSettingsModal();
         });
 
         if (menuLogout) menuLogout.addEventListener('click', async (e) => {
             e.preventDefault();
-            dropdown.classList.remove('show');
+            drp.classList.remove('show');
             if (confirm('로그아웃 하시겠습니까?')) {
-                const res = await fetch('/api/auth/logout', { method: 'POST' });
-                if (res.ok) {
-                    this.isLoggedIn = false;
-                    // Note: We keep local favorites even after logout
-                    this.updateAuthUI(null);
-                    this.showToast('로그아웃 되었습니다.');
-                }
+                await this.supabase.auth.signOut();
+                this.showToast('로그아웃 되었습니다.');
             }
         });
 
-        // ─── Modal Close Buttons
+        // ─── Form & Tab Events
         if (closeAuth) closeAuth.addEventListener('click', () => modal.classList.remove('show'));
         if (closeSettings) closeSettings.addEventListener('click', () => setModal.classList.remove('show'));
-        if (closeReactivate) closeReactivate.addEventListener('click', () => reactModal.classList.remove('show'));
 
-        // ─── Tab/Form Events
-        const tabLogin = document.getElementById('tabLoginBtn');
-        const tabRegister = document.getElementById('tabRegisterBtn');
         if (tabLogin) tabLogin.addEventListener('click', () => this.switchAuthTab('login'));
         if (tabRegister) tabRegister.addEventListener('click', () => this.switchAuthTab('register'));
-
         if (authForm) authForm.addEventListener('submit', (e) => this.handleAuthSubmit(e));
-        if (reactivateForm) reactivateForm.addEventListener('submit', (e) => this.handleReactivateSubmit(e));
 
-        // ─── Account Settings Actions
-        const updProf = document.getElementById('btnUpdateProfile');
-        if (updProf) updProf.addEventListener('click', () => this.updateProfile());
+        // ─── OAuth Buttons
+        const googleBtn = document.getElementById('googleLoginBtn');
+        const githubBtn = document.getElementById('githubLoginBtn');
+        if (googleBtn) googleBtn.addEventListener('click', () => {
+            this.supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+        });
+        if (githubBtn) githubBtn.addEventListener('click', () => {
+            this.supabase.auth.signInWithOAuth({ provider: 'github', options: { redirectTo: window.location.origin } });
+        });
 
-        const updPass = document.getElementById('btnUpdatePassword');
-        if (updPass) updPass.addEventListener('click', () => this.updatePassword());
-
+        // ─── Settings Actions
+        const btnUpdProf = document.getElementById('btnUpdateProfile');
+        if (btnUpdProf) btnUpdProf.addEventListener('click', () => this.updateProfile());
+        
         const imgInput = document.getElementById('profileImgInput');
         if (imgInput) imgInput.addEventListener('change', (e) => this.uploadProfileImage(e));
-
-        const btnDisable = document.getElementById('btnDisableAccount');
-        const btnDelete = document.getElementById('btnDeleteAccount');
-        if (btnDisable) btnDisable.addEventListener('click', () => this.changeAccountStatus('disable'));
-        if (btnDelete) btnDelete.addEventListener('click', () => this.deleteAccount());
-
-        // ─── URL Parameters Check
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('login') === 'success') {
-            this.showToast('로그인 성공!');
-            window.history.replaceState({}, document.title, window.location.pathname);
-        } else if (params.get('error') === 'disabled') {
-            const email = params.get('email') || '';
-            const reactModal = document.getElementById('reactivateModal');
-            document.getElementById('reactivateEmail').value = email;
-            if (reactModal) reactModal.classList.add('show');
-            this.showToast('비활성화된 계정입니다. 활성화를 진행하세요.');
-            window.history.replaceState({}, document.title, window.location.pathname);
-        } else if (params.has('error')) {
-            this.showToast('오류: ' + params.get('error'));
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-
-        // ─── Initial Session Fetch
-        this.fetchSession();
-    }
-
-    async fetchSession() {
-        try {
-            const res = await fetch('/api/auth/session');
-            const data = await res.json();
-            if (data.loggedIn) {
-                this.isLoggedIn = true;
-                this.currentUser = data.user;
-                this.updateAuthUI(data.user);
-                await this.fetchServerPalettes();
-            } else {
-                this.updateAuthUI(null);
-            }
-        } catch(e) {}
     }
 
     updateAuthUI(user) {
@@ -1246,8 +1203,6 @@ class ColorPalette {
         const drpEmail = document.getElementById('dropdownUserEmail');
 
         if (user) {
-            this.isLoggedIn = true;
-            this.currentUser = user;
             if (user.picture) {
                 avatarImg.src = user.picture;
                 avatarImg.style.display = 'block';
@@ -1257,13 +1212,11 @@ class ColorPalette {
                 avatarDefault.style.display = 'block';
             }
             drpName.textContent = user.name;
-            drpEmail.textContent = user.email || '인증된 사용자';
+            drpEmail.textContent = user.email;
             if (menuLogin) menuLogin.style.display = 'none';
             if (menuSettings) menuSettings.style.display = 'flex';
             if (menuLogout) menuLogout.style.display = 'flex';
         } else {
-            this.isLoggedIn = false;
-            this.currentUser = null;
             avatarImg.style.display = 'none';
             avatarDefault.style.display = 'block';
             drpName.textContent = '방문자';
@@ -1278,124 +1231,85 @@ class ColorPalette {
         if (!this.currentUser) return;
         document.getElementById('settingsName').value = this.currentUser.name || '';
         document.getElementById('settingsAvatarPreview').src = this.currentUser.picture || '';
-        
-        // Hide password section for Social users
-        const pwArea = document.getElementById('settingsPwArea');
-        if (pwArea) pwArea.style.display = this.currentUser.isLocal ? 'block' : 'none';
-
         document.getElementById('settingsModal').classList.add('show');
     }
 
     async updateProfile() {
+        if (!this.currentUser) return;
         const name = document.getElementById('settingsName').value.trim();
         if (!name) return alert('이름을 입력하세요.');
-        try {
-            const res = await fetch('/api/user/profile', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name })
-            });
-            if (res.ok) {
-                const data = await res.json();
-                this.currentUser.name = data.user.name;
-                this.updateAuthUI(this.currentUser);
-                this.showToast('프로필 정보가 수정되었습니다.');
-            }
-        } catch(e) {}
+        
+        const { error } = await this.supabase.from('profiles').upsert({ id: this.currentUser.id, name });
+        if (error) return alert('프로필 수정 실패: ' + error.message);
+        
+        this.currentUser.name = name;
+        this.updateAuthUI(this.currentUser);
+        this.showToast('프로필이 수정되었습니다.');
     }
 
     async uploadProfileImage(e) {
+        if (!this.currentUser) return;
         const file = e.target.files[0];
         if (!file) return;
-        const formData = new FormData();
-        formData.append('profileImg', file);
 
-        try {
-            const res = await fetch('/api/user/upload', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-            if (res.ok) {
-                this.currentUser.picture = data.picture;
-                this.updateAuthUI(this.currentUser);
-                document.getElementById('settingsAvatarPreview').src = data.picture;
-                this.showToast('이미지가 업로드되었습니다.');
-            } else {
-                alert(data.error || '업로드 실패');
-            }
-        } catch(e) {}
+        const path = `avatars/${this.currentUser.id}-${Date.now()}.${file.name.split('.').pop()}`;
+        const { error: uploadError } = await this.supabase.storage.from('avatars').upload(path, file);
+        if (uploadError) return alert('업로드 실패: ' + uploadError.message);
+
+        const { data } = this.supabase.storage.from('avatars').getPublicUrl(path);
+        const { error: dbError } = await this.supabase.from('profiles').upsert({ id: this.currentUser.id, picture: data.publicUrl });
+        if (dbError) return alert('DB 업데이트 실패: ' + dbError.message);
+
+        this.currentUser.picture = data.publicUrl;
+        this.updateAuthUI(this.currentUser);
+        document.getElementById('settingsAvatarPreview').src = data.publicUrl;
+        this.showToast('프로필 이미지가 변경되었습니다.');
     }
 
-    async updatePassword() {
-        const cur = document.getElementById('curPassword').value;
-        const n1 = document.getElementById('newPassword').value;
-        if (!cur || !n1) return alert('모든 필드를 입력하세요.');
-        try {
-            const res = await fetch('/api/user/password', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ currentPassword: cur, newPassword: n1 })
-            });
-            const data = await res.json();
-            if (res.ok) {
-                this.showToast('비밀번호가 변경되었습니다.');
-                document.getElementById('curPassword').value = '';
-                document.getElementById('newPassword').value = '';
-            } else {
-                alert(data.error);
-            }
-        } catch(e) {}
+    switchAuthTab(mode) {
+        this.authMode = mode;
+        const loginBtn = document.getElementById('tabLoginBtn');
+        const regBtn = document.getElementById('tabRegisterBtn');
+        const nameArea = document.getElementById('authNameArea');
+        const submitBtn = document.getElementById('authSubmitBtn');
+
+        if (mode === 'login') {
+            loginBtn.classList.add('active');
+            regBtn.classList.remove('active');
+            nameArea.style.display = 'none';
+            submitBtn.textContent = '로그인';
+        } else {
+            loginBtn.classList.remove('active');
+            regBtn.classList.add('active');
+            nameArea.style.display = 'block';
+            submitBtn.textContent = '회원가입';
+        }
     }
 
-    async changeAccountStatus(action) {
-        if (!confirm(`정말로 계정을 ${action === 'disable' ? '비활성화' : '활성화'} 하시겠습니까?`)) return;
-        try {
-            const res = await fetch('/api/user/status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action })
-            });
-            if (res.ok) {
-                this.showToast('계정 상태가 변경되었습니다.');
-                location.reload();
-            }
-        } catch(e) {}
-    }
-
-    async deleteAccount() {
-        if (!confirm('정말로 탈퇴하시겠습니까? 모든 데이터가 즉시 삭제되며 복구할 수 없습니다.')) return;
-        try {
-            const res = await fetch('/api/user/account', { method: 'DELETE' });
-            if (res.ok) {
-                alert('탈퇴가 완료되었습니다.');
-                location.reload();
-            }
-        } catch(e) {}
-    }
-
-    async handleReactivateSubmit(e) {
+    async handleAuthSubmit(e) {
         e.preventDefault();
-        const email = document.getElementById('reactivateEmail').value;
-        const password = document.getElementById('reactivatePassword').value;
-        try {
-            const res = await fetch('/api/user/status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'enable', email, password })
-            });
-            const data = await res.json();
-            if (res.ok) {
-                alert('계정이 활성화되었습니다. 이제 로그인해주세요.');
-                location.reload();
-            } else {
-                alert(data.error || '활성화 실패');
+        const email = document.getElementById('authEmail').value;
+        const password = document.getElementById('authPassword').value;
+        const name = document.getElementById('authName').value;
+
+        if (this.authMode === 'login') {
+            const { error } = await this.supabase.auth.signInWithPassword({ email, password });
+            if (error) return alert('로그인 실패: ' + error.message);
+            document.getElementById('authModal').classList.remove('show');
+            this.showToast('반갑습니다!');
+        } else {
+            const { data, error } = await this.supabase.auth.signUp({ email, password, options: { data: { full_name: name } } });
+            if (error) return alert('회원가입 실패: ' + error.message);
+            if (data.user) {
+                await this.supabase.from('profiles').upsert({ id: data.user.id, name });
             }
-        } catch(e) {}
+            alert('회원가입 성공! 메일함을 확인하거나 바로 로그인하세요.');
+            this.switchAuthTab('login');
+        }
     }
 }
 
-// ─── Init
+// ─── Initialization
 const app = new ColorPalette();
 
 document.querySelectorAll('.nav-tab').forEach(btn => {
