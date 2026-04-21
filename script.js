@@ -1179,10 +1179,10 @@ class ColorPalette {
         const googleBtn = document.getElementById('googleLoginBtn');
         const githubBtn = document.getElementById('githubLoginBtn');
         if (googleBtn) googleBtn.addEventListener('click', () => {
-            this.supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+            this.supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href.split('#')[0].split('?')[0] } });
         });
         if (githubBtn) githubBtn.addEventListener('click', () => {
-            this.supabase.auth.signInWithOAuth({ provider: 'github', options: { redirectTo: window.location.origin } });
+            this.supabase.auth.signInWithOAuth({ provider: 'github', options: { redirectTo: window.location.href.split('#')[0].split('?')[0] } });
         });
 
         // ─── Settings Actions
