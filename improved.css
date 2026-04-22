@@ -381,13 +381,28 @@ h2 {
 /* Feedback Styles */
 .fab-feedback { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: #111; color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.2s; z-index: 1001; }
 .fab-feedback:hover { transform: scale(1.1); background: #333; }
-.feedback-modal { max-width: 400px; }
-.rating-group { display: flex; justify-content: center; gap: 8px; margin: 20px 0; font-size: 32px; }
+
+/* Feedback Modal v2 */
+.feedback-modal { max-width: 440px; padding: 40px; text-align: center; }
+.modal-header-v2 { margin-bottom: 24px; }
+.modal-icon-bg { width: 56px; height: 56px; background: #f0f0f4; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #111; }
+.fb-section { margin-bottom: 24px; text-align: left; }
+.fb-label { display: block; font-size: 13px; font-weight: 800; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.rating-group { display: flex; justify-content: center; gap: 4px; margin: 0; font-size: 36px; }
 .rating-star { cursor: pointer; color: #ddd; transition: all 0.2s; }
 .rating-star:hover, .rating-star.active { color: #FFCC00; transform: scale(1.2); }
-.feedback-form textarea { width: 100%; height: 120px; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: #f8f8fa; resize: none; font-size: 14px; margin-bottom: 20px; }
-.fb-actions { display: flex; gap: 10px; }
-.fb-actions button { flex: 1; }
+.feedback-form textarea {
+    width: 100%; height: 140px; padding: 16px; border: 1px solid #eee; border-radius: 16px;
+    background: #f8f8fa; font-size: 14px; line-height: 1.6; transition: all 0.2s;
+}
+.feedback-form textarea:focus { border-color: #111; background: #fff; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+.fb-actions-v2 { display: flex; gap: 12px; margin-top: 32px; }
+.btn-reset-v2 { flex: 1; padding: 14px; border: 1px solid #eee; background: #fff; color: #666; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-submit-v2 { flex: 2; padding: 14px; background: #111; color: #fff; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-reset-v2:hover { background: #f8f8fa; border-color: #ddd; }
+.btn-submit-v2:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+.btn-submit-v2:disabled { background: #ccc; transform: none; box-shadow: none; cursor: not-allowed; }
 
 /* Global SVG Fix */
 svg { width: 24px; height: 24px; pointer-events: none; }
@@ -422,5 +437,5 @@ svg { width: 24px; height: 24px; pointer-events: none; }
 .admin-fb-item { background: #f8f8fa; border-radius: 16px; padding: 16px; border: 1px solid #eee; }
 .admin-fb-meta { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: #888; }
 .admin-fb-rating { color: #FFCC00; font-weight: 800; }
-.admin-fb-text { font-size: 14px; color: #333; line-height: 1.6; word-break: break-all; }
+.admin-fb-text { font-size: 14px; color: #333; line-height: 1.6; word-break: break-all; white-space: pre-wrap; }
 
