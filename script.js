@@ -60,13 +60,16 @@ class ColorPalette {
         this.adminClicks = 0;
         this.audioCtx = null;
 
-        // Supabase 초기화
-        this.supabase = null;
-        if (typeof supabase !== 'undefined') {
-            this.supabase = supabase.createClient('https://zluewlatcfawndimssmo.supabase.co', 'sb_publishable_9Kam_Ta3YaYropYmUhU8OA__2TESf0S');
-        }
+        // Supabase 초기화 (지연 로딩 대응)
+        this.initSupabase();
 
         this.init();
+    }
+
+    initSupabase() {
+        if (typeof supabase !== 'undefined' && !this.supabase) {
+            this.supabase = supabase.createClient('https://zluewlatcfawndimssmo.supabase.co', 'sb_publishable_9Kam_Ta3YaYropYmUhU8OA__2TESf0S');
+        }
     }
 
     init() {
@@ -625,17 +628,25 @@ class ColorPalette {
             submitBtn.disabled = true;
             submitBtn.textContent = '전송 중...';
             
-            // Supabase 전송 시도
+            this.initSupabase(); // 전송 전 다시 한번 확인
+
             if (this.supabase) {
                 this.supabase.from('feedbacks').insert([{ rating, text }]).then(({ error }) => {
-                    if (error) console.error('Supabase Error:', error);
-                    finalize();
+                    if (error) {
+                        console.error('Supabase Error:', error);
+                        this.showToast('전송 실패: DB 설정을 확인해주세요.');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    } else {
+                        finalize();
+                    }
                 });
             } else {
-                // 로컬 저장소 (백업)
+                // 로컬 저장소 (오프라인 백업)
                 const feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
                 feedbacks.push({ rating, text, date: new Date().toISOString() });
                 localStorage.setItem('designpick_feedbacks', JSON.stringify(feedbacks));
+                this.showToast('오프라인 상태로 저장되었습니다.');
                 finalize();
             }
 
