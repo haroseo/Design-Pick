@@ -594,7 +594,22 @@ class ColorPalette {
         const fab = document.getElementById('fabFeedback'), modal = document.getElementById('feedbackModal'), close = document.getElementById('closeFeedbackBtn'), form = document.getElementById('feedbackForm');
         fab?.addEventListener('click', () => modal.classList.add('show')); close?.addEventListener('click', () => modal.classList.remove('show'));
         document.querySelectorAll('.rating-star').forEach(star => { star.addEventListener('click', () => { const val = parseInt(star.dataset.val); document.getElementById('fbRating').value = val; document.querySelectorAll('.rating-star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= val)); }); });
-        form?.addEventListener('submit', (e) => { e.preventDefault(); this.showToast('소중한 피드백 감사합니다!'); modal.classList.remove('show'); form.reset(); document.querySelectorAll('.rating-star').forEach(s => s.classList.remove('active')); });
+        form?.addEventListener('submit', (e) => { 
+            e.preventDefault(); 
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = '전송 중...';
+            
+            setTimeout(() => {
+                this.showToast('소중한 피드백 감사합니다!'); 
+                modal.classList.remove('show'); 
+                form.reset(); 
+                document.querySelectorAll('.rating-star').forEach(s => s.classList.remove('active'));
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }, 1000);
+        });
     }
 }
 
