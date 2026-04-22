@@ -54,6 +54,22 @@
         <symbol id="icon-settings" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1a8.45 8.45 0 00-1.69-.98l-.38-2.65C14.37 2.15 14.15 2 13.88 2h-4c-.27 0-.49.15-.53.41l-.38 2.65c-.61.22-1.17.55-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.43 1.08.76 1.69.98l.38 2.65c.04.26.26.41.53.41h4c.27 0 .49-.15.53-.41l.38-2.65c.61-.22 1.17-.55 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
         </symbol>
+        <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </symbol>
+        <symbol id="icon-star-filled" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </symbol>
+        <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+        </symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </symbol>
     </svg>
 
     <!-- Navbar -->
@@ -76,6 +92,9 @@
             <button class="nav-tab" data-tab="colors">
                 <svg class="tab-icon"><use href="#icon-library"/></svg><span>Library</span>
             </button>
+            <button class="nav-tab" data-tab="mypalettes">
+                <svg class="tab-icon"><use href="#icon-heart"/></svg><span>My</span>
+            </button>
         </div>
 
         <div class="nav-actions">
@@ -83,12 +102,6 @@
             <div class="icon-indicator">
                 <svg class="icon-svg" id="soundIconOn"><use href="#icon-volume"/></svg>
                 <svg class="icon-svg" id="soundIconOff" style="display:none;"><use href="#icon-volume-off"/></svg>
-            </div>
-            <div class="nav-extra-actions">
-                <button class="nav-my-btn" id="navMyBtn" title="내 보관함">
-                    <svg class="icon-svg" style="width:16px; height:16px;"><use href="#icon-heart"/></svg>
-                    <span>MY</span>
-                </button>
             </div>
         </div>
     </nav>
@@ -288,11 +301,38 @@
     <!-- My Palettes Tab -->
     <div id="mypalettes" class="tab-content">
         <div class="wrapper">
-            <div class="colors-wrapper">
-                <h2>내 보관함</h2>
-                <p class="colors-subtitle">스크랩한 색상 조합 (♥)</p>
-                <div class="my-palettes-grid" id="myPalettesList"></div>
+            <div class="my-pal-header">
+                <div class="my-pal-title-row">
+                    <h2>내 보관함 <span class="my-count-badge" id="myPalCount">0</span></h2>
+                    <p class="colors-subtitle">스크랩한 나만의 컬러 팔레트</p>
+                </div>
+                
+                <div class="my-pal-controls">
+                    <div class="my-search-box">
+                        <svg class="search-icon"><use href="#icon-search"/></svg>
+                        <input type="text" id="myPalSearch" placeholder="이름 또는 HEX 검색...">
+                    </div>
+                </div>
             </div>
+
+            <div class="my-filter-container">
+                <div class="my-filter-chips" id="myFilterChips">
+                    <button class="filter-chip active" data-filter="all">전체</button>
+                    <button class="filter-chip" data-filter="starred">
+                        <svg class="chip-icon"><use href="#icon-star-filled"/></svg> 중요
+                    </button>
+                    <div class="filter-divider"></div>
+                    <button class="filter-chip" data-filter="red">빨강</button>
+                    <button class="filter-chip" data-filter="orange">주황</button>
+                    <button class="filter-chip" data-filter="yellow">노랑</button>
+                    <button class="filter-chip" data-filter="green">초록</button>
+                    <button class="filter-chip" data-filter="blue">파랑</button>
+                    <button class="filter-chip" data-filter="purple">보라</button>
+                    <button class="filter-chip" data-filter="neutral">무채색</button>
+                </div>
+            </div>
+
+            <div class="my-palettes-grid" id="myPalettesList"></div>
         </div>
     </div>
 

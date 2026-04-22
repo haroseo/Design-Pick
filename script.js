@@ -55,6 +55,8 @@ class ColorPalette {
         this.volume = 0.5;
         this.history = [];
         this.favorites = [];
+        this.activeFilter = 'all';
+        this.mySearchQuery = '';
         this.audioCtx = null;
 
         this.init();
@@ -98,10 +100,7 @@ class ColorPalette {
             this.updateVolumeIcon();
         });
 
-        // MY (보관함) 이동 버튼 (상단 내비바)
-        document.getElementById('navMyBtn')?.addEventListener('click', () => {
-            this.switchTab('mypalettes');
-        });
+        
         
         document.getElementById('favBtn')?.addEventListener('click', () => this.toggleFavorite());
         document.getElementById('exportCssBtn')?.addEventListener('click', () => this.openExportModal());
@@ -110,6 +109,19 @@ class ColorPalette {
         });
 
         this.initFeedbackUI();
+
+        // MY 탭 전용 이벤트 리스너
+        document.getElementById('myPalSearch')?.addEventListener('input', (e) => {
+            this.mySearchQuery = e.target.value.toLowerCase();
+            this.renderFavorites();
+        });
+        document.querySelectorAll('#myFilterChips .filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                this.activeFilter = chip.dataset.filter;
+                document.querySelectorAll('#myFilterChips .filter-chip').forEach(c => c.classList.toggle('active', c === chip));
+                this.renderFavorites();
+            });
+        });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -383,7 +395,15 @@ class ColorPalette {
 
     loadStorage() {
         this.history = JSON.parse(localStorage.getItem('designpick_history') || '[]');
-        this.favorites = JSON.parse(localStorage.getItem('designpick_favs') || '[]');
+        let savedFavs = JSON.parse(localStorage.getItem('designpick_favs') || '[]');
+        // Migration: 기존 데이터에 필드 추가
+        this.favorites = savedFavs.map(f => ({
+            hex: f.hex,
+            name: f.name,
+            isStarred: f.isStarred || false,
+            category: f.category || this.getCategoryFromRgb(...Object.values(this.hexToRgb(f.hex))),
+            createdAt: f.createdAt || Date.now()
+        }));
         this.renderHistory(); this.renderFavorites();
     }
     saveLocalHistory() { localStorage.setItem('designpick_history', JSON.stringify(this.history)); }
@@ -400,16 +420,119 @@ class ColorPalette {
     }
 
     toggleFavorite() {
-        const hex = this.rgbToHex(this.r, this.g, this.b); const name = this.colorNameDisp?.textContent || 'Custom Color';
+        const hex = this.rgbToHex(this.r, this.g, this.b); 
+        const name = this.colorNameDisp?.textContent || 'Custom Color';
         const idx = this.favorites.findIndex(f => f.hex === hex);
-        if (idx !== -1) { this.favorites.splice(idx, 1); this.showToast('보관함에서 삭제되었습니다.'); }
-        else { this.favorites.unshift({ hex, name }); this.showToast('보관함에 저장되었습니다. (♥)'); this.playSuccessSound(); }
+        if (idx !== -1) { 
+            this.favorites.splice(idx, 1); 
+            this.showToast('보관함에서 삭제되었습니다.'); 
+        } else { 
+            const cat = this.getCategoryFromRgb(this.r, this.g, this.b);
+            this.favorites.unshift({ hex, name, isStarred: false, category: cat, createdAt: Date.now() }); 
+            this.showToast('보관함에 저장되었습니다. (♥)'); 
+            this.playSuccessSound(); 
+        }
         this.saveLocalFavorites(); this.updateFavBtnState(hex); this.renderFavorites();
     }
     updateFavBtnState(hex) { document.getElementById('favBtn')?.classList.toggle('active', this.favorites.some(f => f.hex === hex)); }
     renderFavorites() {
-        const list = document.getElementById('myPalettesList'); if (!list) return;
-        list.innerHTML = this.favorites.length ? this.favorites.map(f => `<div class="my-pal-card" onclick="app.switchTab('picker'); app.setColorFromHex('${f.hex}')"><div class="my-pal-color" style="background:${f.hex}"></div><div class="my-pal-name">${f.name}</div><div class="my-pal-hex">${f.hex}</div></div>`).join('') : `<div class="my-pal-empty">스크랩한 색상이 없습니다.</div>`;
+        const list = document.getElementById('myPalettesList'); 
+        const countBadge = document.getElementById('myPalCount');
+        if (!list) return;
+
+        // 필터링 및 검색 적용
+        let filtered = this.favorites.filter(f => {
+            const matchesSearch = f.name.toLowerCase().includes(this.mySearchQuery) || f.hex.toLowerCase().includes(this.mySearchQuery);
+            const matchesFilter = this.activeFilter === 'all' || 
+                                 (this.activeFilter === 'starred' && f.isStarred) || 
+                                 (f.category === this.activeFilter);
+            return matchesSearch && matchesFilter;
+        });
+
+        // 별표 항목 우선 정렬 (상단 고정 느낌)
+        filtered.sort((a, b) => (b.isStarred ? 1 : 0) - (a.isStarred ? 1 : 0));
+
+        if (countBadge) countBadge.textContent = this.favorites.length;
+
+        if (filtered.length === 0) {
+            list.innerHTML = `<div class="my-pal-empty" style="grid-column: 1/-1; padding: 60px; text-align: center; color: #999;">
+                <svg style="width:48px; height:48px; margin-bottom:16px; opacity:0.3;"><use href="#icon-heart"/></svg>
+                <p>${this.favorites.length === 0 ? '스크랩한 색상이 없습니다.' : '검색 결과가 없습니다.'}</p>
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = filtered.map(f => `
+            <div class="my-pal-card ${f.isStarred ? 'is-starred' : ''}" onclick="app.selectMyColor('${f.hex}')">
+                <div class="my-pal-color" style="background:${f.hex}"></div>
+                <div class="my-pal-info">
+                    <div class="my-pal-name">${f.name}</div>
+                    <div class="my-pal-hex">${f.hex}</div>
+                </div>
+                <div class="card-actions" onclick="event.stopPropagation()">
+                    <button class="action-btn star-btn ${f.isStarred ? 'active' : ''}" onclick="app.toggleStar('${f.hex}')" title="중요 표시">
+                        <svg class="chip-icon"><use href="#icon-${f.isStarred ? 'star-filled' : 'star'}"/></svg>
+                    </button>
+                    <button class="action-btn delete-btn" onclick="app.deleteFavorite('${f.hex}')" title="삭제">
+                        <svg class="chip-icon"><use href="#icon-trash"/></svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    selectMyColor(hex) { this.setColorFromHex(hex); this.switchTab('picker'); }
+
+    toggleStar(hex) {
+        const item = this.favorites.find(f => f.hex === hex);
+        if (item) {
+            item.isStarred = !item.isStarred;
+            this.saveLocalFavorites();
+            this.renderFavorites();
+            if (item.isStarred) this.playTickSound();
+        }
+    }
+
+    deleteFavorite(hex) {
+        const idx = this.favorites.findIndex(f => f.hex === hex);
+        if (idx !== -1) {
+            this.favorites.splice(idx, 1);
+            this.saveLocalFavorites();
+            this.updateFavBtnState(this.rgbToHex(this.r, this.g, this.b));
+            this.renderFavorites();
+            this.showToast('삭제되었습니다.');
+        }
+    }
+
+    getCategoryFromRgb(r, g, b) {
+        // HSL 변환 후 간단한 분류
+        const { h, s, l } = this.rgbToHsl(r, g, b);
+        if (s < 12) return 'neutral';
+        if (h < 15 || h >= 345) return 'red';
+        if (h < 45) return 'orange';
+        if (h < 75) return 'yellow';
+        if (h < 165) return 'green';
+        if (h < 260) return 'blue';
+        if (h < 345) return 'purple';
+        return 'neutral';
+    }
+
+    rgbToHsl(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        if (max === min) h = s = 0;
+        else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+        return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
     }
 
     initAudio() { if (!this.audioCtx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) this.audioCtx = new AC(); } }
