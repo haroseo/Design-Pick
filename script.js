@@ -595,6 +595,7 @@ class ColorPalette {
     searchColor() { const q = this.sanitizeInput(this.colorInput.value).toLowerCase(); if (!q) { this.searchResults.innerHTML = ''; return; } const res = []; for (const [name, color] of Object.entries(colorNameReferences)) { if (name.toLowerCase().includes(q) || (color.tags || []).some(t => t.includes(q))) res.push({ name, color }); } this.searchResults.innerHTML = res.slice(0, 8).map(({ name, color }) => `<div class="search-result-item" onclick="app.setColorFromHex('${color.hex}')"><div class="search-result-color" style="background-color:${color.hex}"></div><div class="search-result-info"><div class="search-result-name">${name}</div><div class="search-result-hex">${color.hex}</div></div></div>`).join(''); }
     sanitizeInput(input) { const d = document.createElement('div'); d.textContent = input; return d.innerHTML.substring(0, 60); }
     handleKeyPress(e) {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
         const activeId = document.querySelector('.tab-content.active')?.id;
         if (e.code === 'Space') { e.preventDefault(); if (activeId === 'inspiration') { if (this.reelRunning) this.stopInspirationReel(); else if (!this.reelDecelerating) { this.inspirationStopped = false; this.startInspirationReel(); } } else if (activeId === 'picker' && !this.isRouletting) this.startRoulette(); }
         else if (e.key === 'ArrowLeft') { e.preventDefault(); if (activeId === 'today') this.inspoPrev(); else if (activeId === 'picker' && !this.isRouletting) this.adjustColor(-1); }
@@ -635,11 +636,26 @@ class ColorPalette {
     }
 
     openAdminDashboard() {
-        const modal = document.getElementById('adminModal');
-        if (modal) {
-            this.renderAdminFeedbacks();
-            modal.classList.add('show');
-            this.showToast('관리자 모드가 활성화되었습니다. (Secret)');
+        const authModal = document.getElementById('adminAuthModal');
+        if (authModal) {
+            authModal.classList.add('show');
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminPassword').focus();
+        }
+    }
+
+    verifyAdmin() {
+        const pw = document.getElementById('adminPassword').value;
+        if (pw === 'rgb') { // 기본 비밀번호 'rgb'
+            document.getElementById('adminAuthModal').classList.remove('show');
+            const modal = document.getElementById('adminModal');
+            if (modal) {
+                this.renderAdminFeedbacks();
+                modal.classList.add('show');
+                this.showToast('보안 인증 성공');
+            }
+        } else {
+            this.showToast('비밀번호가 틀렸습니다.');
         }
     }
 
