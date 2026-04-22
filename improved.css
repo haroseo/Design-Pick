@@ -442,10 +442,15 @@ svg { width: 24px; height: 24px; pointer-events: none; }
 .admin-fb-text { font-size: 14px; color: #333; line-height: 1.6; word-break: break-all; white-space: pre-wrap; }
 /* ─── Mobile Optimization ────────────────────── */
 @media (max-width: 768px) {
-    .navbar { padding: 12px 16px; flex-wrap: wrap; gap: 12px; height: auto; }
-    .nav-brand { width: 100%; text-align: center; margin-bottom: 4px; }
-    .nav-tabs { order: 3; width: 100%; margin: 0; justify-content: space-around; }
-    .nav-actions { order: 2; width: 100%; justify-content: center; }
+    .navbar { padding: 16px; flex-direction: column; gap: 16px; height: auto; }
+    .nav-brand { width: 100%; text-align: center; margin: 0; }
+    .nav-tabs { order: 2; width: 100%; margin: 0; justify-content: center; gap: 4px; }
+    .nav-actions { order: 3; width: 100%; justify-content: center; margin: 0; }
+    
+    /* RGB Picker Resize */
+    .color-display { width: 100% !important; height: auto !important; aspect-ratio: 1/1; max-width: 360px; margin: 0 auto 24px auto; }
+    .main-box { width: 100% !important; padding: 20px !important; }
+    .picker-container { gap: 20px !important; }
     
     .my-pal-header { flex-direction: column; align-items: stretch; gap: 16px; }
     .my-search-box { width: 100%; }
