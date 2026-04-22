@@ -144,6 +144,11 @@ class ColorPalette {
         });
         document.getElementById('closeAdminBtn')?.addEventListener('click', () => {
             document.getElementById('adminModal')?.classList.remove('show');
+            // 실시간 구독 해제
+            if (this.supabase && this.feedbackChannel) {
+                this.supabase.removeChannel(this.feedbackChannel);
+                this.feedbackChannel = null;
+            }
         });
     }
 
@@ -672,13 +677,23 @@ class ColorPalette {
 
     verifyAdmin() {
         const pw = document.getElementById('adminPassword').value;
-        if (pw === 'rgb') { // 기본 비밀번호 'rgb'
+        if (pw === 'rgb') { 
             document.getElementById('adminAuthModal').classList.remove('show');
             const modal = document.getElementById('adminModal');
             if (modal) {
                 this.renderAdminFeedbacks();
                 modal.classList.add('show');
-                this.showToast('보안 인증 성공');
+                this.showToast('실시간 동기화 활성화됨');
+
+                // 실시간 구독 시작
+                if (this.supabase) {
+                    this.feedbackChannel = this.supabase.channel('admin-feedbacks')
+                        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'feedbacks' }, payload => {
+                            this.renderAdminFeedbacks();
+                            this.showToast('새로운 피드백이 도착했습니다! 🔔');
+                        })
+                        .subscribe();
+                }
             }
         } else {
             this.showToast('비밀번호가 틀렸습니다.');
