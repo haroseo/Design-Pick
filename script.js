@@ -52,7 +52,7 @@ class ColorPalette {
         this.reelRAF          = null;
         this.reelCurrentSpeed = 0;
         this.reelItemHeight   = 100;
-        this.totalDesigns     = designInspiration.length;
+        this.totalDesigns     = typeof designInspiration !== 'undefined' ? designInspiration.length : 0;
         this.currentDesignIdx = 0;
         this.inspirationStopped = false;
 
@@ -64,9 +64,6 @@ class ColorPalette {
         this.history = [];
         this.favorites = [];
         this.audioCtx = null;
-
-        this.init();
-    }
 
         this.init();
     }
@@ -97,42 +94,11 @@ class ColorPalette {
             chip.addEventListener('click', () => this.setSelectedFamily(chip.dataset.family));
         });
 
-        // Touch — inspiration reel
-        const reelWrapper = document.getElementById('reelWrapper');
-        if (reelWrapper) {
-            reelWrapper.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                const activeId = document.querySelector('.tab-content.active')?.id;
-                if (activeId !== 'inspiration') return;
-                if (this.reelRunning) {
-                    this.stopInspirationReel();
-                } else if (!this.reelDecelerating && this.inspirationStopped) {
-                    this.inspirationStopped = false;
-                    this.startInspirationReel();
-                }
-            }, { passive: false });
-        }
-
-        // ─── Today's Pick Card navigation
+        // Today's Pick Card navigation
         const prevBtn = document.getElementById('inspoPrev');
         const nextBtn = document.getElementById('inspoNext');
         if (prevBtn) prevBtn.addEventListener('click', () => this.inspoPrev());
         if (nextBtn) nextBtn.addEventListener('click', () => this.inspoNext());
-
-        const inspoCard = document.getElementById('inspoCard');
-        if (inspoCard) {
-            let touchStartX = 0;
-            inspoCard.addEventListener('touchstart', (e) => {
-                touchStartX = e.touches[0].clientX;
-            }, { passive: true });
-            inspoCard.addEventListener('touchend', (e) => {
-                const dx = e.changedTouches[0].clientX - touchStartX;
-                if (Math.abs(dx) > 40) {
-                    if (dx < 0) this.inspoNext();
-                    else        this.inspoPrev();
-                }
-            }, { passive: true });
-        }
 
         this.showInspoCard(0);
 
@@ -164,18 +130,8 @@ class ColorPalette {
             document.getElementById('exportModal')?.classList.remove('show');
         });
 
-        // Authentication & Feedback
-        this.initAuthUI();
+        // Feedback
         this.initFeedbackUI();
-
-        // ─── Document click to close dropdowns
-        document.addEventListener('click', (e) => {
-            const dropdown = document.getElementById('profileDropdown');
-            const trigger  = document.getElementById('profileTrigger');
-            if (dropdown && dropdown.classList.contains('show') && !trigger.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -187,7 +143,6 @@ class ColorPalette {
         document.querySelectorAll('.family-chip').forEach(c => {
             c.classList.toggle('active', c.dataset.family === family);
         });
-        // 선택 즉시 룰렛 실행
         if (!this.isRouletting) {
             setTimeout(() => this.startRoulette(), 80);
         }
@@ -245,7 +200,6 @@ class ColorPalette {
         this.isRouletting = true;
         this.setColorNameText('');
 
-        // 목표 색을 먼저 계열에서 뽑아놓음
         const target = this.randomInFamily(this.selectedFamily);
 
         this.spinChannelToTarget('r', target.r, 1800, () => {
@@ -272,11 +226,10 @@ class ColorPalette {
         let current = this[channel];
         let distance = target - current;
         while (distance < 0) distance += 256;
-        // Add 3~5 extra rotations so it spins satisfyingly
         distance += 256 * (3 + Math.floor(Math.random() * 3)); 
         
         let position = current;
-        const friction = 0.95; // 0.95 gives a nice ~1.5 sec deceleration
+        const friction = 0.95;
         let speed = distance * (1 - friction);
         let lastTickVal = current;
 
@@ -289,7 +242,6 @@ class ColorPalette {
             
             if (val !== lastTickVal) {
                 lastTickVal = val;
-                // Play tick sound every ~10 units to avoid sound flood
                 if (val % 7 === 0) {
                     try { this.playTickSound(); } catch(e) {}
                 }
@@ -334,7 +286,6 @@ class ColorPalette {
         }
         this.displaySimilarColors();
 
-        // Premium hooks
         try {
             this.addToHistory(hex);
             this.updateFavBtnState(hex);
@@ -345,10 +296,6 @@ class ColorPalette {
         this.colorNameDisp.textContent = text;
         this.colorNameDisp.classList.toggle('visible', !!text);
     }
-
-    // ═══════════════════════════════════════════════════════════
-    //  Color Name Lookup
-    // ═══════════════════════════════════════════════════════════
 
     findColorName(r, g, b) {
         let closest = null;
@@ -371,7 +318,7 @@ class ColorPalette {
     // ═══════════════════════════════════════════════════════════
 
     buildInspirationReel() {
-        if (!this.inspirationReel) return;
+        if (!this.inspirationReel || typeof designInspiration === 'undefined') return;
         const items = [...designInspiration, ...designInspiration];
         this.inspirationReel.innerHTML = items
             .map(d => `<div class="reel-item">${d.name}</div>`)
@@ -481,7 +428,6 @@ class ColorPalette {
         const d = designCards[index];
         if (!d) return;
 
-        // Text
         const numEl  = document.getElementById('inspoNumber');
         const catEl  = document.getElementById('inspoCategory');
         const titEl  = document.getElementById('inspoTitle');
@@ -491,7 +437,6 @@ class ColorPalette {
         if (titEl) titEl.textContent = d.name;
         if (desEl) desEl.textContent = d.description;
 
-        // Swatches
         const c0 = d.colors[0] || {};
         const c1 = d.colors[1] || {};
         const back  = document.getElementById('swatchBack');
@@ -508,7 +453,6 @@ class ColorPalette {
         if (nfr) nfr.textContent = c1.name || '';
         if (hfr) hfr.textContent = c1.hex  || '';
 
-        // Text color based on brightness
         [{ el: back,  hex: c0.hex }, { el: front, hex: c1.hex }].forEach(({ el, hex }) => {
             if (!el || !hex) return;
             const rgb = this.hexToRgb(hex);
@@ -517,7 +461,6 @@ class ColorPalette {
             el.style.color = lum > 0.55 ? '#111' : '#fff';
         });
 
-        // Animate
         const card = document.getElementById('inspoCard');
         if (card) {
             card.classList.remove('inspo-anim');
@@ -536,14 +479,6 @@ class ColorPalette {
         if (typeof designCards === 'undefined') return;
         this.todayIndex = (this.todayIndex - 1 + designCards.length) % designCards.length;
         this.showInspoCard(this.todayIndex);
-    }
-
-    inspoPickColor(colorIdx) {
-        if (typeof designCards === 'undefined') return;
-        const d = designCards[this.todayIndex];
-        if (!d || !d.colors[colorIdx]) return;
-        this.setColorFromHex(d.colors[colorIdx].hex);
-        this.switchTab('picker');
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -579,7 +514,7 @@ class ColorPalette {
     // ═══════════════════════════════════════════════════════════
 
     buildColorLibrary(filterCat = 'all') {
-        if (!this.colorLibrary) return;
+        if (!this.colorLibrary || typeof designerColors === 'undefined') return;
 
         const categoryMeta = {
             ui_web:       { label: 'UI / 웹 기본',  icon: '🖥' },
@@ -591,7 +526,6 @@ class ColorPalette {
             monochrome:   { label: '모노크롬',       icon: '⬜' },
         };
 
-        // Render chips
         const chipsContainer = document.getElementById('libFilterChips');
         if (chipsContainer) {
             chipsContainer.innerHTML = `
@@ -606,7 +540,6 @@ class ColorPalette {
 
         let html = '';
         for (const [key, colors] of Object.entries(designerColors)) {
-            // 필터 로직
             if (filterCat !== 'all') {
                 if (filterCat === 'nature' && !(key === 'nature' || key === 'earth')) continue;
                 if (filterCat === 'pastel' && key !== 'pastel') continue;
@@ -640,9 +573,6 @@ class ColorPalette {
         this.colorLibrary.innerHTML = html || '<div style="padding:40px;text-align:center;color:#999;">결과가 없습니다.</div>';
     }
 
-    // ═══════════════════════════════════════════════════════════
-    //  Guide Tab Build
-    // ═══════════════════════════════════════════════════════════
     buildGuide() {
         const grid = document.getElementById('guideGrid');
         if (!grid || typeof designGuides === 'undefined') return;
@@ -659,206 +589,70 @@ class ColorPalette {
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Similar Colors
+    //  Storage & Favorites
     // ═══════════════════════════════════════════════════════════
 
-    displaySimilarColors() {
-        if (!this.similarColors) return;
-        const similar = findSimilarColors(this.r, this.g, this.b, 8);
-        this.similarColors.innerHTML = similar.map(({ name, hex }) => `
-            <div class="similar-color-group">
-                <div class="similar-color-item"
-                     style="background-color:${hex}"
-                     onclick="app.selectSimilarColor('${hex}','${name}')">
-                    <div class="similar-color-tooltip">
-                        <span class="tooltip-name">${name}</span>
-                        <span class="tooltip-hex">${hex}</span>
-                    </div>
-                </div>
-                <span class="similar-color-label">${name}</span>
-            </div>
-        `).join('');
-    }
-
-    selectSimilarColor(hex, name) {
-        this.setColorFromHex(hex);
-        this.showToast(name);
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    //  Utility
-    // ═══════════════════════════════════════════════════════════
-
-    rgbToHex(r, g, b) {
-        return '#' + [r, g, b].map(x => {
-            const h = x.toString(16);
-            return h.length === 1 ? '0' + h : h;
-        }).join('').toUpperCase();
-    }
-
-    hexToRgb(hex) {
-        const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return r ? {
-            r: parseInt(r[1], 16),
-            g: parseInt(r[2], 16),
-            b: parseInt(r[3], 16),
-        } : null;
-    }
-
-    setColorFromHex(hex) {
-        if (!hex) return;
-        try { this.playClickSound(); } catch(e) {}
-        const rgb = this.hexToRgb(hex);
-        if (rgb) {
-            this.r = rgb.r;
-            this.g = rgb.g;
-            this.b = rgb.b;
-            if (this.selectedChannel) this.selectedChannel = null;
-            this.isRouletting = false;
-            this.updateColor();
-        }
-    }
-
-    reset() {
-        this.r = this.g = this.b = 0;
-        this.updateColor();
-        this.showToast('리셋되었습니다');
-        setTimeout(() => this.startRoulette(), 300);
-    }
-
-    copyToClipboard(type) {
-        const text = type === 'hex'
-            ? this.hexValue.textContent
-            : `rgb(${this.r}, ${this.g}, ${this.b})`;
-        this.fallbackCopy(text, type === 'hex' ? 'HEX 복사됨' : 'RGB 복사됨');
-    }
-
-    fallbackCopy(text, msg) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(text).then(() => {
-                this.showToast(msg);
-                try { this.playSuccessSound(); } catch(e) {}
-            }).catch(() => {
-                this.forceExecCopy(text, msg);
-            });
-        } else {
-            this.forceExecCopy(text, msg);
-        }
+    loadStorage() {
+        this.history = JSON.parse(localStorage.getItem('designpick_history') || '[]');
+        this.favorites = JSON.parse(localStorage.getItem('designpick_favs') || '[]');
+        this.renderHistory();
+        this.renderFavorites();
     }
     
-    forceExecCopy(text, msg) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-            document.execCommand('copy');
-            this.showToast(msg);
-            try { this.playSuccessSound(); } catch(e) {}
-        } catch (e) {
-            this.showToast('복사 실패');
-        }
-        document.body.removeChild(textarea);
+    saveLocalHistory() { localStorage.setItem('designpick_history', JSON.stringify(this.history)); }
+    saveLocalFavorites() { localStorage.setItem('designpick_favs', JSON.stringify(this.favorites)); }
+
+    addToHistory(hex) {
+        if (this.isRouletting || this.reelRunning || this.history[0] === hex) return;
+        this.history.unshift(hex);
+        if (this.history.length > 20) this.history.pop();
+        this.saveLocalHistory();
+        this.renderHistory();
+    }
+    renderHistory() {
+        const tr = document.getElementById('historyTray');
+        if (!tr) return;
+        tr.innerHTML = this.history.length ? this.history.map(hex => `
+            <div class="history-item" style="background:${hex}" 
+                 onclick="app.setColorFromHex('${hex}')" title="${hex}"></div>
+        `).join('') : '<span style="font-size:11px; color:#999; padding:0 8px;">최근 방문한 색상이 없습니다.</span>';
     }
 
-    searchColor() {
-        const q = this.sanitizeInput(this.colorInput.value).toLowerCase();
-        if (!q) { this.searchResults.innerHTML = ''; return; }
-
-        const results = [];
-        for (const [name, color] of Object.entries(colorNameReferences)) {
-            const tags = color.tags || [];
-            if (name.toLowerCase().includes(q) || tags.some(t => t.includes(q))) {
-                results.push({ name, color });
-            }
-        }
-
-        this.searchResults.innerHTML = results.slice(0, 8).map(({ name, color }) => `
-            <div class="search-result-item" onclick="app.setColorFromHex('${color.hex}')">
-                <div class="search-result-color" style="background-color:${color.hex}"></div>
-                <div class="search-result-info">
-                    <div class="search-result-name">${name}</div>
-                    <div class="search-result-hex">${color.hex}</div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    sanitizeInput(input) {
-        const d = document.createElement('div');
-        d.textContent = input;
-        return d.innerHTML.substring(0, 60);
-    }
-
-    handleKeyPress(e) {
-        const activeId = document.querySelector('.tab-content.active')?.id;
-        if (e.code === 'Space') {
-            e.preventDefault();
-            if (activeId === 'inspiration') {
-                if (this.reelRunning) {
-                    this.stopInspirationReel();
-                } else if (!this.reelDecelerating) {
-                    this.inspirationStopped = false;
-                    this.startInspirationReel();
-                }
-            } else if (activeId === 'picker') {
-                if (!this.isRouletting) this.startRoulette();
-            }
-        } else if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            if (activeId === 'today') this.inspoPrev();
-            else if (activeId === 'picker' && !this.isRouletting) this.adjustColor(-1);
-        } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            if (activeId === 'today') this.inspoNext();
-            else if (activeId === 'picker' && !this.isRouletting) this.adjustColor(1);
-        }
-    }
-
-    adjustColor(step) {
-        const clamp = v => Math.max(0, Math.min(255, v));
-        if (this.selectedChannel) {
-            this[this.selectedChannel] = clamp(this[this.selectedChannel] + step);
+    toggleFavorite() {
+        const hex = this.rgbToHex(this.r, this.g, this.b);
+        const name = document.getElementById('colorNameDisplay')?.textContent || 'Custom Color';
+        const idx = this.favorites.findIndex(f => f.hex === hex);
+        if (idx !== -1) {
+            this.favorites.splice(idx, 1);
+            this.showToast('보관함에서 삭제되었습니다.');
         } else {
-            if      (this.r + step >= 0 && this.r + step <= 255) this.r = clamp(this.r + step);
-            else if (this.g + step >= 0 && this.g + step <= 255) this.g = clamp(this.g + step);
-            else if (this.b + step >= 0 && this.b + step <= 255) this.b = clamp(this.b + step);
+            this.favorites.unshift({ hex, name });
+            this.showToast('보관함에 저장되었습니다. (♥)');
+            this.playSuccessSound();
         }
-        this.updateColor();
+        this.saveLocalFavorites();
+        this.updateFavBtnState(hex);
+        this.renderFavorites();
     }
-
-    mobileAdjust(step) {
-        if (!this.selectedChannel || this.isRouletting) return;
-        const clamp = v => Math.max(0, Math.min(255, v));
-        this[this.selectedChannel] = clamp(this[this.selectedChannel] + step);
-        this.updateColor();
+    updateFavBtnState(hex) {
+        document.getElementById('favBtn')?.classList.toggle('active', this.favorites.some(f => f.hex === hex));
     }
-
-    setSelectedChannel(channel) {
-        this.selectedChannel = this.selectedChannel === channel ? null : channel;
-        [['r', this.rItem], ['g', this.gItem], ['b', this.bItem]].forEach(([ch, el]) => {
-            if (el) el.classList.toggle('channel-selected', this.selectedChannel === ch);
-        });
-        const labels = { r: 'R 채널', g: 'G 채널', b: 'B 채널' };
-        if (this.mobileAdjLabel) {
-            this.mobileAdjLabel.textContent = this.selectedChannel ? labels[this.selectedChannel] : '채널 선택';
-        }
-    }
-
-    showToast(message) {
-        this.toast.textContent = message;
-        this.toast.classList.add('show');
-        clearTimeout(this._toastTimer);
-        this._toastTimer = setTimeout(() => this.toast.classList.remove('show'), 2200);
+    renderFavorites() {
+        const list = document.getElementById('myPalettesList');
+        if (!list) return;
+        list.innerHTML = this.favorites.length ? this.favorites.map(f => `
+            <div class="my-pal-card" onclick="app.switchTab('picker'); app.setColorFromHex('${f.hex}')">
+                <div class="my-pal-color" style="background:${f.hex}"></div>
+                <div class="my-pal-name">${f.name}</div>
+                <div class="my-pal-hex">${f.hex}</div>
+            </div>
+        `).join('') : `<div class="my-pal-empty">스크랩한 색상이 없습니다.</div>`;
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Premium Features Additions
+    //  Premium & Utility
     // ═══════════════════════════════════════════════════════════
 
-    // 1. Sound Framework (Volume Control)
     initAudio() {
         if (!this.audioCtx) {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -883,7 +677,6 @@ class ColorPalette {
             const gain = this.audioCtx.createGain();
             osc.connect(gain);
             gain.connect(this.audioCtx.destination);
-            
             const now = this.audioCtx.currentTime;
             
             if (type === 'tick') {
@@ -916,138 +709,86 @@ class ColorPalette {
     playClickSound() { this.playSound('click'); }
     playSuccessSound() { this.playSound('success'); }
 
-    async loadStorage() {
-        this.history = [];
-        this.favorites = [];
-        try {
-            const h = localStorage.getItem('designpick_history');
-            if (h) this.history = JSON.parse(h);
-            const f = localStorage.getItem('designpick_favs');
-            if (f) this.favorites = JSON.parse(f);
-        } catch(e) {}
-        this.renderHistory();
-        this.renderFavorites();
-
-    }
-    
-    saveLocalHistory() {
-        try { localStorage.setItem('designpick_history', JSON.stringify(this.history)); } catch(e) {}
-    }
-    saveLocalFavorites() {
-        try { localStorage.setItem('designpick_favs', JSON.stringify(this.favorites)); } catch(e) {}
-    }
-
-    addToHistory(hex) {
-        if (this.isRouletting || this.reelRunning) return; 
-        if (this.history[0] === hex) return;
-        this.history.unshift(hex);
-        if (this.history.length > 20) this.history.pop();
-        this.saveLocalHistory();
-        this.renderHistory();
-    }
-    renderHistory() {
-        const tr = document.getElementById('historyTray');
-        if (!tr) return;
-        if (this.history.length === 0) {
-            tr.innerHTML = '<span style="font-size:11px; color:#999; padding:0 8px;">최근 방문한 색상이 없습니다.</span>';
-            return;
-        }
-        tr.innerHTML = this.history.map(hex => `
-            <div class="history-item" style="background:${hex}" 
-                 onclick="app.setColorFromHex('${hex}')" title="${hex}"></div>
-        `).join('');
-    }
-
-    async toggleFavorite() {
-        const hex = this.rgbToHex(this.r, this.g, this.b);
-        const nameEl = document.getElementById('colorNameDisplay');
-        const name = nameEl && nameEl.textContent ? nameEl.textContent : 'Custom Color';
-
-        const idx = this.favorites.findIndex(f => f.hex === hex);
-        if (idx > -1) {
-            this.favorites.splice(idx, 1);
-        } else {
-            this.favorites.unshift({ hex, name });
-        }
-        this.saveLocalFavorites();
-        this.updateFavBtnState(hex);
-        this.renderFavorites();
-    }
-
-    updateFavBtnState(hex) {
-        const btn = document.getElementById('favBtn');
-        if (!btn) return;
-        if (this.favorites.some(f => f.hex === hex)) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    }
-    renderFavorites() {
-        const list = document.getElementById('myPalettesList');
-        if (!list) return;
-
-        if (this.favorites.length === 0) {
-            list.innerHTML = `<div class="my-pal-empty">스크랩한 색상이 없습니다.<br>Color Picker에서 마음에 드는 색상을 ♥ 눌러 찜해보세요!</div>`;
-            return;
-        }
-        list.innerHTML = this.favorites.map(f => `
-            <div class="my-pal-card" onclick="app.switchTab('picker'); app.setColorFromHex('${f.hex}')">
-                <div class="my-pal-color" style="background:${f.hex}"></div>
-                <div class="my-pal-name">${f.name}</div>
-                <div class="my-pal-hex">${f.hex}</div>
-            </div>
-        `).join('');
-    }
-
     openExportModal() {
         const hex = this.rgbToHex(this.r, this.g, this.b);
-        const nameEl = document.getElementById('colorNameDisplay');
-        let rawName = nameEl && nameEl.textContent ? nameEl.textContent : 'primary';
-        let kebab = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        if (!kebab) kebab = 'primary';
+        const name = document.getElementById('colorNameDisplay')?.textContent || 'primary';
+        const kebab = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'primary';
         
-        const cssOut = document.getElementById('exportCssCode');
-        if (cssOut) {
-            cssOut.textContent = `:root {\n  --${kebab}: ${hex};\n  --${kebab}-rgb: ${this.r}, ${this.g}, ${this.b};\n}`;
-        }
+        document.getElementById('exportCssCode').textContent = `:root {\n  --color-${kebab}: ${hex};\n  --color-${kebab}-rgb: ${this.r}, ${this.g}, ${this.b};\n}`;
+        document.getElementById('exportTwCode').textContent = `// tailwind.config.js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '${kebab}': '${hex}',\n      }\n    }\n  }\n}`;
+        const allHex = [hex, ...this.favorites.map(f => f.hex)].slice(0, 10);
+        document.getElementById('exportHexCode').textContent = [...new Set(allHex)].join(', ');
 
-        const twOut = document.getElementById('exportTwCode');
-        if (twOut) {
-            twOut.textContent = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '${kebab}': '${hex}',\n      }\n    }\n  }\n}`;
-        }
-
-        const hexOut = document.getElementById('exportHexCode');
-        if (hexOut) {
-            const hexList = this.favorites.length > 0 ? this.favorites.map(f => f.hex).join(', ') : hex;
-            hexOut.textContent = hexList;
-        }
-
-        const mod = document.getElementById('exportModal');
-        if (mod) mod.classList.add('show');
+        document.getElementById('exportModal')?.classList.add('show');
     }
     
     copyExport(type) {
         if (type === 'figma') {
             const size = 100;
-            const list = this.favorites.length > 0 ? this.favorites : [{hex: this.rgbToHex(this.r, this.g, this.b)}];
-            const rects = list.map((f, i) => `<rect x="${i*(size+20)}" y="0" width="${size}" height="${size}" fill="${f.hex}" rx="12"/>`).join('');
-            this.fallbackCopy(`<svg width="${list.length*(size+20)}" height="${size}" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`, 'Figma 도형(SVG)이 복사되었습니다.');
-            return;
+            const colors = this.favorites.length ? this.favorites.map(f => f.hex) : [this.rgbToHex(this.r, this.g, this.b)];
+            const rects = colors.map((c, i) => `<rect x="${i*(size+20)}" y="0" width="${size}" height="${size}" fill="${c}" rx="12"/>`).join('');
+            this.fallbackCopy(`<svg width="${colors.length*(size+20)}" height="${size}" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`, 'Figma SVG가 복사되었습니다.');
+        } else {
+            const el = document.getElementById(type === 'css' ? 'exportCssCode' : type === 'tw' ? 'exportTwCode' : 'exportHexCode');
+            if (el) this.fallbackCopy(el.textContent, '코드가 복사되었습니다!');
         }
+    }
 
-        const el = document.getElementById(type === 'css' ? 'exportCssCode' : type === 'tw' ? 'exportTwCode' : 'exportHexCode');
-        if (!el) return;
-        this.fallbackCopy(el.textContent, '코드가 복사되었습니다!');
+    displaySimilarColors() {
+        if (!this.similarColors || typeof findSimilarColors === 'undefined') return;
+        this.similarColors.innerHTML = findSimilarColors(this.r, this.g, this.b, 8).map(({ name, hex }) => `
+            <div class="similar-color-group"><div class="similar-color-item" style="background-color:${hex}" onclick="app.selectSimilarColor('${hex}','${name}')"><div class="similar-color-tooltip"><span class="tooltip-name">${name}</span><span class="tooltip-hex">${hex}</span></div></div><span class="similar-color-label">${name}</span></div>`).join('');
+    }
+    selectSimilarColor(hex, name) { this.setColorFromHex(hex); this.showToast(name); }
+    rgbToHex(r, g, b) { return '#' + [r, g, b].map(x => { const h = x.toString(16); return h.length === 1 ? '0' + h : h; }).join('').toUpperCase(); }
+    hexToRgb(hex) { const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return r ? { r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16) } : null; }
+    setColorFromHex(hex) { if (!hex) return; try { this.playClickSound(); } catch(e) {} const rgb = this.hexToRgb(hex); if (rgb) { this.r = rgb.r; this.g = rgb.g; this.b = rgb.b; this.selectedChannel = null; this.isRouletting = false; this.updateColor(); } }
+    reset() { this.r = this.g = this.b = 0; this.updateColor(); this.showToast('리셋되었습니다'); setTimeout(() => this.startRoulette(), 300); }
+    copyToClipboard(type) { this.fallbackCopy(type === 'hex' ? this.hexValue.textContent : `rgb(${this.r}, ${this.g}, ${this.b})`, type === 'hex' ? 'HEX 복사됨' : 'RGB 복사됨'); }
+    fallbackCopy(text, msg) {
+        const run = () => { this.showToast(msg); try { this.playSuccessSound(); } catch(e) {} };
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(run).catch(() => this.forceExecCopy(text, msg));
+        else this.forceExecCopy(text, msg);
+    }
+    forceExecCopy(text, msg) {
+        const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); this.showToast(msg); try { this.playSuccessSound(); } catch(e) {} } catch (e) {} document.body.removeChild(ta);
+    }
+    searchColor() {
+        const q = this.sanitizeInput(this.colorInput.value).toLowerCase(); if (!q) { this.searchResults.innerHTML = ''; return; }
+        const res = []; for (const [name, color] of Object.entries(colorNameReferences)) { if (name.toLowerCase().includes(q) || (color.tags || []).some(t => t.includes(q))) res.push({ name, color }); }
+        this.searchResults.innerHTML = res.slice(0, 8).map(({ name, color }) => `<div class="search-result-item" onclick="app.setColorFromHex('${color.hex}')"><div class="search-result-color" style="background-color:${color.hex}"></div><div class="search-result-info"><div class="search-result-name">${name}</div><div class="search-result-hex">${color.hex}</div></div></div>`).join('');
+    }
+    sanitizeInput(input) { const d = document.createElement('div'); d.textContent = input; return d.innerHTML.substring(0, 60); }
+    handleKeyPress(e) {
+        const activeId = document.querySelector('.tab-content.active')?.id;
+        if (e.code === 'Space') { e.preventDefault(); if (activeId === 'inspiration') { if (this.reelRunning) this.stopInspirationReel(); else if (!this.reelDecelerating) { this.inspirationStopped = false; this.startInspirationReel(); } } else if (activeId === 'picker' && !this.isRouletting) this.startRoulette(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); if (activeId === 'today') this.inspoPrev(); else if (activeId === 'picker' && !this.isRouletting) this.adjustColor(-1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); if (activeId === 'today') this.inspoNext(); else if (activeId === 'picker' && !this.isRouletting) this.adjustColor(1); }
+    }
+    adjustColor(step) {
+        const clamp = v => Math.max(0, Math.min(255, v));
+        if (this.selectedChannel) this[this.selectedChannel] = clamp(this[this.selectedChannel] + step);
+        else { if (this.r + step >= 0 && this.r + step <= 255) this.r = clamp(this.r + step); else if (this.g + step >= 0 && this.g + step <= 255) this.g = clamp(this.g + step); else if (this.b + step >= 0 && this.b + step <= 255) this.b = clamp(this.b + step); }
+        this.updateColor();
+    }
+    mobileAdjust(step) { if (!this.selectedChannel || this.isRouletting) return; this[this.selectedChannel] = Math.max(0, Math.min(255, this[this.selectedChannel] + step)); this.updateColor(); }
+    setSelectedChannel(channel) { this.selectedChannel = this.selectedChannel === channel ? null : channel; [['r', this.rItem], ['g', this.gItem], ['b', this.bItem]].forEach(([ch, el]) => el?.classList.toggle('channel-selected', this.selectedChannel === ch)); if (this.mobileAdjLabel) this.mobileAdjLabel.textContent = this.selectedChannel ? { r: 'R 채널', g: 'G 채널', b: 'B 채널' }[this.selectedChannel] : '채널 선택'; }
+    showToast(message) { this.toast.textContent = message; this.toast.classList.add('show'); clearTimeout(this._toastTimer); this._toastTimer = setTimeout(() => this.toast.classList.remove('show'), 2200); }
+    initFeedbackUI() {
+        const fab = document.getElementById('fabFeedback'); const modal = document.getElementById('feedbackModal');
+        const close = document.getElementById('closeFeedbackBtn'); const form = document.getElementById('feedbackForm');
+        fab?.addEventListener('click', () => modal.classList.add('show'));
+        close?.addEventListener('click', () => modal.classList.remove('show'));
+        document.querySelectorAll('.rating-star').forEach(star => {
+            star.addEventListener('click', () => {
+                const val = parseInt(star.dataset.val); document.getElementById('fbRating').value = val;
+                document.querySelectorAll('.rating-star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= val));
+            });
+        });
+        form?.addEventListener('submit', (e) => { e.preventDefault(); this.showToast('소중한 피드백 감사합니다!'); modal.classList.remove('show'); form.reset(); document.querySelectorAll('.rating-star').forEach(s => s.classList.remove('active')); });
     }
 }
 
-// ─── Initialization
 const app = new ColorPalette();
-
-document.querySelectorAll('.nav-tab').forEach(btn => {
-    btn.addEventListener('click', function () {
-        app.switchTab(this.getAttribute('data-tab'));
-    });
-});
-
+document.querySelectorAll('.nav-tab').forEach(btn => btn.addEventListener('click', function () { app.switchTab(this.getAttribute('data-tab')); }));

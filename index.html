@@ -8,7 +8,7 @@
     <title>Design Pick</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="improved.css">
-    <script src="data.js"></script>
+
 </head>
 <body>
     <!-- SVG Library -->
@@ -88,9 +88,7 @@
                 <svg class="icon-svg" id="soundIconOff" style="display:none;"><use href="#icon-volume-off"/></svg>
             </div>
             
-            <div class="nav-extra-actions" style="margin-left: 12px; padding-left: 12px; border-left: 1px solid #ddd;">
-                <!-- 더 이상 로그인 아이콘은 필요 없으므로 제거 또는 간소화 가능 -->
-            </div>
+
         </div>
     </nav>
 
@@ -299,13 +297,60 @@
 
     <!-- Export Modal -->
     <div class="modal-overlay" id="exportModal">
-        <div class="modal-content export-modal">
-            <h3 class="modal-title">코드 내보내기</h3>
-                    <button class="btn btn-copy" onclick="app.copyExport('hexlist')">콤마(,) 리스트 복사</button>
+        <div class="modal-content export-modal-large">
+            <h3 class="modal-title">전문가용 내보내기</h3>
+            <p class="modal-desc">워크플로우에 맞는 형식을 선택하세요.</p>
+            
+            <div class="export-sections-wrapper">
+                <!-- Web Development Group -->
+                <div class="export-group">
+                    <h4 class="group-title"><svg class="icon-svg-s"><use href="#icon-guide"/></svg> Web Development</h4>
+                    <div class="export-grid-v2">
+                        <div class="export-card">
+                            <div class="card-header">
+                                <span>CSS Variables</span>
+                                <button class="btn-copy-s" onclick="app.copyExport('css')">복사</button>
+                            </div>
+                            <pre id="exportCssCode"></pre>
+                        </div>
+                        <div class="export-card">
+                            <div class="card-header">
+                                <span>Tailwind Config</span>
+                                <button class="btn-copy-s" onclick="app.copyExport('tw')">복사</button>
+                            </div>
+                            <pre id="exportTwCode"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design Tools Group -->
+                <div class="export-group">
+                    <h4 class="group-title"><svg class="icon-svg-s"><use href="#icon-image"/></svg> Design Tools</h4>
+                    <div class="export-grid-v2">
+                        <div class="export-card design-card">
+                            <div class="card-info">
+                                <h5>Figma</h5>
+                                <p>복사 후 피그마에서 붙여넣기(Ctrl+V) 하세요.</p>
+                            </div>
+                            <button class="btn-copy-full" onclick="app.copyExport('figma')">Figma 레이아웃 복사</button>
+                        </div>
+                        <div class="export-card design-card">
+                            <div class="card-info">
+                                <h5>Photoshop & Illustrator</h5>
+                                <p>HEX 리스트를 복사하여 Swatches에 입력하세요.</p>
+                            </div>
+                            <div class="adobe-actions">
+                                <pre id="exportHexCode" style="display:none;"></pre>
+                                <button class="btn-copy-full" onclick="app.copyExport('hexlist')">HEX 리스트 복사</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <button class="btn btn-close-modal" id="closeExportBtn">닫기</button>
+            <div class="modal-footer-actions">
+                <button class="btn btn-close-modal-v2" id="closeExportBtn">닫기</button>
+            </div>
         </div>
     </div>
 
@@ -338,6 +383,7 @@
             </form>
         </div>
     </div>
+
 
     <script src="data.js"></script>
     <script src="script.js"></script>
