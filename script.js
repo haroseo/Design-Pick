@@ -60,6 +60,12 @@ class ColorPalette {
         this.adminClicks = 0;
         this.audioCtx = null;
 
+        // Supabase 초기화
+        this.supabase = null;
+        if (typeof supabase !== 'undefined') {
+            this.supabase = supabase.createClient('https://zluewlatcfawndimssmo.supabase.co', 'sb_publishable_9Kam_Ta3YaYropYmUhU8OA__2TESf0S');
+        }
+
         this.init();
     }
 
@@ -611,7 +617,7 @@ class ColorPalette {
         document.querySelectorAll('.rating-star').forEach(star => { star.addEventListener('click', () => { const val = parseInt(star.dataset.val); document.getElementById('fbRating').value = val; document.querySelectorAll('.rating-star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= val)); }); });
         form?.addEventListener('submit', (e) => { 
             e.preventDefault(); 
-            const rating = document.getElementById('fbRating').value;
+            const rating = parseInt(document.getElementById('fbRating').value);
             const text = document.getElementById('fbText').value;
             
             const submitBtn = form.querySelector('button[type="submit"]');
@@ -619,19 +625,28 @@ class ColorPalette {
             submitBtn.disabled = true;
             submitBtn.textContent = '전송 중...';
             
-            // 피드백 저장 (로컬)
-            const feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
-            feedbacks.push({ rating, text, date: new Date().toISOString() });
-            localStorage.setItem('designpick_feedbacks', JSON.stringify(feedbacks));
+            // Supabase 전송 시도
+            if (this.supabase) {
+                this.supabase.from('feedbacks').insert([{ rating, text }]).then(({ error }) => {
+                    if (error) console.error('Supabase Error:', error);
+                    finalize();
+                });
+            } else {
+                // 로컬 저장소 (백업)
+                const feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
+                feedbacks.push({ rating, text, date: new Date().toISOString() });
+                localStorage.setItem('designpick_feedbacks', JSON.stringify(feedbacks));
+                finalize();
+            }
 
-            setTimeout(() => {
+            const finalize = () => {
                 this.showToast('소중한 피드백 감사합니다!'); 
                 modal.classList.remove('show'); 
                 form.reset(); 
                 document.querySelectorAll('.rating-star').forEach(s => s.classList.remove('active'));
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
-            }, 1000);
+            };
         });
     }
 
@@ -659,23 +674,34 @@ class ColorPalette {
         }
     }
 
-    renderAdminFeedbacks() {
+    async renderAdminFeedbacks() {
         const list = document.getElementById('adminFeedbackList');
         if (!list) return;
-        const feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
+        
+        list.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">데이터를 불러오는 중...</div>';
+
+        let feedbacks = [];
+        if (this.supabase) {
+            const { data, error } = await this.supabase.from('feedbacks').select('*').order('created_at', { ascending: false });
+            if (!error) feedbacks = data;
+        } else {
+            feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]').reverse();
+        }
+
         if (feedbacks.length === 0) {
             list.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">수집된 피드백이 없습니다.</div>';
             return;
         }
+
         list.innerHTML = feedbacks.map((f, i) => `
             <div class="admin-fb-item">
                 <div class="admin-fb-meta">
                     <span class="admin-fb-rating">${'★'.repeat(f.rating)}</span>
-                    <span class="admin-fb-date">${new Date(f.date).toLocaleString()}</span>
+                    <span class="admin-fb-date">${new Date(f.created_at || f.date).toLocaleString()}</span>
                 </div>
                 <div class="admin-fb-text">${this.sanitizeInput(f.text)}</div>
             </div>
-        `).reverse().join('');
+        `).join('');
     }
 
     exportFeedbacks() {
