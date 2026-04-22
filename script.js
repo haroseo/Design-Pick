@@ -596,11 +596,19 @@ class ColorPalette {
         document.querySelectorAll('.rating-star').forEach(star => { star.addEventListener('click', () => { const val = parseInt(star.dataset.val); document.getElementById('fbRating').value = val; document.querySelectorAll('.rating-star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= val)); }); });
         form?.addEventListener('submit', (e) => { 
             e.preventDefault(); 
+            const rating = document.getElementById('fbRating').value;
+            const text = document.getElementById('fbText').value;
+            
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
             submitBtn.textContent = '전송 중...';
             
+            // 피드백 저장 (로컬)
+            const feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
+            feedbacks.push({ rating, text, date: new Date().toISOString() });
+            localStorage.setItem('designpick_feedbacks', JSON.stringify(feedbacks));
+
             setTimeout(() => {
                 this.showToast('소중한 피드백 감사합니다!'); 
                 modal.classList.remove('show'); 
