@@ -97,6 +97,11 @@ class ColorPalette {
             this.volume = parseFloat(e.target.value);
             this.updateVolumeIcon();
         });
+
+        // MY (보관함) 이동 버튼 (상단 내비바)
+        document.getElementById('navMyBtn')?.addEventListener('click', () => {
+            this.switchTab('mypalettes');
+        });
         
         document.getElementById('favBtn')?.addEventListener('click', () => this.toggleFavorite());
         document.getElementById('exportCssBtn')?.addEventListener('click', () => this.openExportModal());
