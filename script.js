@@ -625,6 +625,16 @@ class ColorPalette {
         document.querySelectorAll('.rating-star').forEach(star => { star.addEventListener('click', () => { const val = parseInt(star.dataset.val); document.getElementById('fbRating').value = val; document.querySelectorAll('.rating-star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= val)); }); });
         form?.addEventListener('submit', (e) => { 
             e.preventDefault(); 
+
+            // 스팸 방지: 1분 쿨타임 체크
+            const lastSent = localStorage.getItem('designpick_fb_last_sent');
+            const now = Date.now();
+            if (lastSent && (now - parseInt(lastSent) < 60000)) {
+                const remaining = Math.ceil((60000 - (now - parseInt(lastSent))) / 1000);
+                this.showToast(`${remaining}초 후에 다시 보내실 수 있습니다.`);
+                return;
+            }
+
             const rating = parseInt(document.getElementById('fbRating').value);
             const text = document.getElementById('fbText').value;
             
@@ -656,6 +666,7 @@ class ColorPalette {
             }
 
             const finalize = () => {
+                localStorage.setItem('designpick_fb_last_sent', Date.now().toString());
                 this.showToast('소중한 피드백 감사합니다!'); 
                 modal.classList.remove('show'); 
                 form.reset(); 
