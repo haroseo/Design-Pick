@@ -6,8 +6,8 @@
     <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
     <meta name="theme-color" content="#ffffff">
     <title>Design Pick</title>
-    <link rel="stylesheet" href="style.css?v=6">
-    <link rel="stylesheet" href="improved.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="improved.css?v=7">
 
 </head>
 <body>
@@ -303,7 +303,7 @@
         <div class="wrapper">
             <div class="my-pal-header">
                 <div class="my-pal-title-row">
-                    <h2>내 보관함 <span class="my-count-badge" id="myPalCount">0</span></h2>
+                    <h2 id="myPalTitle" style="cursor:default">내 보관함 <span class="my-count-badge" id="myPalCount">0</span></h2>
                     <p class="colors-subtitle">스크랩한 나만의 컬러 팔레트</p>
                 </div>
                 
@@ -426,7 +426,19 @@
     </div>
 
 
-    <script src="data.js?v=6"></script>
-    <script src="script.js?v=6"></script>
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-content admin-modal">
+            <h3 class="modal-title">관리자 대시보드</h3>
+            <p class="modal-desc">수집된 사용자 피드백 목록입니다.</p>
+            <div id="adminFeedbackList" class="admin-fb-list"></div>
+            <div class="modal-footer-actions" style="margin-top:20px">
+                <button class="btn btn-copy" onclick="app.exportFeedbacks()">데이터 추출 (JSON)</button>
+                <button class="btn btn-reset" id="closeAdminBtn">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js?v=7"></script>
+    <script src="script.js?v=7"></script>
 </body>
 </html>

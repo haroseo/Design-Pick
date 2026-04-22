@@ -57,6 +57,7 @@ class ColorPalette {
         this.favorites = [];
         this.activeFilter = 'all';
         this.mySearchQuery = '';
+        this.adminClicks = 0;
         this.audioCtx = null;
 
         this.init();
@@ -121,6 +122,19 @@ class ColorPalette {
                 document.querySelectorAll('#myFilterChips .filter-chip').forEach(c => c.classList.toggle('active', c === chip));
                 this.renderFavorites();
             });
+        });
+
+        // 비밀 관리자 모드 트리거
+        document.getElementById('myPalTitle')?.addEventListener('click', () => {
+            this.adminClicks++;
+            if (this.adminClicks >= 5) {
+                this.openAdminDashboard();
+                this.adminClicks = 0;
+            }
+            setTimeout(() => { if (this.adminClicks > 0) this.adminClicks = 0; }, 3000);
+        });
+        document.getElementById('closeAdminBtn')?.addEventListener('click', () => {
+            document.getElementById('adminModal')?.classList.remove('show');
         });
     }
 
@@ -618,6 +632,48 @@ class ColorPalette {
                 submitBtn.textContent = originalText;
             }, 1000);
         });
+    }
+
+    openAdminDashboard() {
+        const modal = document.getElementById('adminModal');
+        if (modal) {
+            this.renderAdminFeedbacks();
+            modal.classList.add('show');
+            this.showToast('관리자 모드가 활성화되었습니다. (Secret)');
+        }
+    }
+
+    renderAdminFeedbacks() {
+        const list = document.getElementById('adminFeedbackList');
+        if (!list) return;
+        const feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
+        if (feedbacks.length === 0) {
+            list.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">수집된 피드백이 없습니다.</div>';
+            return;
+        }
+        list.innerHTML = feedbacks.map((f, i) => `
+            <div class="admin-fb-item">
+                <div class="admin-fb-meta">
+                    <span class="admin-fb-rating">${'★'.repeat(f.rating)}</span>
+                    <span class="admin-fb-date">${new Date(f.date).toLocaleString()}</span>
+                </div>
+                <div class="admin-fb-text">${this.sanitizeInput(f.text)}</div>
+            </div>
+        `).reverse().join('');
+    }
+
+    exportFeedbacks() {
+        const feedbacks = localStorage.getItem('designpick_feedbacks') || '[]';
+        const blob = new Blob([feedbacks], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `designpick_feedbacks_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        this.showToast('데이터를 다운로드합니다.');
     }
 }
 
