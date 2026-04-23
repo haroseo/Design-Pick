@@ -150,6 +150,10 @@ class ColorPalette {
                 this.feedbackChannel = null;
             }
         });
+
+        document.getElementById('closeDetailBtn')?.addEventListener('click', () => {
+            document.getElementById('colorDetailModal')?.classList.remove('show');
+        });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -393,23 +397,62 @@ class ColorPalette {
         if (tabName === 'today') this.showInspoCard(this.todayIndex);
     }
 
-    buildColorLibrary(filterCat = 'all') {
-        if (!this.colorLibrary || typeof designerColors === 'undefined') return;
-        const meta = { ui_web:['🖥','UI/웹'], brand_global:['🌐','브랜드'], nature:['🌿','자연/어스'], pastel:['🌸','감성/파스텔'], neon_modern:['⚡','네온/모던'], earth:['🍂','어스 톤'], monochrome:['⬜','모노크롬'] };
-        const chips = document.getElementById('libFilterChips');
-        if (chips) {
-            const btns = [['all','전체보기'], ['ui_web','UI/웹'], ['brand_global','브랜드'], ['nature','자연/어스'], ['pastel','감성/파스텔'], ['neon_modern','네온/모던']];
-            chips.innerHTML = btns.map(([k,v]) => `<button class="lib-filter-chip ${filterCat===k?'active':''}" onclick="app.buildColorLibrary('${k}')">${v}</button>`).join('');
+    buildColorLibrary(filter) {
+        if (!this.colorLibrary) return;
+        this.colorLibrary.innerHTML = '';
+        const list = filter === 'all' ? Object.values(designerColors).flat() : designerColors[filter];
+        list.forEach(c => {
+            const el = document.createElement('div');
+            el.className = 'color-item';
+            el.innerHTML = `<div class="color-swatch" style="background-color:${c.hex}"></div><div class="color-info"><span class="color-name">${c.name}</span><span class="color-hex">${c.hex}</span></div>`;
+            el.addEventListener('click', () => this.openColorDetail(c.hex, c.name, filter));
+            this.colorLibrary.appendChild(el);
+        });
+    }
+
+    openColorDetail(hex, name, category) {
+        this.fallbackCopy(hex, `${name} (${hex}) 복사됨`);
+        
+        const modal = document.getElementById('colorDetailModal');
+        const swatch = document.getElementById('detailSwatch');
+        const hexLabel = document.getElementById('detailHexLabel');
+        const nameEl = document.getElementById('detailName');
+        const catEl = document.getElementById('detailCategory');
+        const adviceEl = document.getElementById('detailAdvice');
+        const simGrid = document.getElementById('detailSimilarGrid');
+        
+        swatch.style.backgroundColor = hex;
+        hexLabel.textContent = hex;
+        nameEl.textContent = name;
+        catEl.textContent = category.replace('_', ' ').toUpperCase();
+        
+        // RGB 값 계산
+        const rgb = this.hexToRgb(hex);
+        document.getElementById('valHex').textContent = hex;
+        document.getElementById('valRgb').textContent = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
+        
+        // 텍스트 가독성 프리뷰
+        const tLight = document.getElementById('detailTextLight');
+        const tDark = document.getElementById('detailTextDark');
+        tLight.style.backgroundColor = hex; tLight.style.color = '#fff';
+        tDark.style.backgroundColor = hex; tDark.style.color = '#111';
+        
+        // 지능형 조언 생성
+        const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+        let advice = '';
+        if (brightness > 200) advice = '밝고 화사한 느낌을 주는 색상입니다. 배경색이나 넓은 면적에 활용하여 깨끗하고 탁 트인 분위기를 연출하기 좋습니다.';
+        else if (brightness < 60) advice = '깊고 진중한 무게감이 느껴지는 색상입니다. 타이포그래피나 배경으로 사용하여 프리미엄하고 신뢰감 있는 무드를 전달하세요.';
+        else advice = '생동감 넘치는 중간톤 색상입니다. 버튼, 아이콘 등 인터랙티브 요소의 포인트 컬러로 사용했을 때 가장 효과적입니다.';
+        
+        adviceEl.textContent = advice;
+        
+        // 유사색 생성
+        if (typeof findSimilarColors !== 'undefined') {
+            const sims = findSimilarColors(rgb.r, rgb.g, rgb.b, 8);
+            simGrid.innerHTML = sims.map(s => `<div class="sim-item" style="background-color:${s.hex}" title="${s.name}" onclick="app.openColorDetail('${s.hex}','${s.name}','Similar')"></div>`).join('');
         }
-        let html = '';
-        for (const [key, colors] of Object.entries(designerColors)) {
-            if (filterCat !== 'all' && filterCat !== key && !(filterCat==='nature' && key==='earth') && !(filterCat==='neon_modern' && key==='monochrome')) continue;
-            const [icon, label] = meta[key] || ['🎨', key];
-            html += `<div class="color-category-section"><h3 class="color-category-title"><span>${icon}</span> ${label}</h3><div class="color-category-grid">
-                ${colors.map(c => `<div class="color-library-item" onclick="app.setColorFromHex('${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>${c.hex}</div></div></div><div class="color-library-name">${this.sanitizeInput(c.name)}</div></div>`).join('')}
-            </div></div>`;
-        }
-        this.colorLibrary.innerHTML = html || '<div style="padding:40px;text-align:center;color:#999;">결과가 없습니다.</div>';
+        
+        modal.classList.add('show');
     }
 
     buildGuide() {

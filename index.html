@@ -6,8 +6,8 @@
     <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
     <meta name="theme-color" content="#ffffff">
     <title>Design Pick</title>
-    <link rel="stylesheet" href="style.css?v=14">
-    <link rel="stylesheet" href="improved.css?v=14">
+    <link rel="stylesheet" href="style.css?v=15">
+    <link rel="stylesheet" href="improved.css?v=15">
 
 </head>
 <body>
@@ -440,6 +440,52 @@
     </div>
 
 
+    <!-- Color Detail Modal (Premium) -->
+    <div class="modal-overlay" id="colorDetailModal">
+        <div class="modal-content color-detail-modal">
+            <button class="btn-close-circle" id="closeDetailBtn">&times;</button>
+            <div class="detail-container">
+                <div class="detail-visual">
+                    <div id="detailSwatch" class="detail-swatch">
+                        <span id="detailHexLabel" class="detail-hex-label">#000000</span>
+                    </div>
+                    <div class="detail-preview-grid">
+                        <div id="detailTextLight" class="preview-box">
+                            <span class="preview-text">Light Text</span>
+                        </div>
+                        <div id="detailTextDark" class="preview-box">
+                            <span class="preview-text">Dark Text</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-info">
+                    <div class="detail-header">
+                        <h3 id="detailName" class="detail-title">색상 이름</h3>
+                        <p id="detailCategory" class="detail-subtitle">컬러 카테고리</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4 class="section-title">Design Advice</h4>
+                        <p id="detailAdvice" class="detail-text">이 색상은 강조 포인트로 사용하기 좋습니다...</p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4 class="section-title">Similar Colors</h4>
+                        <div id="detailSimilarGrid" class="detail-similar-grid"></div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4 class="section-title">Values</h4>
+                        <div class="detail-values">
+                            <div class="value-item"><span>HEX</span><strong id="valHex">#000000</strong></div>
+                            <div class="value-item"><span>RGB</span><strong id="valRgb">0, 0, 0</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="adminAuthModal">
         <div class="modal-content admin-modal" style="max-width:320px; padding:32px">
             <h3 class="modal-title" style="font-size:20px">보안 인증</h3>
@@ -465,7 +511,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="data.js?v=14"></script>
-    <script src="script.js?v=14"></script>
+    <script src="data.js?v=15"></script>
+    <script src="script.js?v=15"></script>
 </body>
 </html>
