@@ -397,62 +397,76 @@ class ColorPalette {
         if (tabName === 'today') this.showInspoCard(this.todayIndex);
     }
 
-    buildColorLibrary(filter) {
-        if (!this.colorLibrary) return;
-        this.colorLibrary.innerHTML = '';
-        const list = filter === 'all' ? Object.values(designerColors).flat() : designerColors[filter];
-        list.forEach(c => {
-            const el = document.createElement('div');
-            el.className = 'color-item';
-            el.innerHTML = `<div class="color-swatch" style="background-color:${c.hex}"></div><div class="color-info"><span class="color-name">${c.name}</span><span class="color-hex">${c.hex}</span></div>`;
-            el.addEventListener('click', () => this.openColorDetail(c.hex, c.name, filter));
-            this.colorLibrary.appendChild(el);
-        });
+    buildColorLibrary(filterCat = 'all') {
+        if (!this.colorLibrary || typeof designerColors === 'undefined') return;
+        const meta = { ui_web:['🖥','UI/웹'], brand_global:['🌐','브랜드'], nature:['🌿','자연/어스'], pastel:['🌸','감성/파스텔'], neon_modern:['⚡','네온/모던'], earth:['🍂','어스 톤'], monochrome:['⬜','모노크롬'] };
+        const chips = document.getElementById('libFilterChips');
+        if (chips) {
+            const btns = [['all','전체보기'], ['ui_web','UI/웹'], ['brand_global','브랜드'], ['nature','자연/어스'], ['pastel','감성/파스텔'], ['neon_modern','네온/모던']];
+            chips.innerHTML = btns.map(([k,v]) => `<button class="lib-filter-chip ${filterCat===k?'active':''}" onclick="app.buildColorLibrary('${k}')">${v}</button>`).join('');
+        }
+        let html = '';
+        for (const [key, colors] of Object.entries(designerColors)) {
+            if (filterCat !== 'all' && filterCat !== key && !(filterCat==='nature' && key==='earth') && !(filterCat==='neon_modern' && key==='monochrome')) continue;
+            const [icon, label] = meta[key] || ['🎨', key];
+            html += `<div class="color-category-section"><h3 class="color-category-title"><span>${icon}</span> ${label}</h3><div class="color-category-grid">
+                ${colors.map(c => `<div class="color-library-item" onclick="app.openColorDetail('${c.hex}','${c.name}','${label}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(c.name)}</div></div>`).join('')}
+            </div></div>`;
+        }
+        this.colorLibrary.innerHTML = html || '<div style="padding:40px;text-align:center;color:#999;">결과가 없습니다.</div>';
     }
 
     openColorDetail(hex, name, category) {
-        this.fallbackCopy(hex, `${name} (${hex}) 복사됨`);
-        
-        const modal = document.getElementById('colorDetailModal');
+        // 화면 전환: 라이브러리 숨기고 상세 뷰 보이기
+        const libView = document.getElementById('library');
+        const detailView = document.getElementById('colorDetailView');
+        if (libView) libView.style.display = 'none';
+        if (detailView) detailView.style.display = 'block';
+
         const swatch = document.getElementById('detailSwatch');
-        const hexLabel = document.getElementById('detailHexLabel');
         const nameEl = document.getElementById('detailName');
         const catEl = document.getElementById('detailCategory');
         const adviceEl = document.getElementById('detailAdvice');
         const simGrid = document.getElementById('detailSimilarGrid');
         
         swatch.style.backgroundColor = hex;
-        hexLabel.textContent = hex;
         nameEl.textContent = name;
-        catEl.textContent = category.replace('_', ' ').toUpperCase();
+        catEl.textContent = category;
         
-        // RGB 값 계산
         const rgb = this.hexToRgb(hex);
         document.getElementById('valHex').textContent = hex;
         document.getElementById('valRgb').textContent = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
         
-        // 텍스트 가독성 프리뷰
         const tLight = document.getElementById('detailTextLight');
         const tDark = document.getElementById('detailTextDark');
         tLight.style.backgroundColor = hex; tLight.style.color = '#fff';
         tDark.style.backgroundColor = hex; tDark.style.color = '#111';
         
-        // 지능형 조언 생성
         const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
         let advice = '';
-        if (brightness > 200) advice = '밝고 화사한 느낌을 주는 색상입니다. 배경색이나 넓은 면적에 활용하여 깨끗하고 탁 트인 분위기를 연출하기 좋습니다.';
-        else if (brightness < 60) advice = '깊고 진중한 무게감이 느껴지는 색상입니다. 타이포그래피나 배경으로 사용하여 프리미엄하고 신뢰감 있는 무드를 전달하세요.';
-        else advice = '생동감 넘치는 중간톤 색상입니다. 버튼, 아이콘 등 인터랙티브 요소의 포인트 컬러로 사용했을 때 가장 효과적입니다.';
+        if (brightness > 200) advice = '이 색상은 매우 밝고 화사합니다. 주로 배경색이나 카드의 면적을 채우는 색상으로 활용하여 깨끗한 공간감을 주기에 좋습니다.';
+        else if (brightness < 60) advice = '깊고 중후한 느낌을 주는 다크톤 색상입니다. 타이포그래피의 주조색이나 다크 모드의 배경으로 사용하여 기품 있는 브랜드 이미지를 구축하세요.';
+        else advice = '시선을 끄는 생동감 있는 중간톤입니다. 버튼이나 링크, 중요한 아이콘 등 사용자의 행동을 유도하는 포인트 컬러로 사용했을 때 가장 빛을 발합니다.';
         
         adviceEl.textContent = advice;
         
-        // 유사색 생성
         if (typeof findSimilarColors !== 'undefined') {
             const sims = findSimilarColors(rgb.r, rgb.g, rgb.b, 8);
-            simGrid.innerHTML = sims.map(s => `<div class="sim-item" style="background-color:${s.hex}" title="${s.name}" onclick="app.openColorDetail('${s.hex}','${s.name}','Similar')"></div>`).join('');
+            simGrid.innerHTML = sims.map(s => `<div class="sim-item-v2" style="background-color:${s.hex}" title="${s.name}" onclick="app.openColorDetail('${s.hex}','${s.name}','Similar')"></div>`).join('');
         }
-        
-        modal.classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    closeColorDetail() {
+        const libView = document.getElementById('library');
+        const detailView = document.getElementById('colorDetailView');
+        if (libView) libView.style.display = 'block';
+        if (detailView) detailView.style.display = 'none';
+    }
+
+    copyFromDetail(id) {
+        const val = document.getElementById(id).textContent;
+        this.fallbackCopy(val, `${val} 복사 완료!`);
     }
 
     buildGuide() {
