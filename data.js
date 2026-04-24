@@ -215,6 +215,24 @@ const designCards = [
         description_en: 'Vibrant coral contrast with deep midnight\nCreates a hip yet weighty brand identity.',
         colors: [{ name: 'Coral', hex: '#FF6B6B' }, { name: 'Midnight', hex: '#191970' }],
     },
+    {
+        id: '11',
+        name: 'Cream × Forest',
+        category: '유기농 브랜드 / 카페 / 농산물',
+        category_en: 'Organic Brand / Cafe / Produce',
+        description: '크리미한 배경과 숲의 깊이가 더해진 조화\n자연스럽고 건강한 이미지를 만듭니다.',
+        description_en: 'Harmony of creamy background and forest depth\nCreates a natural and healthy image.',
+        colors: [{ name: 'Cream', hex: '#FFF8DC' }, { name: 'Forest', hex: '#2D5A27' }],
+    },
+    {
+        id: '12',
+        name: 'Denim × Wheat',
+        category: '캐주얼 패션 / 아웃도어 라이프',
+        category_en: 'Casual Fashion / Outdoor Life',
+        description: '워크웨어의 견고함과 밀밭의 따뜻함\n일상 속 진정성 있는 스타일을 표현합니다.',
+        description_en: 'Ruggedness of workwear and warmth of wheat fields\nExpresses authentic everyday style.',
+        colors: [{ name: 'Denim', hex: '#1560BD' }, { name: 'Wheat', hex: '#F5DEB3' }],
+    },
 ];
 
 const designGuides = [

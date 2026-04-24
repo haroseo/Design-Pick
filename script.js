@@ -145,11 +145,13 @@ class ColorPalette {
         // 비밀 관리자 모드 트리거
         document.getElementById('myPalTitle')?.addEventListener('click', () => {
             this.adminClicks++;
+            clearTimeout(this.adminTimer);
             if (this.adminClicks >= 5) {
                 this.openAdminDashboard();
                 this.adminClicks = 0;
+            } else {
+                this.adminTimer = setTimeout(() => { this.adminClicks = 0; }, 5000);
             }
-            setTimeout(() => { if (this.adminClicks > 0) this.adminClicks = 0; }, 3000);
         });
         document.getElementById('closeAdminBtn')?.addEventListener('click', () => {
             document.getElementById('adminModal')?.classList.remove('show');
