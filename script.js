@@ -280,8 +280,7 @@ class ColorPalette {
             if (speed > 0.5) requestAnimationFrame(tick);
             else {
                 this[channel] = target; el.textContent = target;
-                this.colorDisplay.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
-                this.hexValue.textContent = this.rgbToHex(this.r, this.g, this.b);
+                this.updateColor();
                 item.classList.remove('spinning');
                 item.classList.add('landed');
                 setTimeout(() => item.classList.remove('landed'), 700);
@@ -325,7 +324,10 @@ class ColorPalette {
             const rgb = this.hexToRgb(color.hex);
             if (!rgb) continue;
             const dist = Math.sqrt((rgb.r - r) ** 2 + (rgb.g - g) ** 2 + (rgb.b - b) ** 2);
-            if (dist < minDist) { minDist = dist; closest = name; }
+            if (dist < minDist) { 
+                minDist = dist; 
+                closest = (this.lang === 'en' && color.name_en) ? color.name_en : name; 
+            }
         }
         return closest;
     }

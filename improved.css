@@ -772,8 +772,9 @@ svg { width: 24px; height: 24px; pointer-events: none; }
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    z-index: 999;
-    transition: transform 0.2s;
+    z-index: 10001 !important;
+    transition: transform 0.2s, background 0.2s;
+    pointer-events: auto !important;
 }
 .fab-feedback:hover { transform: scale(1.1); background: #333; }
 
