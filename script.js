@@ -937,11 +937,11 @@ class ColorPalette {
                     <div class="modal-content feedback-modal">
                         <div class="modal-header-v2">
                             <div class="modal-icon-bg">💬</div>
-                            <h3 class="modal-title" data-i18n="feedback_title">피드백 보내기</h3>
-                            <p class="modal-desc" data-i18n="feedback_desc">디자인 픽을 사용하시면서 느낀 점을 알려주세요.</p>
+                            <h3 class="modal-title">피드백 보내기</h3>
+                            <p class="modal-desc">디자인 픽을 사용하시면서 느낀 점을 알려주세요.</p>
                         </div>
                         <div class="fb-section">
-                            <label class="fb-label" data-i18n="feedback_rating">만족도</label>
+                            <label class="fb-label">만족도</label>
                             <div class="rating-group" id="fbRating">
                                 <span class="rating-star" data-v="1">★</span>
                                 <span class="rating-star" data-v="2">★</span>
@@ -951,12 +951,12 @@ class ColorPalette {
                             </div>
                         </div>
                         <div class="fb-section">
-                            <label class="fb-label" data-i18n="feedback_comment">의견</label>
-                            <textarea id="fbText" placeholder="여기에 내용을 입력하세요..." data-i18n-placeholder="feedback_placeholder"></textarea>
+                            <label class="fb-label">의견</label>
+                            <textarea id="fbText" placeholder="여기에 내용을 입력하세요..."></textarea>
                         </div>
                         <div class="fb-actions-v2">
-                            <button class="btn btn-reset-v2" onclick="document.getElementById('feedbackModal').classList.remove('show')" data-i18n="btn_close">닫기</button>
-                            <button class="btn btn-submit-v2" id="btnSubmitFb" data-i18n="btn_submit">보내기</button>
+                            <button class="btn btn-reset-v2" id="btnCancelFb">닫기</button>
+                            <button class="btn btn-submit-v2" id="btnSubmitFb">보내기</button>
                         </div>
                     </div>
                 </div>
@@ -965,6 +965,10 @@ class ColorPalette {
             div.innerHTML = modalHtml;
             document.body.appendChild(div.firstElementChild);
         }
+
+        document.getElementById('btnCancelFb').onclick = () => {
+            document.getElementById('feedbackModal').classList.remove('show');
+        };
 
         let rating = 5;
         const stars = document.querySelectorAll('.rating-star');

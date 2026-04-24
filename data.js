@@ -85,32 +85,30 @@ const designerColors = {
     ]
 };
 
-// ─── Color Name References ──────────────────────────────────────────────────
 const colorNameReferences = {
-    '가을 단풍':    { hex: '#D35400', name_en: 'Autumn Leaf', tags: ['autumn', '오렌지', '붉은'] },
-    '감청색':       { hex: '#1428A0', name_en: 'Royal Blue', tags: ['business', '전문', '파랑'] },
-    '검정':         { hex: '#000000', name_en: 'Black', tags: ['contrast', '우아', '어둠'] },
-    '골드':         { hex: '#FFD700', name_en: 'Gold', tags: ['premium', '화려', '럭셔리'] },
-    '녹색':         { hex: '#00B050', name_en: 'Green', tags: ['natural', '성장', '자연'] },
-    '네이비':       { hex: '#001F5B', name_en: 'Navy', tags: ['formal', '클래식', '신뢰'] },
-    '네온 그린':    { hex: '#39FF14', name_en: 'Neon Green', tags: ['neon', '형광', '밝은'] },
-    '라벤더':       { hex: '#967BB6', name_en: 'Lavender', tags: ['soft', '우아', '보라'] },
-    '민트':         { hex: '#00B8A9', name_en: 'Mint', tags: ['fresh', '차분', '자연'] },
-    '베이지':       { hex: '#C8A882', name_en: 'Beige', tags: ['elegant', '전통', '따뜻함'] },
-    '보라':         { hex: '#7851A9', name_en: 'Purple', tags: ['luxury', '창의', '우아'] },
-    '분홍':         { hex: '#FF69B4', name_en: 'Pink', tags: ['pink', '귀여움', '부드러움'] },
-    '빨강':         { hex: '#FF0000', name_en: 'Red', tags: ['primary', '강렬', '위험'] },
-    '살몬':         { hex: '#FA8072', name_en: 'Salmon', tags: ['warm', '소프트', '핑크'] },
-    '스카이블루':   { hex: '#87CEEB', name_en: 'Sky Blue', tags: ['sky', '하늘', '맑음'] },
-    '시안':         { hex: '#00BCD4', name_en: 'Cyan', tags: ['tech', '혁신', '청량'] },
-    '아이보리':     { hex: '#FFFFF0', name_en: 'Ivory', tags: ['warm', '부드러운', '화이트'] },
-    '오렌지':       { hex: '#FF6B00', name_en: 'Orange', tags: ['energy', '활동', '따뜻함'] },
-    '청록':         { hex: '#20B2AA', name_en: 'Teal', tags: ['cool', '편안', '바다'] },
-    '회색':         { hex: '#808080', name_en: 'Gray', tags: ['neutral', '중립', '차분'] },
-    '흰색':         { hex: '#FFFFFF', name_en: 'White', tags: ['clean', '공간', '순수'] },
+    '가을 단풍': { hex: '#D35400', name_en: 'Autumn Leaf', tags: ['autumn', '오렌지', '붉은'] },
+    '감청색': { hex: '#1428A0', name_en: 'Royal Blue', tags: ['business', '전문', '파랑'] },
+    '검정': { hex: '#000000', name_en: 'Black', tags: ['contrast', '우아', '어둠'] },
+    '골드': { hex: '#FFD700', name_en: 'Gold', tags: ['premium', '화려', '럭셔리'] },
+    '녹색': { hex: '#00B050', name_en: 'Green', tags: ['natural', '성장', '자연'] },
+    '네이비': { hex: '#001F5B', name_en: 'Navy', tags: ['formal', '클래식', '신뢰'] },
+    '네온 그린': { hex: '#39FF14', name_en: 'Neon Green', tags: ['neon', '형광', '밝은'] },
+    '라벤더': { hex: '#967BB6', name_en: 'Lavender', tags: ['soft', '우아', '보라'] },
+    '민트': { hex: '#00B8A9', name_en: 'Mint', tags: ['fresh', '차분', '자연'] },
+    '베이지': { hex: '#C8A882', name_en: 'Beige', tags: ['elegant', '전통', '따뜻함'] },
+    '보라': { hex: '#7851A9', name_en: 'Purple', tags: ['luxury', '창의', '우아'] },
+    '분홍': { hex: '#FF69B4', name_en: 'Pink', tags: ['pink', '귀여움', '부드러움'] },
+    '빨강': { hex: '#FF0000', name_en: 'Red', tags: ['primary', '강렬', '위험'] },
+    '살몬': { hex: '#FA8072', name_en: 'Salmon', tags: ['warm', '소프트', '핑크'] },
+    '스카이블루': { hex: '#87CEEB', name_en: 'Sky Blue', tags: ['sky', '하늘', '맑음'] },
+    '시안': { hex: '#00BCD4', name_en: 'Cyan', tags: ['tech', '혁신', '청량'] },
+    '아이보리': { hex: '#FFFFF0', name_en: 'Ivory', tags: ['warm', '부드러운', '화이트'] },
+    '오렌지': { hex: '#FF6B00', name_en: 'Orange', tags: ['energy', '활동', '따뜻함'] },
+    '청록': { hex: '#20B2AA', name_en: 'Teal', tags: ['cool', '편안', '바다'] },
+    '회색': { hex: '#808080', name_en: 'Gray', tags: ['neutral', '중립', '차분'] },
+    '흰색': { hex: '#FFFFFF', name_en: 'White', tags: ['clean', '공간', '순수'] },
 };
 
-// ─── Design Inspiration Palettes ────────────────────────────────────────────
 const designInspiration = [
     { name: '미니멀 모던', name_en: 'Minimal Modern', colors: ['#000000', '#FFFFFF', '#8B8B8B', '#E8E8E8'] },
     { name: '네온 나이트', name_en: 'Neon Night', colors: ['#FF10F0', '#FFE600', '#00B4FF', '#7B00FF'] },
@@ -126,7 +124,6 @@ const designInspiration = [
     { name: '어스 톤', name_en: 'Earth Tone', colors: ['#C27A54', '#A0522D', '#DEB887', '#6B7C3A'] },
 ];
 
-// ─── Today's Design Pick (Cards) ────────────────────────────────────────────
 const designCards = [
     {
         id: '01',
@@ -134,63 +131,148 @@ const designCards = [
         category: '스포츠웨어 / 테크 / 스트릿 브랜딩',
         category_en: 'Sportswear / Tech / Street Branding',
         description: '어둠을 뚫고 나오는 형광의 대비\n강한 긴장감과 젊은 에너지를 동시에 만듭니다.',
-        description_en: 'Fluorescent contrast piercing through darkness, creating strong tension and youthful energy.',
-        colors: [
-            { name: 'Midnight', hex: '#0A0A0A' },
-            { name: 'Electric Kiwi', hex: '#DFFF00' }
-        ]
+        description_en: 'Fluorescent contrast emerging from darkness\nCreates strong tension and youthful energy simultaneously.',
+        colors: [{ name: 'Night', hex: '#222222' }, { name: 'Kiwi', hex: '#89E900' }],
     },
     {
         id: '02',
-        name: 'Soft Shell',
-        category: '라이프스타일 / 코스메틱 / 감성 매거진',
-        category_en: 'Lifestyle / Cosmetics / Emotional Magazine',
-        description: '파스텔 톤의 부드러움 속에 숨겨진 견고함\n편안하면서도 정돈된 분위기를 제안합니다.',
-        description_en: 'Firmness hidden within pastel softness, proposing a comfortable yet organized atmosphere.',
-        colors: [
-            { name: 'Dusty Rose', hex: '#DCAE96' },
-            { name: 'Sand Beige', hex: '#F5F5DC' }
-        ]
-    }
-];
-
-// ─── Design Guides ──────────────────────────────────────────────────────────
-const designGuides = [
-    {
-        title: '60-30-10 법칙',
-        title_en: '60-30-10 Rule',
-        desc: '주조색 60%, 보조색 30%, 포인트색 10%의 황금 비율로 균형 잡힌 디자인을 완성하세요.',
-        desc_en: 'Complete a balanced design with the golden ratio: 60% primary, 30% secondary, and 10% point color.',
-        colors: ['#FFFFFF', '#F0F0F0', '#0070F3']
+        name: 'Cloud × Blue',
+        category: 'IT / 핀테크 / 모던 브랜딩',
+        category_en: 'IT / Fintech / Modern Branding',
+        description: '깨끗한 여백 위에 적힌 투명한 신뢰\n차갑지 않으면서 전문성을 전달합니다.',
+        description_en: 'Vivid trust written on clean space\nConveys professionalism without being cold.',
+        colors: [{ name: 'Canvas Cloud', hex: '#EDF1F5' }, { name: 'Electric Blue', hex: '#0145F2' }],
     },
     {
-        title: '보색 대비 활용',
+        id: '03',
+        name: 'Night × Imperial',
+        category: '럭셔리 브랜딩 / 프리미엄 패키지 / 시네마틱',
+        category_en: 'Luxury Branding / Premium Package / Cinematic',
+        description: '어둠 속에서 피어오르는 붉은 기품\n시선을 단번에 사로잡으면서도 무게감을 잃지 않습니다.',
+        description_en: 'Red elegance rising in the darkness\nCaptures attention while maintaining weight.',
+        colors: [{ name: 'Night', hex: '#000F08' }, { name: 'Imperial', hex: '#FB3640' }],
+    },
+    {
+        id: '04',
+        name: 'ICE × MINT',
+        category: '카페 / 뷰티 / 웰니스 브랜딩',
+        category_en: 'Cafe / Beauty / Wellness Branding',
+        description: '순수한 우유빛 위에 얹힌 상큼한 민트\n부드러우면서도 선명한 인상을 남깁니다.',
+        description_en: 'Fresh mint on top of pure milky white\nLeaves a soft yet distinct impression.',
+        colors: [{ name: 'Ice Latte', hex: '#E4DDD3' }, { name: 'The Mint', hex: '#00A19B' }],
+    },
+    {
+        id: '05',
+        name: 'Wattle × Bottle Green',
+        category: '유기농 푸드 / 친환경 브랜딩 / 아웃도어',
+        category_en: 'Organic Food / Eco-friendly / Outdoor',
+        description: '숲의 깊이와 햇살의 생기가 만나는 자리\n자연주의 속에서도 눈에 띄는 생동감을 만듭니다.',
+        description_en: 'Where forest depth meets sunlight vitality\nCreates striking vividness within naturalism.',
+        colors: [{ name: 'Wattle', hex: '#CCDA47' }, { name: 'Bottle Green', hex: '#0A3625' }],
+    },
+    {
+        id: '06',
+        name: 'Sand × Rust',
+        category: '인테리어 / 홈리빙 / 빈티지 브랜딩',
+        category_en: 'Interior / Home Living / Vintage Branding',
+        description: '사막의 따뜻한 모래 위에 얹힌 녹슨 붉음\n오래된 것들이 가지는 고요한 아름다움.',
+        description_en: 'Rusted red on top of warm desert sand\nThe quiet beauty of old things.',
+        colors: [{ name: 'Sand', hex: '#E8D5B7' }, { name: 'Rust', hex: '#B7410E' }],
+    },
+    {
+        id: '07',
+        name: 'Ink × Gold',
+        category: '출판 / 리테일 / 하이엔드 브랜딩',
+        category_en: 'Publishing / Retail / High-end Branding',
+        description: '깊은 먹빛 위에 빛나는 황금의 대비\n고전적이면서도 현대적인 품격을 담았습니다.',
+        description_en: 'Brilliant gold contrast on deep ink\nEmbodies both classical and modern elegance.',
+        colors: [{ name: 'Ink', hex: '#1A1A2E' }, { name: 'Gold', hex: '#D4AF37' }],
+    },
+    {
+        id: '08',
+        name: 'Blush × Slate',
+        category: '패션 / 웨딩 / 라이프스타일 브랜딩',
+        category_en: 'Fashion / Wedding / Lifestyle Branding',
+        description: '부드러운 살구빛과 차가운 슬레이트의 균형\n감성적이면서도 트렌디한 인상을 전달합니다.',
+        description_en: 'Balance of soft blush and cold slate\nConveys an emotional yet sophisticated impression.',
+        colors: [{ name: 'Blush', hex: '#F4A7B9' }, { name: 'Slate', hex: '#475569' }],
+    },
+    {
+        id: '09',
+        name: 'Void × Neon',
+        category: '게임 / 음악 / 스트릿웨어 브랜딩',
+        category_en: 'Game / Music / Streetwear Branding',
+        description: '완전한 어둠 속에서 터져 나오는 형광\n강렬하고 미래적인 에너지를 표현합니다.',
+        description_en: 'Neon bursting out of complete darkness\nExpresses intense and futuristic energy.',
+        colors: [{ name: 'Void', hex: '#0D0D0D' }, { name: 'Neon', hex: '#FF10F0' }],
+    },
+    {
+        id: '10',
+        name: 'Coral × Midnight',
+        category: '엔터테인먼트 / K-POP / 영상 브랜딩',
+        category_en: 'Entertainment / K-POP / Video Branding',
+        description: '생동감 넘치는 코랄과 깊은 미드나잇의 대비\n힙하면서도 무게감 있는 브랜드를 만듭니다.',
+        description_en: 'Vibrant coral contrast with deep midnight\nCreates a hip yet weighty brand identity.',
+        colors: [{ name: 'Coral', hex: '#FF6B6B' }, { name: 'Midnight', hex: '#191970' }],
+    },
+];
+
+const designGuides = [
+    { 
+        title: '60-30-10 법칙', 
+        title_en: '60-30-10 Rule',
+        desc: '주조색 60%, 보조색 30%, 포인트색 10%의 황금 비율로 균형 잡힌 디자인을 완성하세요.', 
+        desc_en: 'Create a balanced design with the golden ratio: 60% primary, 30% secondary, and 10% accent color.',
+        colors: ['#F5F5F7', '#D1D1D6', '#FF9500'] 
+    },
+    { 
+        title: '보색 대비 활용', 
         title_en: 'Complementary Contrast',
-        desc: '색상환의 반대편 색상을 사용하여 강렬한 시각적 효과를 주는 방법입니다.',
-        desc_en: 'A method to create a powerful visual effect by using colors on the opposite side of the color wheel.',
-        colors: ['#FF4500', '#00BFFF', '#FFD700']
+        desc: '색상환에서 서로 마주 보는 두 색상을 조합하는 방식입니다. 강렬한 시각적 효과를 줍니다.', 
+        desc_en: 'A method of combining two colors facing each other on the color wheel for a striking visual effect.',
+        colors: ['#FF3B30', '#34C759'] 
+    },
+    { 
+        title: '유사색 (Analogous)', 
+        title_en: 'Analogous Colors',
+        desc: '색상환에서 서로 인접한 3색을 사용합니다. 눈이 편안하고 조화로운 분위기를 연출합니다.', 
+        desc_en: 'Uses three adjacent colors on the color wheel. Creates a comfortable and harmonious atmosphere.',
+        colors: ['#007AFF', '#5856D6', '#AF52DE'] 
+    },
+    { 
+        title: '톤온톤 (Tone-on-Tone)', 
+        title_en: 'Tone-on-Tone',
+        desc: '동일한 색상에서 채도와 명도만 다르게 조합합니다. 매우 안정적이고 깔끔한 이미지를 줍니다.', 
+        desc_en: 'Combines the same hue with different saturation and brightness. Gives a stable and clean image.',
+        colors: ['#0A84FF', '#64D2FF', '#B0E2FF'] 
+    },
+    { 
+        title: '모노크롬 (Monochrome)', 
+        title_en: 'Monochrome',
+        desc: '하나의 색상을 베이스로 화이트, 블랙을 섞어 명도를 조절합니다. 극강의 심플함을 보여줍니다.', 
+        desc_en: 'Uses a single base color and adjusts brightness with white and black. Shows extreme simplicity.',
+        colors: ['#111111', '#888888', '#EEEEEE'] 
     }
 ];
 
-// ─── UI Translations ────────────────────────────────────────────────────────
 const uiTranslations = {
     kr: {
-        nav_picker: '피커',
+        nav_picker: '컬러 피커',
         nav_library: '라이브러리',
-        nav_today: '오늘의 픽',
-        nav_inspiration: '움직이는 영감',
+        nav_today: '오늘의 영감',
+        nav_inspiration: '인스피레이션',
         nav_guide: '가이드',
         nav_my: '내 보관함',
-        detail_mood: '색상 무드',
+        detail_mood: '색상 성격',
         detail_advice: '디자인 조언',
         detail_usage: '활용 분야',
-        detail_similar: '비슷한 색상',
-        detail_contrast: '가독성 테스트',
+        detail_similar: '유사한 색상 추천',
+        detail_contrast: '텍스트 가독성 테스트',
         btn_copy_hex: 'HEX 복사',
         btn_copy_rgb: 'RGB 복사',
         btn_reset: '리셋',
-        btn_save: '보관함 저장',
-        btn_share: '링크 공유',
+        btn_save: '보관함에 저장',
+        btn_share: '공유하기',
         btn_close: '닫기',
         search_placeholder: '색상 이름이나 태그 검색...',
         empty_fav: '보관함이 비어 있습니다.',
@@ -200,26 +282,20 @@ const uiTranslations = {
         keyboard_guide_2: '← →: 선택 채널 미세 조정',
         keyboard_guide_3: '스페이스바: 룰렛 재시작',
         inspiration_subtitle: '멈추면 팔레트가 나타납니다 • 색을 클릭하면 Color Picker로 이동',
-        guide_subtitle: '색채에 대한 기초적이고 실용적인 지식들',
+        guide_subtitle: '색을 다루는 기본적인 실용적인 지식들',
         library_subtitle: '용도별로 분류된 컬러 라이브러리',
-        cat_all: '전체',
+        cat_all: '전체보기',
         cat_ui_web: 'UI/웹',
         cat_brand_global: '브랜딩',
-        cat_nature: '자연',
-        cat_pastel: '파스텔',
+        cat_nature: '자연/에코',
+        cat_pastel: '감성/파스텔',
         cat_neon_modern: '네온/모던',
         cat_earth: '어스 톤',
         cat_monochrome: '모노크롬',
         btn_export_css: 'CSS / Tailwind 내보내기',
         my_palettes_title: '내 보관함',
         search_result_empty: '검색 결과가 없습니다.',
-        footer_copy: '© 2024 RGBdom. 디자인을 위한 모든 색상.',
-        feedback_title: '피드백 보내기',
-        feedback_desc: '디자인 픽을 사용하시면서 느낀 점을 알려주세요.',
-        feedback_rating: '만족도',
-        feedback_comment: '의견',
-        feedback_placeholder: '여기에 내용을 입력하세요...',
-        btn_submit: '보내기'
+        footer_copy: '© 2024 RGBdom. 디자인을 위한 모든 색상.'
     },
     en: {
         nav_picker: 'Picker',
@@ -260,12 +336,6 @@ const uiTranslations = {
         btn_export_css: 'Export CSS / Tailwind',
         my_palettes_title: 'My Palettes',
         search_result_empty: 'No results found.',
-        footer_copy: '© 2024 RGBdom. All colors for design.',
-        feedback_title: 'Send Feedback',
-        feedback_desc: 'Please tell us about your experience with Design Pick.',
-        feedback_rating: 'Rating',
-        feedback_comment: 'Comment',
-        feedback_placeholder: 'Type your feedback here...',
-        btn_submit: 'Send'
+        footer_copy: '© 2024 RGBdom. All colors for design.'
     }
 };
