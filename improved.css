@@ -741,3 +741,17 @@ svg { width: 24px; height: 24px; pointer-events: none; }
 @media (max-width: 768px) {
     .lang-selector { margin-right: 0; margin-bottom: 8px; }
 }
+
+/* Keyboard Guide Overrides */
+.guide-title {
+    font-weight: 900 !important;
+    font-size: 13px !important;
+    color: #000 !important;
+}
+.guide-text {
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    color: #444 !important;
+    letter-spacing: -0.8px !important;
+    font-family: 'Cascadia Code', 'Fira Code', 'Monaco', monospace !important;
+}
