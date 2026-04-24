@@ -377,6 +377,7 @@ body {
     font-size: 11px;
     color: #777;
     line-height: 1.8;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
 }
 
 .desktop-only {
