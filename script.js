@@ -925,82 +925,51 @@ class ColorPalette {
     }
 
     initFeedbackUI() {
-        const fab = document.createElement('button');
-        fab.className = 'fab-feedback';
-        fab.innerHTML = '<span>💬</span>';
-        fab.onclick = () => this.openFeedbackModal();
-        document.body.appendChild(fab);
+        const fab = document.getElementById('fabFeedback');
+        if (fab) fab.onclick = () => this.openFeedbackModal();
 
-        if (!document.getElementById('feedbackModal')) {
-            const modalHtml = `
-                <div class="modal-overlay" id="feedbackModal">
-                    <div class="modal-content feedback-modal">
-                        <div class="modal-header-v2">
-                            <div class="modal-icon-bg">💬</div>
-                            <h3 class="modal-title">피드백 보내기</h3>
-                            <p class="modal-desc">디자인 픽을 사용하시면서 느낀 점을 알려주세요.</p>
-                        </div>
-                        <div class="fb-section">
-                            <label class="fb-label">만족도</label>
-                            <div class="rating-group" id="fbRating">
-                                <span class="rating-star" data-v="1">★</span>
-                                <span class="rating-star" data-v="2">★</span>
-                                <span class="rating-star" data-v="3">★</span>
-                                <span class="rating-star" data-v="4">★</span>
-                                <span class="rating-star" data-v="5">★</span>
-                            </div>
-                        </div>
-                        <div class="fb-section">
-                            <label class="fb-label">의견</label>
-                            <textarea id="fbText" placeholder="여기에 내용을 입력하세요..."></textarea>
-                        </div>
-                        <div class="fb-actions-v2">
-                            <button class="btn btn-reset-v2" id="btnCancelFb">닫기</button>
-                            <button class="btn btn-submit-v2" id="btnSubmitFb">보내기</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            const div = document.createElement('div');
-            div.innerHTML = modalHtml;
-            document.body.appendChild(div.firstElementChild);
+        const closeBtn = document.getElementById('closeFeedbackBtn');
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                document.getElementById('feedbackModal')?.classList.remove('show');
+            };
         }
 
-        document.getElementById('btnCancelFb').onclick = () => {
-            document.getElementById('feedbackModal').classList.remove('show');
-        };
-
-        let rating = 5;
-        const stars = document.querySelectorAll('.rating-star');
-        stars.forEach(s => {
-            s.onclick = () => {
-                rating = parseInt(s.dataset.v);
-                stars.forEach((star, idx) => star.classList.toggle('active', idx < rating));
-            };
-        });
-        stars.forEach((star, idx) => star.classList.toggle('active', idx < rating));
-
-        const btnSubmit = document.getElementById('btnSubmitFb');
-        if (btnSubmit) {
-            btnSubmit.onclick = async () => {
+        const form = document.getElementById('feedbackForm');
+        if (form) {
+            form.onsubmit = async (e) => {
+                e.preventDefault();
                 const textEl = document.getElementById('fbText');
-                if (!textEl) return;
-                const text = textEl.value;
+                const rating = document.getElementById('fbRating')?.value || 5;
+                const text = textEl?.value;
+
                 if (!text) return this.showToast('내용을 입력해주세요.');
-                
+
                 this.showToast('피드백이 전송되었습니다. 감사합니다!');
                 document.getElementById('feedbackModal')?.classList.remove('show');
-                textEl.value = '';
+                if (textEl) textEl.value = '';
 
                 if (this.supabase) {
-                    await this.supabase.from('feedbacks').insert([{ rating, text, created_at: new Date() }]);
+                    await this.supabase.from('feedbacks').insert([{ rating: parseInt(rating), text, created_at: new Date() }]);
                 } else {
                     const fbs = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
-                    fbs.push({ rating, text, date: new Date() });
+                    fbs.push({ rating: parseInt(rating), text, date: new Date() });
                     localStorage.setItem('designpick_feedbacks', JSON.stringify(fbs));
                 }
             };
         }
+
+        // 별점 로직
+        const stars = document.querySelectorAll('.rating-star');
+        stars.forEach(s => {
+            s.onclick = () => {
+                const val = s.dataset.val;
+                document.getElementById('fbRating').value = val;
+                stars.forEach(star => {
+                    star.classList.toggle('active', parseInt(star.dataset.val) <= parseInt(val));
+                });
+            };
+        });
     }
 
     openFeedbackModal() {
