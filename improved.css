@@ -66,7 +66,219 @@ h2 {
     pointer-events: none;
 }
 
-/* ─── Similar color item border ─── */
+/* ============================================
+   Color Detail View (Premium Immersive)
+   ============================================ */
+
+.detail-page-container {
+    background: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.btn-detail-share {
+    background: #f0f0f4;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.btn-detail-share:hover { background: #e0e0e8; }
+
+.detail-main-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px;
+    width: 100%;
+}
+
+.detail-hero-section {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: center;
+    margin-bottom: 80px;
+}
+
+.hero-text-content {
+    text-align: left;
+}
+
+.mood-tag {
+    display: inline-block;
+    background: #f0f0f4;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #666;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.detail-headline {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    color: #111;
+    margin-bottom: 16px;
+    letter-spacing: -2px;
+}
+
+.detail-sub-headline {
+    font-size: 18px;
+    color: #888;
+    line-height: 1.6;
+}
+
+.main-swatch-v2 {
+    width: 100%;
+    aspect-ratio: 1.2/1;
+    border-radius: 40px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px;
+}
+
+.swatch-inner-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 18px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.detail-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.info-card-v2, .visual-card-v2 {
+    background: #f8f8fa;
+    border-radius: 32px;
+    padding: 40px;
+    text-align: left;
+}
+
+.card-title-v3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 24px;
+}
+
+.card-body-v3 {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+}
+
+.advice-list-v2 {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.advice-list-v2 li {
+    position: relative;
+    padding-left: 24px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.advice-list-v2 li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #888;
+    font-weight: bold;
+}
+
+.usage-badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.usage-badge {
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid #eee;
+}
+
+.a11y-test-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.test-box {
+    padding: 24px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 18px;
+    text-align: center;
+}
+
+#testLightText { color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+#testDarkText { color: #111; border: 1px solid rgba(0,0,0,0.05); }
+
+.similar-colors-mini {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.mini-swatch {
+    aspect-ratio: 1/1;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.mini-swatch:hover { transform: scale(1.1); }
+
+@media (max-width: 850px) {
+    .detail-hero-section { grid-template-columns: 1fr; gap: 40px; margin-bottom: 40px; }
+    .detail-grid-layout { grid-template-columns: 1fr; }
+    .detail-headline { font-size: 32px; }
+    .detail-navbar { padding: 15px 20px; }
+    .detail-main-content { padding: 20px; }
+}
+
+/* Mobile fixes for new UI */
 .similar-color-item {
     border: 2px solid transparent;
 }

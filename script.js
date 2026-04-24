@@ -60,6 +60,9 @@ class ColorPalette {
         this.adminClicks = 0;
         this.audioCtx = null;
 
+        // URL 라우팅 감지
+        window.addEventListener('hashchange', () => this.handleRouting());
+
         // Supabase 초기화 (지연 로딩 대응)
         this.initSupabase();
 
@@ -99,6 +102,7 @@ class ColorPalette {
         this.showInspoCard(0);
         setTimeout(() => this.startRoulette(), 400);
         this.loadStorage();
+        this.handleRouting(); // 초기 로드 시 라우팅 체크
 
         document.body.addEventListener('pointerdown', () => {
             if (this.audioCtx && this.audioCtx.state === 'suspended') this.audioCtx.resume();
@@ -113,7 +117,10 @@ class ColorPalette {
         
         
         document.getElementById('favBtn')?.addEventListener('click', () => this.toggleFavorite());
-        document.getElementById('exportCssBtn')?.addEventListener('click', () => this.openExportModal());
+        document.getElementById('navMyBtn')?.addEventListener('click', () => {
+            this.switchTab('mypalettes');
+        });
+
         document.getElementById('closeExportBtn')?.addEventListener('click', () => {
             document.getElementById('exportModal')?.classList.remove('show');
         });
@@ -152,7 +159,7 @@ class ColorPalette {
         });
 
         document.getElementById('closeDetailBtn')?.addEventListener('click', () => {
-            document.getElementById('colorDetailModal')?.classList.remove('show');
+            this.closeColorDetail();
         });
     }
 
@@ -371,27 +378,24 @@ class ColorPalette {
         const c0 = d.colors[0] || {}; const c1 = d.colors[1] || {};
         const b = document.getElementById('swatchBack'); const f = document.getElementById('swatchFront');
         if (b) b.style.backgroundColor = c0.hex || '#fff'; if (f) f.style.backgroundColor = c1.hex || '#000';
-        set('swNameBack', c0.name); set('swHexBack', c0.hex); set('swNameFront', c1.name); set('swHexFront', c1.hex);
-        [b, f].forEach((el, i) => { if (!el) return; const rgb = this.hexToRgb(d.colors[i].hex); const lum = (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b)/255; el.style.color = lum > 0.55 ? '#111' : '#fff'; });
-        const card = document.getElementById('inspoCard'); if (card) { card.classList.remove('inspo-anim'); void card.offsetWidth; card.classList.add('inspo-anim'); }
-    }
-    inspoNext() { if (typeof designCards === 'undefined') return; this.showInspoCard((this.todayIndex + 1) % designCards.length); }
-    inspoPrev() { if (typeof designCards === 'undefined') return; this.showInspoCard((this.todayIndex - 1 + designCards.length) % designCards.length); }
-    inspoPickColor(colorIdx) {
-        if (typeof designCards === 'undefined') return;
-        const d = designCards[this.todayIndex]; if (!d || !d.colors[colorIdx]) return;
-        this.setColorFromHex(d.colors[colorIdx].hex); this.switchTab('picker');
-    }
-
-    // ═══════════════════════════════════════════════════════════
+        set('swNameBack', c0.name); set('swHexBack', c0.hex); set('swNameFront', c1.name); set('swHexFront',     // ═══════════════════════════════════════════════════════════
     //  Tabs & Library
     // ═══════════════════════════════════════════════════════════
 
     switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => {
+            t.classList.remove('active');
+            t.style.display = 'none'; // 명시적 숨김
+        });
         document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(tabName)?.classList.add('active');
+        
+        const target = document.getElementById(tabName);
+        if (target) {
+            target.classList.add('active');
+            target.style.display = 'block';
+        }
         document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('active');
+        
         if (tabName === 'inspiration') { if (!this.inspirationStopped) this.startInspirationReel(); }
         else { this.reelRunning = false; this.reelDecelerating = false; cancelAnimationFrame(this.reelRAF); }
         if (tabName === 'today') this.showInspoCard(this.todayIndex);
@@ -410,63 +414,140 @@ class ColorPalette {
             if (filterCat !== 'all' && filterCat !== key && !(filterCat==='nature' && key==='earth') && !(filterCat==='neon_modern' && key==='monochrome')) continue;
             const [icon, label] = meta[key] || ['🎨', key];
             html += `<div class="color-category-section"><h3 class="color-category-title"><span>${icon}</span> ${label}</h3><div class="color-category-grid">
-                ${colors.map(c => `<div class="color-library-item" onclick="app.openColorDetail('${c.hex}','${c.name}','${label}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(c.name)}</div></div>`).join('')}
+                ${colors.map(c => `<div class="color-library-item" onclick="app.openColorDetail('${c.name}','${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(c.name)}</div></div>`).join('')}
             </div></div>`;
         }
         this.colorLibrary.innerHTML = html || '<div style="padding:40px;text-align:center;color:#999;">결과가 없습니다.</div>';
     }
 
-    openColorDetail(hex, name, category) {
-        // 화면 전환: 라이브러리 숨기고 상세 뷰 보이기
-        const libView = document.getElementById('library');
+    // ─── Color Detail View (개편된 버전) ──────────────────────────────────
+    openColorDetail(name, hex) {
         const detailView = document.getElementById('colorDetailView');
-        if (libView) libView.style.display = 'none';
-        if (detailView) detailView.style.display = 'block';
+        if (!detailView) return;
 
+        // URL 해시 업데이트 (공유 가능하게)
+        const safeName = encodeURIComponent(name);
+        const safeHex = hex.replace('#', '');
+        window.location.hash = `view=${safeName}_${safeHex}`;
+
+        // 탭 전환
+        this.switchTab('colorDetailView');
+
+        // 데이터 렌더링
         const swatch = document.getElementById('detailSwatch');
-        const nameEl = document.getElementById('detailName');
-        const catEl = document.getElementById('detailCategory');
-        const adviceEl = document.getElementById('detailAdvice');
-        const simGrid = document.getElementById('detailSimilarGrid');
-        
-        swatch.style.backgroundColor = hex;
-        nameEl.textContent = name;
-        catEl.textContent = category;
-        
+        const hexLabel = document.getElementById('detailHexLabel');
+        const rgbLabel = document.getElementById('detailRgbLabel');
+        const headline = document.getElementById('detailHeadline');
+        const subHeadline = document.getElementById('detailSubHeadline');
+        const moodTag = document.getElementById('detailMoodTag');
+        const description = document.getElementById('detailDescription');
+        const adviceList = document.getElementById('detailAdviceList');
+        const usageBadges = document.getElementById('detailUsageBadges');
+        const testLight = document.getElementById('testLightText');
+        const testDark = document.getElementById('testDarkText');
+
         const rgb = this.hexToRgb(hex);
-        document.getElementById('valHex').textContent = hex;
-        document.getElementById('valRgb').textContent = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-        
-        const tLight = document.getElementById('detailTextLight');
-        const tDark = document.getElementById('detailTextDark');
-        tLight.style.backgroundColor = hex; tLight.style.color = '#fff';
-        tDark.style.backgroundColor = hex; tDark.style.color = '#111';
-        
-        const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-        let advice = '';
-        if (brightness > 200) advice = '이 색상은 매우 밝고 화사합니다. 주로 배경색이나 카드의 면적을 채우는 색상으로 활용하여 깨끗한 공간감을 주기에 좋습니다.';
-        else if (brightness < 60) advice = '깊고 중후한 느낌을 주는 다크톤 색상입니다. 타이포그래피의 주조색이나 다크 모드의 배경으로 사용하여 기품 있는 브랜드 이미지를 구축하세요.';
-        else advice = '시선을 끄는 생동감 있는 중간톤입니다. 버튼이나 링크, 중요한 아이콘 등 사용자의 행동을 유도하는 포인트 컬러로 사용했을 때 가장 빛을 발합니다.';
-        
-        adviceEl.textContent = advice;
-        
+        const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+
+        swatch.style.backgroundColor = hex;
+        hexLabel.textContent = hex;
+        rgbLabel.textContent = rgbStr;
+
+        // 감성 문구 및 성격 생성 (알잘딱 엔진)
+        const wisdom = this.getColorWisdom(name, hex);
+        headline.textContent = wisdom.headline;
+        subHeadline.textContent = wisdom.sub;
+        moodTag.textContent = wisdom.tag;
+        description.textContent = wisdom.desc;
+
+        // 가이드 및 활용처 렌더링
+        adviceList.innerHTML = wisdom.advice.map(a => `<li>${a}</li>`).join('');
+        usageBadges.innerHTML = wisdom.usage.map(u => `<span class="usage-badge">${u}</span>`).join('');
+
+        // 가독성 테스트
+        testLight.style.backgroundColor = hex;
+        testDark.style.backgroundColor = hex;
+
+        // 유사색 미니 그리드
+        const similarGrid = document.getElementById('detailSimilarGrid');
         if (typeof findSimilarColors !== 'undefined') {
-            const sims = findSimilarColors(rgb.r, rgb.g, rgb.b, 8);
-            simGrid.innerHTML = sims.map(s => `<div class="sim-item-v2" style="background-color:${s.hex}" title="${s.name}" onclick="app.openColorDetail('${s.hex}','${s.name}','Similar')"></div>`).join('');
+            const similar = findSimilarColors(rgb.r, rgb.g, rgb.b, 8);
+            similarGrid.innerHTML = similar.map(c => `
+                <div class="mini-swatch" style="background-color: ${c.hex}" title="${c.name}" onclick="app.openColorDetail('${c.name}', '${c.hex}')"></div>
+            `).join('');
         }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     closeColorDetail() {
-        const libView = document.getElementById('library');
-        const detailView = document.getElementById('colorDetailView');
-        if (libView) libView.style.display = 'block';
-        if (detailView) detailView.style.display = 'none';
+        window.location.hash = '';
+        this.switchTab('colors');
     }
 
-    copyFromDetail(id) {
-        const val = document.getElementById(id).textContent;
-        this.fallbackCopy(val, `${val} 복사 완료!`);
+    handleRouting() {
+        const hash = window.location.hash;
+        if (hash.startsWith('#view=')) {
+            const params = hash.replace('#view=', '').split('_');
+            if (params.length === 2) {
+                const name = decodeURIComponent(params[0]);
+                const hex = '#' + params[1];
+                this.openColorDetail(name, hex);
+            }
+        } else if (hash === '' || hash === '#') {
+            const detailView = document.getElementById('colorDetailView');
+            if (detailView && detailView.classList.contains('active')) {
+                this.switchTab('colors');
+            }
+        }
+    }
+
+    getColorWisdom(name, hex) {
+        const rgbVal = this.hexToRgb(hex);
+        const hsl = this.rgbToHsl(rgbVal.r, rgbVal.g, rgbVal.b);
+        const h = hsl.h, s = hsl.s, l = hsl.l;
+
+        let res = {
+            tag: 'Design Pick',
+            headline: `${name}, 특별한 감각의 시작`,
+            sub: '이 색상만이 가진 고유한 온도를 경험해보세요.',
+            desc: `이 색상은 명도 ${Math.round(l)}%, 채도 ${Math.round(s)}%의 균형을 가진 매력적인 컬러입니다.`,
+            advice: ['공간에 포인트를 주기 좋습니다.', '브랜드의 신뢰감을 높여줍니다.'],
+            usage: ['UI/UX', 'Branding']
+        };
+
+        // 색상 계열별 성격 부여 (Humor & Emotional)
+        if (h >= 0 && h < 30) {
+            res.tag = 'Energy Booster';
+            res.headline = '우울한 하루, 당신에게 에너지를 가져다 줄 색!';
+            res.sub = '열정적이고 따뜻한 이 컬러는 당신의 프로젝트에 생기를 불어넣습니다.';
+            res.advice = ['중요한 CTA 버튼에 사용해보세요.', '활동적인 스포츠 브랜드에 완벽합니다.', '흰색 텍스트와 최상의 궁합을 보여줍니다.'];
+            res.usage = ['스포츠웨어', '식품 브랜드', '이벤트 페이지'];
+        } else if (h >= 180 && h < 260) {
+            res.tag = 'Trust & Calm';
+            res.headline = '지친 마음을 차분하게 달래주는 깊은 신뢰';
+            res.sub = '안정감과 전문성을 동시에 전달하는 마법 같은 컬러입니다.';
+            res.advice = ['핀테크나 비즈니스 앱의 주조색으로 추천합니다.', '그레이 톤과 함께 쓰면 더 세련되어 보입니다.', '사용자에게 신뢰를 주고 싶을 때 사용하세요.'];
+            res.usage = ['뱅킹 앱', '포트폴리오', '테크 기업'];
+        } else if (s < 15) {
+            res.tag = 'Minimalism';
+            res.headline = '비움의 미학, 무엇보다 화려한 무채색';
+            res.sub = '절제된 세련미가 돋보이는 모던 디자인의 정석입니다.';
+            res.advice = ['여백의 미를 강조할 때 사용하세요.', '사진이 돋보여야 하는 갤러리 웹사이트에 적합합니다.', '검정색 타이포그래피와 조화롭습니다.'];
+            res.usage = ['건축 매거진', '미니멀 쇼핑몰', '패키지 디자인'];
+        } else if (l > 80) {
+            res.tag = 'Pure & Soft';
+            res.headline = '구름 위를 걷는 듯한 포근한 위로';
+            res.sub = '부드럽고 깨끗한 인상으로 사용자의 긴장을 풀어줍니다.';
+            res.advice = ['배경색으로 사용하면 텍스트 가독성이 극대화됩니다.', '파스텔 톤 배색으로 따뜻한 분위기를 연출하세요.', '친환경적이고 부드러운 서비스에 좋습니다.'];
+            res.usage = ['유아용품', '라이프스타일', '명상 앱'];
+        }
+        return res;
+    }
+
+    shareCurrentColor() {
+        const url = window.location.href;
+        this.fallbackCopy(url, '공유 링크가 복사되었습니다!');
     }
 
     buildGuide() {
@@ -475,7 +556,7 @@ class ColorPalette {
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Storage & Premium
+    //  Storage & Favorites
     // ═══════════════════════════════════════════════════════════
 
     loadStorage() {
@@ -676,73 +757,6 @@ class ColorPalette {
     mobileAdjust(step) { if (!this.selectedChannel || this.isRouletting) return; this[this.selectedChannel] = Math.max(0, Math.min(255, this[this.selectedChannel] + step)); this.updateColor(); }
     setSelectedChannel(channel) { this.selectedChannel = this.selectedChannel === channel ? null : channel; [['r', this.rItem], ['g', this.gItem], ['b', this.bItem]].forEach(([ch, el]) => el?.classList.toggle('channel-selected', this.selectedChannel === ch)); if (this.mobileAdjLabel) this.mobileAdjLabel.textContent = this.selectedChannel ? { r: 'R 채널', g: 'G 채널', b: 'B 채널' }[this.selectedChannel] : '채널 선택'; }
     showToast(message) { if(!this.toast) return; this.toast.textContent = message; this.toast.classList.add('show'); clearTimeout(this._toastTimer); this._toastTimer = setTimeout(() => this.toast.classList.remove('show'), 2200); }
-    initFeedbackUI() {
-        const fab = document.getElementById('fabFeedback'), modal = document.getElementById('feedbackModal'), close = document.getElementById('closeFeedbackBtn'), form = document.getElementById('feedbackForm');
-        fab?.addEventListener('click', () => modal.classList.add('show')); close?.addEventListener('click', () => modal.classList.remove('show'));
-        document.querySelectorAll('.rating-star').forEach(star => { star.addEventListener('click', () => { const val = parseInt(star.dataset.val); document.getElementById('fbRating').value = val; document.querySelectorAll('.rating-star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= val)); }); });
-        form?.addEventListener('submit', (e) => { 
-            e.preventDefault(); 
-
-            // 스팸 방지: 1분 쿨타임 체크
-            const lastSent = localStorage.getItem('designpick_fb_last_sent');
-            const now = Date.now();
-            if (lastSent && (now - parseInt(lastSent) < 60000)) {
-                const remaining = Math.ceil((60000 - (now - parseInt(lastSent))) / 1000);
-                this.showToast(`${remaining}초 후에 다시 보내실 수 있습니다.`);
-                return;
-            }
-
-            const rating = parseInt(document.getElementById('fbRating').value);
-            const text = document.getElementById('fbText').value;
-            
-            const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = '전송 중...';
-            
-            this.initSupabase(); // 전송 전 다시 한번 확인
-
-            if (this.supabase) {
-                this.supabase.from('feedbacks').insert([{ rating, text }]).then(({ error }) => {
-                    if (error) {
-                        console.error('Supabase Error:', error);
-                        this.showToast('전송 실패: DB 설정을 확인해주세요.');
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = originalText;
-                    } else {
-                        finalize();
-                    }
-                });
-            } else {
-                // 로컬 저장소 (오프라인 백업)
-                const feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
-                feedbacks.push({ rating, text, date: new Date().toISOString() });
-                localStorage.setItem('designpick_feedbacks', JSON.stringify(feedbacks));
-                this.showToast('오프라인 상태로 저장되었습니다.');
-                finalize();
-            }
-
-            const finalize = () => {
-                localStorage.setItem('designpick_fb_last_sent', Date.now().toString());
-                this.showToast('소중한 피드백 감사합니다!'); 
-                modal.classList.remove('show'); 
-                form.reset(); 
-                document.querySelectorAll('.rating-star').forEach(s => s.classList.remove('active'));
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
-            };
-        });
-    }
-
-    openAdminDashboard() {
-        const authModal = document.getElementById('adminAuthModal');
-        if (authModal) {
-            authModal.classList.add('show');
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('adminPassword').focus();
-        }
-    }
-
     verifyAdmin() {
         const pw = document.getElementById('adminPassword').value;
         if (pw === 'rgb') { 

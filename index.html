@@ -440,55 +440,80 @@
     </div>
 
 
-    <!-- Color Detail View (In-page) -->
+    <!-- Color Detail View (Immersive Full Page) -->
     <div id="colorDetailView" class="tab-content" style="display:none">
-        <div class="detail-page-header">
-            <button class="btn-back-v2" onclick="app.closeColorDetail()">
-                <svg class="icon-svg"><use href="#icon-arrow-left"/></svg> Library
-            </button>
-        </div>
-        <div class="color-detail-page">
-            <div class="detail-container-v2">
-                <div class="detail-visual-v2">
-                    <div id="detailSwatch" class="detail-swatch-v2"></div>
-                    <div class="detail-preview-grid-v2">
-                        <div id="detailTextLight" class="preview-box-v2">Light Text</div>
-                        <div id="detailTextDark" class="preview-box-v2">Dark Text</div>
-                    </div>
+        <div class="detail-page-container">
+            <header class="detail-navbar">
+                <button class="btn-back-v2" onclick="app.closeColorDetail()">
+                    <svg class="icon-svg"><use href="#icon-arrow-left"/></svg> <span>Back to Library</span>
+                </button>
+                <div class="detail-nav-actions">
+                    <button class="btn-detail-share" onclick="app.shareCurrentColor()">
+                        <svg class="icon-svg"><use href="#icon-export"/></svg> 공유하기
+                    </button>
                 </div>
-                <div class="detail-info-v2">
-                    <div class="detail-header-v2">
-                        <h2 id="detailName" class="detail-title-v2">Name</h2>
-                        <span id="detailCategory" class="detail-cat-badge">Category</span>
-                    </div>
+            </header>
 
-                    <div class="detail-section-v2">
-                        <h3 class="section-title-v2">Design Advice</h3>
-                        <p id="detailAdvice" class="detail-text-v2"></p>
+            <main class="detail-main-content">
+                <!-- 상단: 감성 헤드라인 & 메인 스와치 -->
+                <section class="detail-hero-section">
+                    <div class="hero-text-content">
+                        <span class="mood-tag" id="detailMoodTag">Emotional Pick</span>
+                        <h1 class="detail-headline" id="detailHeadline">색상에 담긴 특별한 이야기</h1>
+                        <p class="detail-sub-headline" id="detailSubHeadline">Design Pick이 제안하는 완벽한 컬러 가이드</p>
                     </div>
-
-                    <div class="detail-section-v2">
-                        <h3 class="section-title-v2">Values & Copy</h3>
-                        <div class="copy-grid-v2">
-                            <div class="copy-card">
-                                <span>HEX</span>
-                                <strong id="valHex">#000000</strong>
-                                <button class="btn-copy-action" onclick="app.copyFromDetail('valHex')">Copy</button>
+                    <div class="hero-visual-content">
+                        <div id="detailSwatch" class="main-swatch-v2">
+                            <div class="swatch-inner-info">
+                                <span id="detailHexLabel">#000000</span>
+                                <span id="detailRgbLabel">rgb(0, 0, 0)</span>
                             </div>
-                            <div class="copy-card">
-                                <span>RGB</span>
-                                <strong id="valRgb">0, 0, 0</strong>
-                                <button class="btn-copy-action" onclick="app.copyFromDetail('valRgb')">Copy</button>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="detail-grid-layout">
+                    <!-- 왼쪽: 정보 및 가이드 -->
+                    <div class="detail-info-column">
+                        <div class="info-card-v2">
+                            <h3 class="card-title-v3">이 색은 어떤 색인가요?</h3>
+                            <p id="detailDescription" class="card-body-v3">색상에 대한 상세한 설명이 여기에 표시됩니다.</p>
+                        </div>
+
+                        <div class="info-card-v2">
+                            <h3 class="card-title-v3">디자인 활용 팁</h3>
+                            <ul id="detailAdviceList" class="advice-list-v2">
+                                <!-- 가이드 내용 동적 삽입 -->
+                            </ul>
+                        </div>
+
+                        <div class="info-card-v2">
+                            <h3 class="card-title-v3">추천 활용처</h3>
+                            <div id="detailUsageBadges" class="usage-badge-container">
+                                <!-- 배지 동적 삽입 -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="detail-section-v2">
-                        <h3 class="section-title-v2">Similar Inspiration</h3>
-                        <div id="detailSimilarGrid" class="detail-similar-grid-v2"></div>
+                    <!-- 오른쪽: 시각적 테스트 및 유사색 -->
+                    <div class="detail-visual-column">
+                        <div class="visual-card-v2">
+                            <h3 class="card-title-v3">텍스트 가독성 테스트</h3>
+                            <div class="a11y-test-container">
+                                <div id="testLightText" class="test-box">Abc 가나다 (Light)</div>
+                                <div id="testDarkText" class="test-box">Abc 가나다 (Dark)</div>
+                            </div>
+                        </div>
+
+                        <div class="visual-card-v2">
+                            <h3 class="card-title-v3">비슷한 감성의 색상</h3>
+                            <div id="detailSimilarGrid" class="similar-colors-mini">
+                                <!-- 유사색 동적 삽입 -->
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 
@@ -517,7 +542,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="data.js?v=5"></script>
-    <script src="script.js?v=5"></script>
+    <script src="data.js?v=6"></script>
+    <script src="script.js?v=6"></script>
 </body>
 </html>
