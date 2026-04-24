@@ -60,12 +60,13 @@ class ColorPalette {
         this.adminClicks = 0;
         this.audioCtx = null;
 
+        // 다국어 초기화
+        this.lang = localStorage.getItem('designpick_lang') || 'kr';
+
         // URL 라우팅 감지
         window.addEventListener('hashchange', () => this.handleRouting());
 
-        // Supabase 초기화 (지연 로딩 대응)
         this.initSupabase();
-
         this.init();
     }
 
@@ -98,11 +99,14 @@ class ColorPalette {
 
         document.getElementById('inspoPrev')?.addEventListener('click', () => this.inspoPrev());
         document.getElementById('inspoNext')?.addEventListener('click', () => this.inspoNext());
+        document.getElementById('langKrBtn')?.addEventListener('click', () => this.setLanguage('kr'));
+        document.getElementById('langEnBtn')?.addEventListener('click', () => this.setLanguage('en'));
 
         this.showInspoCard(0);
         setTimeout(() => this.startRoulette(), 400);
         this.loadStorage();
-        this.handleRouting(); // 초기 로드 시 라우팅 체크
+        this.handleRouting(); 
+        this.applyLanguage();
 
         document.body.addEventListener('pointerdown', () => {
             if (this.audioCtx && this.audioCtx.state === 'suspended') this.audioCtx.resume();
@@ -162,6 +166,33 @@ class ColorPalette {
             this.closeColorDetail();
         });
     }
+
+    setLanguage(lang) {
+        this.lang = lang;
+        localStorage.setItem('designpick_lang', lang);
+        this.applyLanguage();
+        this.buildColorLibrary(); 
+    }
+
+    applyLanguage() {
+        if (typeof uiTranslations === 'undefined') return;
+        const trans = uiTranslations[this.lang];
+        if (!trans) return;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (trans[key]) el.textContent = trans[key];
+        });
+
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (trans[key]) el.setAttribute('placeholder', trans[key]);
+        });
+
+        document.getElementById('langKrBtn')?.classList.toggle('active', this.lang === 'kr');
+        document.getElementById('langEnBtn')?.classList.toggle('active', this.lang === 'en');
+    }
+
 
     // ═══════════════════════════════════════════════════════════
     //  Color Family & RGB Roulette
@@ -303,9 +334,23 @@ class ColorPalette {
     //  Reel & Cards
     // ═══════════════════════════════════════════════════════════
 
+    buildGuide() {
+        if (!document.getElementById('guideGrid') || typeof designGuides === 'undefined') return;
+        const grid = document.getElementById('guideGrid');
+        grid.innerHTML = designGuides.map(g => `
+            <div class="guide-card">
+                <h3>${this.lang === 'kr' ? g.title : (g.title_en || g.title)}</h3>
+                <p>${this.lang === 'kr' ? g.desc : (g.desc_en || g.desc)}</p>
+                <div class="guide-colors">
+                    ${g.colors.map(c => `<div class="guide-color" style="background-color:${c}" onclick="app.setColorFromHex('${c}')"><span>${c}</span></div>`).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
     buildInspirationReel() {
         if (!this.inspirationReel || typeof designInspiration === 'undefined') return;
-        this.inspirationReel.innerHTML = [...designInspiration, ...designInspiration].map(d => `<div class="reel-item">${d.name}</div>`).join('');
+        this.inspirationReel.innerHTML = [...designInspiration, ...designInspiration].map(d => `<div class="reel-item">${this.lang === 'kr' ? d.name : (d.name_en || d.name)}</div>`).join('');
     }
 
     startInspirationReel() {
@@ -353,15 +398,16 @@ class ColorPalette {
 
     showInspirationPalette(index) {
         const design = designInspiration[index]; if (!design || !this.inspirationPalette) return;
+        const name = this.lang === 'kr' ? design.name : (design.name_en || design.name);
         this.inspirationPalette.innerHTML = `
-            <p class="palette-name-label">${design.name}</p>
+            <p class="palette-name-label">${name}</p>
             <div class="palette-colors-row">
                 ${design.colors.map(c => {
-                    const rgb = this.hexToRgb(c); const name = rgb ? this.findColorName(rgb.r, rgb.g, rgb.b) : c;
-                    const desc = (name && colorNameReferences[name]?.tags?.slice(0,3).join(' · ')) || '색상 팔레트';
+                    const rgb = this.hexToRgb(c); const cname = rgb ? this.findColorName(rgb.r, rgb.g, rgb.b) : c;
+                    const desc = (cname && colorNameReferences[cname]?.tags?.slice(0,3).join(' · ')) || (this.lang === 'kr' ? '색상 팔레트' : 'Color Palette');
                     return `<div class="palette-color" style="background-color:${c}" onclick="app.selectInspirationColor('${c}')">
-                                <div class="palette-color-tooltip"><span class="pal-name">${name || c}</span><span class="pal-hex">${c}</span><span class="pal-desc">${desc}</span></div>
-                                <span class="palette-mobile-label">${name || c}</span>
+                                <div class="palette-color-tooltip"><span class="pal-name">${cname || c}</span><span class="pal-hex">${c}</span><span class="pal-desc">${desc}</span></div>
+                                <span class="palette-mobile-label">${cname || c}</span>
                             </div>`;
                 }).join('')}
             </div>`;
@@ -374,18 +420,32 @@ class ColorPalette {
         const d = designCards[index]; if (!d) return;
         this.todayIndex = index;
         const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-        set('inspoNumber', d.id); set('inspoCategory', d.category); set('inspoTitle', d.name); set('inspoDesc', d.description);
+        const category = this.lang === 'kr' ? d.category : (d.category_en || d.category);
+        const desc = this.lang === 'kr' ? d.description : (d.description_en || d.description);
+        set('inspoNumber', d.id); set('inspoCategory', category); set('inspoTitle', d.name); set('inspoDesc', desc);
         const c0 = d.colors[0] || {}; const c1 = d.colors[1] || {};
         const b = document.getElementById('swatchBack'); const f = document.getElementById('swatchFront');
         if (b) b.style.backgroundColor = c0.hex || '#fff'; if (f) f.style.backgroundColor = c1.hex || '#000';
-        set('swNameBack', c0.name); set('swHexBack', c0.hex); set('swNameFront', c1.name); set('swHexFront',     // ═══════════════════════════════════════════════════════════
+        set('swNameBack', c0.name); set('swHexBack', c0.hex); set('swNameFront', c1.name); set('swHexFront', c1.hex);
+        [b, f].forEach((el, i) => { if (!el) return; const rgb = this.hexToRgb(d.colors[i].hex); const lum = (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b)/255; el.style.color = lum > 0.55 ? '#111' : '#fff'; });
+        const card = document.getElementById('inspoCard'); if (card) { card.classList.remove('inspo-anim'); void card.offsetWidth; card.classList.add('inspo-anim'); }
+    }
+    inspoNext() { if (typeof designCards === 'undefined') return; this.showInspoCard((this.todayIndex + 1) % designCards.length); }
+    inspoPrev() { if (typeof designCards === 'undefined') return; this.showInspoCard((this.todayIndex - 1 + designCards.length) % designCards.length); }
+    inspoPickColor(colorIdx) {
+        if (typeof designCards === 'undefined') return;
+        const d = designCards[this.todayIndex]; if (!d || !d.colors[colorIdx]) return;
+        this.setColorFromHex(d.colors[colorIdx].hex); this.switchTab('picker');
+    }
+
+    // ═══════════════════════════════════════════════════════════
     //  Tabs & Library
     // ═══════════════════════════════════════════════════════════
 
     switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(t => {
             t.classList.remove('active');
-            t.style.display = 'none'; // 명시적 숨김
+            t.style.display = 'none';
         });
         document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
         
@@ -403,10 +463,26 @@ class ColorPalette {
 
     buildColorLibrary(filterCat = 'all') {
         if (!this.colorLibrary || typeof designerColors === 'undefined') return;
-        const meta = { ui_web:['🖥','UI/웹'], brand_global:['🌐','브랜드'], nature:['🌿','자연/어스'], pastel:['🌸','감성/파스텔'], neon_modern:['⚡','네온/모던'], earth:['🍂','어스 톤'], monochrome:['⬜','모노크롬'] };
+        const trans = uiTranslations[this.lang];
+        const meta = { 
+            ui_web:['🖥', trans.cat_ui_web], 
+            brand_global:['🌐', trans.cat_brand_global], 
+            nature:['🌿', trans.cat_nature], 
+            pastel:['🌸', trans.cat_pastel], 
+            neon_modern:['⚡', trans.cat_neon_modern], 
+            earth:['🍂', trans.cat_earth], 
+            monochrome:['⬜', trans.cat_monochrome] 
+        };
         const chips = document.getElementById('libFilterChips');
         if (chips) {
-            const btns = [['all','전체보기'], ['ui_web','UI/웹'], ['brand_global','브랜드'], ['nature','자연/어스'], ['pastel','감성/파스텔'], ['neon_modern','네온/모던']];
+            const btns = [
+                ['all', trans.cat_all], 
+                ['ui_web', trans.cat_ui_web], 
+                ['brand_global', trans.cat_brand_global], 
+                ['nature', trans.cat_nature], 
+                ['pastel', trans.cat_pastel], 
+                ['neon_modern', trans.cat_neon_modern]
+            ];
             chips.innerHTML = btns.map(([k,v]) => `<button class="lib-filter-chip ${filterCat===k?'active':''}" onclick="app.buildColorLibrary('${k}')">${v}</button>`).join('');
         }
         let html = '';
@@ -502,45 +578,44 @@ class ColorPalette {
         }
     }
 
-    getColorWisdom(name, hex) {
-        const rgbVal = this.hexToRgb(hex);
-        const hsl = this.rgbToHsl(rgbVal.r, rgbVal.g, rgbVal.b);
-        const h = hsl.h, s = hsl.s, l = hsl.l;
+    getColorWisdom(r, g, b) {
+        const { h, s, l } = this.rgbToHsl(r, g, b);
+        const name = this.findColorName(r, g, b) || 'Custom';
+        const isKr = this.lang === 'kr';
 
         let res = {
-            tag: 'Design Pick',
-            headline: `${name}, 특별한 감각의 시작`,
-            sub: '이 색상만이 가진 고유한 온도를 경험해보세요.',
-            desc: `이 색상은 명도 ${Math.round(l)}%, 채도 ${Math.round(s)}%의 균형을 가진 매력적인 컬러입니다.`,
-            advice: ['공간에 포인트를 주기 좋습니다.', '브랜드의 신뢰감을 높여줍니다.'],
+            tag: isKr ? 'Design Pick' : 'Design Pick',
+            headline: isKr ? `${name}, 특별한 감각의 시작` : `${name}, Start of Special Sense`,
+            sub: isKr ? '이 색상만이 가진 고유한 온도를 경험해보세요.' : 'Experience the unique temperature of this color.',
+            desc: isKr ? `이 색상은 명도 ${Math.round(l)}%, 채도 ${Math.round(s)}%의 균형을 가진 매력적인 컬러입니다.` : `This color is attractive with a balance of ${Math.round(l)}% lightness and ${Math.round(s)}% saturation.`,
+            advice: isKr ? ['공간에 포인트를 주기 좋습니다.', '브랜드의 신뢰감을 높여줍니다.'] : ['Great for adding points to spaces.', 'Increases brand trust.'],
             usage: ['UI/UX', 'Branding']
         };
 
-        // 색상 계열별 성격 부여 (Humor & Emotional)
         if (h >= 0 && h < 30) {
-            res.tag = 'Energy Booster';
-            res.headline = '우울한 하루, 당신에게 에너지를 가져다 줄 색!';
-            res.sub = '열정적이고 따뜻한 이 컬러는 당신의 프로젝트에 생기를 불어넣습니다.';
-            res.advice = ['중요한 CTA 버튼에 사용해보세요.', '활동적인 스포츠 브랜드에 완벽합니다.', '흰색 텍스트와 최상의 궁합을 보여줍니다.'];
-            res.usage = ['스포츠웨어', '식품 브랜드', '이벤트 페이지'];
+            res.tag = isKr ? 'Energy Booster' : 'Energy Booster';
+            res.headline = isKr ? '우울한 하루, 당신에게 에너지를 가져다 줄 색!' : 'Depressing day? This color brings you energy!';
+            res.sub = isKr ? '열정적이고 따뜻한 이 컬러는 당신의 프로젝트에 생기를 불어넣습니다.' : 'This passionate and warm color brings life to your project.';
+            res.advice = isKr ? ['중요한 CTA 버튼에 사용해보세요.', '활동적인 스포츠 브랜드에 완벽합니다.', '흰색 텍스트와 최상의 궁합을 보여줍니다.'] : ['Try it for important CTA buttons.', 'Perfect for active sports brands.', 'Pairs perfectly with white text.'];
+            res.usage = isKr ? ['스포츠웨어', '식품 브랜드', '이벤트 페이지'] : ['Sportswear', 'Food Brands', 'Event Pages'];
         } else if (h >= 180 && h < 260) {
-            res.tag = 'Trust & Calm';
-            res.headline = '지친 마음을 차분하게 달래주는 깊은 신뢰';
-            res.sub = '안정감과 전문성을 동시에 전달하는 마법 같은 컬러입니다.';
-            res.advice = ['핀테크나 비즈니스 앱의 주조색으로 추천합니다.', '그레이 톤과 함께 쓰면 더 세련되어 보입니다.', '사용자에게 신뢰를 주고 싶을 때 사용하세요.'];
-            res.usage = ['뱅킹 앱', '포트폴리오', '테크 기업'];
+            res.tag = isKr ? 'Trust & Calm' : 'Trust & Calm';
+            res.headline = isKr ? '지친 마음을 차분하게 달래주는 깊은 신뢰' : 'Deep trust that calmly soothes the weary mind';
+            res.sub = isKr ? '안정감과 전문성을 동시에 전달하는 마법 같은 컬러입니다.' : 'A magical color that conveys both stability and professionalism.';
+            res.advice = isKr ? ['핀테크나 비즈니스 앱의 주조색으로 추천합니다.', '그레이 톤과 함께 쓰면 더 세련되어 보입니다.', '사용자에게 신뢰를 주고 싶을 때 사용하세요.'] : ['Recommended as a primary color for fintech apps.', 'Looks more sophisticated with gray tones.', 'Use when you want to give trust to users.'];
+            res.usage = isKr ? ['뱅킹 앱', '포트폴리오', '테크 기업'] : ['Banking Apps', 'Portfolio', 'Tech Companies'];
         } else if (s < 15) {
-            res.tag = 'Minimalism';
-            res.headline = '비움의 미학, 무엇보다 화려한 무채색';
-            res.sub = '절제된 세련미가 돋보이는 모던 디자인의 정석입니다.';
-            res.advice = ['여백의 미를 강조할 때 사용하세요.', '사진이 돋보여야 하는 갤러리 웹사이트에 적합합니다.', '검정색 타이포그래피와 조화롭습니다.'];
-            res.usage = ['건축 매거진', '미니멀 쇼핑몰', '패키지 디자인'];
+            res.tag = isKr ? 'Minimalism' : 'Minimalism';
+            res.headline = isKr ? '비움의 미학, 무엇보다 화려한 무채색' : 'Aesthetics of emptiness, more colorful than anything';
+            res.sub = isKr ? '절제된 세련미가 돋보이는 모던 디자인의 정석입니다.' : 'The standard of modern design with restrained sophistication.';
+            res.advice = isKr ? ['여백의 미를 강조할 때 사용하세요.', '사진이 돋보여야 하는 갤러리 웹사이트에 적합합니다.', '검정색 타이포그래피와 조화롭습니다.'] : ['Use it to emphasize the beauty of blank space.', 'Suitable for gallery websites where photos stand out.', 'Harmonious with black typography.'];
+            res.usage = isKr ? ['건축 매거진', '미니멀 쇼핑몰', '패키지 디자인'] : ['Arch. Magazine', 'Minimal Shop', 'Package Design'];
         } else if (l > 80) {
-            res.tag = 'Pure & Soft';
-            res.headline = '구름 위를 걷는 듯한 포근한 위로';
-            res.sub = '부드럽고 깨끗한 인상으로 사용자의 긴장을 풀어줍니다.';
-            res.advice = ['배경색으로 사용하면 텍스트 가독성이 극대화됩니다.', '파스텔 톤 배색으로 따뜻한 분위기를 연출하세요.', '친환경적이고 부드러운 서비스에 좋습니다.'];
-            res.usage = ['유아용품', '라이프스타일', '명상 앱'];
+            res.tag = isKr ? 'Pure & Soft' : 'Pure & Soft';
+            res.headline = isKr ? '구름 위를 걷는 듯한 포근한 위로' : 'Cozy comfort like walking on clouds';
+            res.sub = isKr ? '부드럽고 깨끗한 인상으로 사용자의 긴장을 풀어줍니다.' : 'A soft and clean impression that relaxes the user.';
+            res.advice = isKr ? ['배경색으로 사용하면 텍스트 가독성이 극대화됩니다.', '파스텔 톤 배색으로 따뜻한 분위기를 연출하세요.', '친환경적이고 부드러운 서비스에 좋습니다.'] : ['Using it as a background color maximizes legibility.', 'Create a warm atmosphere with pastel colors.', 'Good for eco-friendly and soft services.'];
+            res.usage = isKr ? ['유아용품', '라이프스타일', '명상 앱'] : ['Baby Products', 'Lifestyle', 'Meditation Apps'];
         }
         return res;
     }

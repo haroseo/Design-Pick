@@ -709,3 +709,35 @@ svg { width: 24px; height: 24px; pointer-events: none; }
     .nav-tab { padding: 6px 8px; font-size: 11px; }
     .rating-group { font-size: 28px; }
 }
+
+/* Language Selector */
+.lang-selector {
+    display: flex;
+    gap: 4px;
+    background: rgba(0,0,0,0.05);
+    padding: 3px;
+    border-radius: 8px;
+    margin-right: 12px;
+}
+.lang-btn {
+    border: none;
+    background: none;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+.lang-btn.active {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.dark-mode .lang-selector { background: rgba(255,255,255,0.1); }
+.dark-mode .lang-btn.active { background: #333; color: #fff; }
+
+@media (max-width: 768px) {
+    .lang-selector { margin-right: 0; margin-bottom: 8px; }
+}

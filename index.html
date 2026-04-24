@@ -78,26 +78,30 @@
         
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="picker">
-                <svg class="tab-icon"><use href="#icon-picker"/></svg><span>Picker</span>
+                <svg class="tab-icon"><use href="#icon-picker"/></svg><span data-i18n="nav_picker">Picker</span>
             </button>
             <button class="nav-tab" data-tab="inspiration">
-                <svg class="tab-icon"><use href="#icon-roulette"/></svg><span>Inspo</span>
+                <svg class="tab-icon"><use href="#icon-roulette"/></svg><span data-i18n="nav_inspiration">Inspo</span>
             </button>
             <button class="nav-tab" data-tab="today">
-                <svg class="tab-icon"><use href="#icon-today"/></svg><span>Today</span>
+                <svg class="tab-icon"><use href="#icon-today"/></svg><span data-i18n="nav_today">Today</span>
             </button>
             <button class="nav-tab" data-tab="guide">
-                <svg class="tab-icon"><use href="#icon-guide"/></svg><span>Guide</span>
+                <svg class="tab-icon"><use href="#icon-guide"/></svg><span data-i18n="nav_guide">Guide</span>
             </button>
             <button class="nav-tab" data-tab="colors">
-                <svg class="tab-icon"><use href="#icon-library"/></svg><span>Library</span>
+                <svg class="tab-icon"><use href="#icon-library"/></svg><span data-i18n="nav_library">Library</span>
             </button>
             <button class="nav-tab" data-tab="mypalettes">
-                <svg class="tab-icon"><use href="#icon-heart"/></svg><span>My</span>
+                <svg class="tab-icon"><use href="#icon-heart"/></svg><span data-i18n="nav_my">My</span>
             </button>
         </div>
 
         <div class="nav-actions">
+            <div class="lang-selector">
+                <button class="lang-btn" id="langKrBtn">KR</button>
+                <button class="lang-btn" id="langEnBtn">EN</button>
+            </div>
             <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.5" aria-label="볼륨 조절">
             <div class="icon-indicator">
                 <svg class="icon-svg" id="soundIconOn"><use href="#icon-volume"/></svg>
@@ -152,9 +156,9 @@
 
                     <!-- 버튼 -->
                     <div class="button-section">
-                        <button id="resetBtn" class="btn btn-reset">리셋</button>
-                        <button id="hexCopyBtn" class="btn btn-copy">HEX 복사</button>
-                        <button id="rgbCopyBtn" class="btn btn-copy">RGB 복사</button>
+                        <button id="resetBtn" class="btn btn-reset" data-i18n="btn_reset">리셋</button>
+                        <button id="hexCopyBtn" class="btn btn-copy" data-i18n="btn_copy_hex">HEX 복사</button>
+                        <button id="rgbCopyBtn" class="btn btn-copy" data-i18n="btn_copy_rgb">RGB 복사</button>
                     </div>
                     
                     <button id="exportCssBtn" class="btn btn-export">
@@ -174,17 +178,17 @@
 
                     <!-- 키보드 가이드 (데스크탑) -->
                     <div class="keyboard-guide desktop-only">
-                        <p class="guide-title">조작 방법</p>
-                        <p class="guide-text">R / G / B 클릭: 채널 선택</p>
-                        <p class="guide-text">← →: 선택 채널 미세 조정</p>
-                        <p class="guide-text">스페이스바: 룰렛 재시작</p>
+                        <p class="guide-title" data-i18n="keyboard_guide_title">조작 방법</p>
+                        <p class="guide-text" data-i18n="keyboard_guide_1">R / G / B 클릭: 채널 선택</p>
+                        <p class="guide-text" data-i18n="keyboard_guide_2">← →: 선택 채널 미세 조정</p>
+                        <p class="guide-text" data-i18n="keyboard_guide_3">스페이스바: 룰렛 재시작</p>
                     </div>
                 </div>
             </div>
 
             <!-- 색 계열 선택 -->
             <div class="family-section">
-                <p class="family-section-title">색 계열 선택</p>
+                <p class="family-section-title" data-i18n="select_family">색 계열 선택</p>
                 <div class="family-chips" id="familyChips">
                     <button class="family-chip active" data-family="all" style="--chip-c:#555">전체</button>
                     <button class="family-chip" data-family="red"     style="--chip-c:#FF3B30">빨강</button>
@@ -201,7 +205,7 @@
 
             <!-- 비슷한 색상 -->
             <div class="similar-colors-section">
-                <p class="similar-title">비슷한 색상</p>
+                <p class="similar-title" data-i18n="detail_similar">비슷한 색상</p>
                 <div class="similar-colors-list" id="similarColors"></div>
             </div>
 
@@ -212,6 +216,7 @@
                     id="colorInput"
                     class="color-input"
                     placeholder="색상 이름 검색 (예: 빨강, 민트, 파랑)"
+                    data-i18n-placeholder="search_placeholder"
                 >
                 <div class="search-results" id="searchResults"></div>
             </div>
@@ -222,8 +227,8 @@
     <div id="inspiration" class="tab-content">
         <div class="wrapper">
             <div class="inspiration-wrapper">
-                <h2>Design Inspiration</h2>
-                <p class="inspiration-subtitle">멈추면 팔레트가 나타납니다 • 색을 클릭하면 Color Picker로 이동</p>
+                <h2 data-i18n="nav_inspiration">Design Inspiration</h2>
+                <p class="inspiration-subtitle" data-i18n="inspiration_subtitle">멈추면 팔레트가 나타납니다 • 색을 클릭하면 Color Picker로 이동</p>
 
                 <div class="inspiration-reel-wrapper" id="reelWrapper">
                     <div class="reel-overlay reel-top"></div>
@@ -275,8 +280,8 @@
     <div id="guide" class="tab-content">
         <div class="wrapper">
             <div class="guide-wrapper">
-                <h2>디자인 컬러 기법</h2>
-                <p class="guide-subtitle">색을 다루는 기본적이고 실용적인 지식들</p>
+                <h2 data-i18n="nav_guide">디자인 컬러 기법</h2>
+                <p class="guide-subtitle" data-i18n="guide_subtitle">색을 다루는 기본적이고 실용적인 지식들</p>
                 <div class="guide-grid" id="guideGrid"></div>
             </div>
         </div>
@@ -286,8 +291,8 @@
     <div id="colors" class="tab-content">
         <div class="wrapper">
             <div class="colors-wrapper">
-                <h2>더 많은 색 보기</h2>
-                <p class="colors-subtitle">용도별로 분류된 컬러 라이브러리</p>
+                <h2 data-i18n="nav_library">더 많은 색 보기</h2>
+                <p class="colors-subtitle" data-i18n="library_subtitle">용도별로 분류된 컬러 라이브러리</p>
                 <div class="lib-filter-chips" id="libFilterChips">
                     <!-- JS에서 동적 렌더링 -->
                 </div>
@@ -498,7 +503,7 @@
                     <!-- 오른쪽: 시각적 테스트 및 유사색 -->
                     <div class="detail-visual-column">
                         <div class="visual-card-v2">
-                            <h3 class="card-title-v3">텍스트 가독성 테스트</h3>
+                            <h3 class="card-title-v3" data-i18n="detail_contrast">텍스트 가독성 테스트</h3>
                             <div class="a11y-test-container">
                                 <div id="testLightText" class="test-box">Abc 가나다 (Light)</div>
                                 <div id="testDarkText" class="test-box">Abc 가나다 (Dark)</div>
@@ -506,7 +511,7 @@
                         </div>
 
                         <div class="visual-card-v2">
-                            <h3 class="card-title-v3">비슷한 감성의 색상</h3>
+                            <h3 class="card-title-v3" data-i18n="detail_similar">비슷한 감성의 색상</h3>
                             <div id="detailSimilarGrid" class="similar-colors-mini">
                                 <!-- 유사색 동적 삽입 -->
                             </div>
