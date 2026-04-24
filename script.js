@@ -975,6 +975,81 @@ class ColorPalette {
     openFeedbackModal() {
         document.getElementById('feedbackModal')?.classList.add('show');
     }
+
+    // ═══════════════════════════════════════════════════════════
+    //  Admin Dashboard
+    // ═══════════════════════════════════════════════════════════
+
+    openAdminDashboard() {
+        document.getElementById('adminAuthModal').classList.add('show');
+    }
+
+    verifyAdmin() {
+        const pw = document.getElementById('adminPassword').value;
+        if (pw === 'rgb') { 
+            document.getElementById('adminAuthModal').classList.remove('show');
+            const modal = document.getElementById('adminModal');
+            if (modal) {
+                this.renderAdminFeedbacks();
+                modal.classList.add('show');
+                this.showToast('실시간 동기화 활성화됨');
+
+                if (this.supabase) {
+                    this.feedbackChannel = this.supabase.channel('admin-feedbacks')
+                        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'feedbacks' }, payload => {
+                            this.renderAdminFeedbacks();
+                            this.showToast('새로운 피드백이 도착했습니다! 🔔');
+                        })
+                        .subscribe();
+                }
+            }
+        } else {
+            this.showToast('비밀번호가 틀렸습니다.');
+        }
+    }
+
+    async renderAdminFeedbacks() {
+        const list = document.getElementById('adminFeedbackList');
+        if (!list) return;
+        list.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">데이터를 불러오는 중...</div>';
+
+        let feedbacks = [];
+        if (this.supabase) {
+            const { data, error } = await this.supabase.from('feedbacks').select('*').order('created_at', { ascending: false });
+            if (!error) feedbacks = data;
+        } else {
+            feedbacks = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]').reverse();
+        }
+
+        if (feedbacks.length === 0) {
+            list.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">수집된 피드백이 없습니다.</div>';
+            return;
+        }
+
+        list.innerHTML = feedbacks.map(f => `
+            <div class="admin-fb-item">
+                <div class="admin-fb-meta">
+                    <span class="admin-fb-rating">${'★'.repeat(f.rating)}</span>
+                    <span class="admin-fb-date">${new Date(f.created_at || f.date).toLocaleString()}</span>
+                </div>
+                <div class="admin-fb-text">${this.sanitizeInput(f.text)}</div>
+            </div>
+        `).join('');
+    }
+
+    exportFeedbacks() {
+        const fbs = localStorage.getItem('designpick_feedbacks') || '[]';
+        const blob = new Blob([fbs], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `designpick_feedbacks_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        this.showToast('데이터를 다운로드합니다.');
+    }
 }
 
 let app;
