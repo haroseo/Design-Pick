@@ -129,7 +129,7 @@ class ColorPalette {
             document.getElementById('exportModal')?.classList.remove('show');
         });
 
-        this.initFeedbackUI();
+        // this.initFeedbackUI();
 
         // MY 탭 전용 이벤트 리스너
         document.getElementById('myPalSearch')?.addEventListener('input', (e) => {
