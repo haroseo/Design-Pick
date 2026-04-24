@@ -626,8 +626,7 @@ class ColorPalette {
 
     shareCurrentColor() {
         const url = window.location.href;
-        const msg = this.lang === 'en' ? 'Link copied to clipboard!' : '공유 링크가 복사되었습니다!';
-        this.fallbackCopy(url, msg);
+        this.fallbackCopy(url, '공유 링크가 복사되었습니다!');
     }
 
     buildGuide() {
@@ -675,11 +674,11 @@ class ColorPalette {
         const idx = this.favorites.findIndex(f => f.hex === hex);
         if (idx !== -1) { 
             this.favorites.splice(idx, 1); 
-            this.showToast(this.lang === 'en' ? 'Removed from library.' : '보관함에서 삭제되었습니다.'); 
+            this.showToast('보관함에서 삭제되었습니다.'); 
         } else { 
             const cat = this.getCategoryFromRgb(this.r, this.g, this.b);
             this.favorites.unshift({ hex, name, isStarred: false, category: cat, createdAt: Date.now() }); 
-            this.showToast(this.lang === 'en' ? 'Saved to library! (♥)' : '보관함에 저장되었습니다. (♥)'); 
+            this.showToast('보관함에 저장되었습니다. (♥)'); 
             this.playSuccessSound(); 
         }
         this.saveLocalFavorites(); this.updateFavBtnState(hex); this.renderFavorites();
@@ -979,9 +978,9 @@ class ColorPalette {
 
         document.getElementById('btnSubmitFb').onclick = async () => {
             const text = document.getElementById('fbText').value;
-            if (!text) return this.showToast(this.lang === 'en' ? 'Please enter feedback.' : '내용을 입력해주세요.');
+            if (!text) return this.showToast('내용을 입력해주세요.');
             
-            this.showToast(this.lang === 'en' ? 'Feedback sent. Thank you!' : '피드백이 전송되었습니다. 감사합니다!');
+            this.showToast('피드백이 전송되었습니다. 감사합니다!');
             document.getElementById('feedbackModal').classList.remove('show');
             document.getElementById('fbText').value = '';
 
@@ -997,7 +996,6 @@ class ColorPalette {
 
     openFeedbackModal() {
         document.getElementById('feedbackModal')?.classList.add('show');
-        this.applyLanguage();
     }
 }
 
