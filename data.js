@@ -233,6 +233,24 @@ const designCards = [
         description_en: 'Ruggedness of workwear and warmth of wheat fields\nExpresses authentic everyday style.',
         colors: [{ name: 'Denim', hex: '#1560BD' }, { name: 'Wheat', hex: '#F5DEB3' }],
     },
+    {
+        id: '13',
+        name: 'Samsung One UI Vivid',
+        category: '모바일 인터페이스 / 역동적 사용자 경험',
+        category_en: 'Mobile Interface / Dynamic UX',
+        description: '삼성 One UI 특유의 생동감 넘치는 블루와 화이트\n깨끗하고 반응성 좋은 모바일 디자인을 완성합니다.',
+        description_en: 'Samsung One UI\'s signature vivid blue and white. Completes a clean and responsive mobile design.',
+        colors: [{ name: 'Samsung Blue', hex: '#034EA2' }, { name: 'One UI White', hex: '#FFFFFF' }],
+    },
+    {
+        id: '14',
+        name: 'Apple Glassmorphism',
+        category: 'OS 인터페이스 / 미니멀 프리미엄',
+        category_en: 'OS Interface / Minimal Premium',
+        description: '애플의 투명한 유리 질감과 고대비 텍스트\n공간감이 느껴지는 세련된 UI를 제안합니다.',
+        description_en: 'Apple\'s transparent glass texture and high-contrast text. Proposes a sophisticated UI with a sense of space.',
+        colors: [{ name: 'Glass Frost', hex: '#F5F5F7' }, { name: 'Deep Space', hex: '#1D1D1F' }],
+    },
 ];
 
 const designGuides = [
@@ -270,6 +288,20 @@ const designGuides = [
         desc: '하나의 색상을 베이스로 화이트, 블랙을 섞어 명도를 조절합니다. 극강의 심플함을 보여줍니다.', 
         desc_en: 'Uses a single base color and adjusts brightness with white and black. Shows extreme simplicity.',
         colors: ['#111111', '#888888', '#EEEEEE'] 
+    },
+    { 
+        title: 'Apple: 글래스모피즘', 
+        title_en: 'Apple: Glassmorphism',
+        desc: '배경을 흐리게 처리(Blur)하고 반투명한 레이어를 쌓아 공간감을 만듭니다. 프리미엄한 느낌을 줍니다.', 
+        desc_en: 'Creates a sense of space by blurring the background and stacking semi-transparent layers. Gives a premium feel.',
+        colors: ['#FFFFFF', 'rgba(255,255,255,0.1)', '#000000'] 
+    },
+    { 
+        title: 'Google: 머티리얼 쉐도우', 
+        title_en: 'Google: Material Shadows',
+        desc: '빛의 방향에 따른 그림자 깊이로 요소의 위계를 정합니다. 직관적인 클릭 범위를 알려줍니다.', 
+        desc_en: 'Determines the hierarchy of elements through shadow depth according to the light direction. Indicates intuitive click areas.',
+        colors: ['#4285F4', '#EA4335', '#FBBC05'] 
     }
 ];
 
