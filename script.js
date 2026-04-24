@@ -129,7 +129,7 @@ class ColorPalette {
             document.getElementById('exportModal')?.classList.remove('show');
         });
 
-        // this.initFeedbackUI();
+        this.initFeedbackUI();
 
         // MY 탭 전용 이벤트 리스너
         document.getElementById('myPalSearch')?.addEventListener('input', (e) => {
@@ -695,10 +695,11 @@ class ColorPalette {
 
         if (countBadge) countBadge.textContent = this.favorites.length;
 
+        const trans = uiTranslations[this.lang];
         if (filtered.length === 0) {
             list.innerHTML = `<div class="my-pal-empty" style="grid-column: 1/-1; padding: 60px; text-align: center; color: #999;">
                 <svg style="width:48px; height:48px; margin-bottom:16px; opacity:0.3;"><use href="#icon-heart"/></svg>
-                <p>${this.favorites.length === 0 ? '스크랩한 색상이 없습니다.' : '검색 결과가 없습니다.'}</p>
+                <p>${this.favorites.length === 0 ? trans.empty_fav : trans.search_result_empty}</p>
             </div>`;
             return;
         }
@@ -899,6 +900,81 @@ class ColorPalette {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         this.showToast('데이터를 다운로드합니다.');
+    }
+
+    initFeedbackUI() {
+        const fab = document.createElement('button');
+        fab.className = 'fab-feedback';
+        fab.innerHTML = '<span>💬</span>';
+        fab.onclick = () => this.openFeedbackModal();
+        document.body.appendChild(fab);
+
+        if (!document.getElementById('feedbackModal')) {
+            const modalHtml = `
+                <div class="modal-overlay" id="feedbackModal">
+                    <div class="modal-content feedback-modal">
+                        <div class="modal-header-v2">
+                            <div class="modal-icon-bg">💬</div>
+                            <h3 class="modal-title" data-i18n="feedback_title">피드백 보내기</h3>
+                            <p class="modal-desc" data-i18n="feedback_desc">디자인 픽을 사용하시면서 느낀 점을 알려주세요.</p>
+                        </div>
+                        <div class="fb-section">
+                            <label class="fb-label" data-i18n="feedback_rating">만족도</label>
+                            <div class="rating-group" id="fbRating">
+                                <span class="rating-star" data-v="1">★</span>
+                                <span class="rating-star" data-v="2">★</span>
+                                <span class="rating-star" data-v="3">★</span>
+                                <span class="rating-star" data-v="4">★</span>
+                                <span class="rating-star" data-v="5">★</span>
+                            </div>
+                        </div>
+                        <div class="fb-section">
+                            <label class="fb-label" data-i18n="feedback_comment">의견</label>
+                            <textarea id="fbText" placeholder="여기에 내용을 입력하세요..." data-i18n-placeholder="feedback_placeholder"></textarea>
+                        </div>
+                        <div class="fb-actions-v2">
+                            <button class="btn btn-reset-v2" onclick="document.getElementById('feedbackModal').classList.remove('show')" data-i18n="btn_close">닫기</button>
+                            <button class="btn btn-submit-v2" id="btnSubmitFb" data-i18n="btn_submit">보내기</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const div = document.createElement('div');
+            div.innerHTML = modalHtml;
+            document.body.appendChild(div.firstElementChild);
+        }
+
+        let rating = 5;
+        const stars = document.querySelectorAll('.rating-star');
+        stars.forEach(s => {
+            s.onclick = () => {
+                rating = parseInt(s.dataset.v);
+                stars.forEach((star, idx) => star.classList.toggle('active', idx < rating));
+            };
+        });
+        stars.forEach((star, idx) => star.classList.toggle('active', idx < rating));
+
+        document.getElementById('btnSubmitFb').onclick = async () => {
+            const text = document.getElementById('fbText').value;
+            if (!text) return this.showToast('내용을 입력해주세요.');
+            
+            this.showToast('피드백이 전송되었습니다. 감사합니다!');
+            document.getElementById('feedbackModal').classList.remove('show');
+            document.getElementById('fbText').value = '';
+
+            if (this.supabase) {
+                await this.supabase.from('feedbacks').insert([{ rating, text, created_at: new Date() }]);
+            } else {
+                const fbs = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
+                fbs.push({ rating, text, date: new Date() });
+                localStorage.setItem('designpick_feedbacks', JSON.stringify(fbs));
+            }
+        };
+    }
+
+    openFeedbackModal() {
+        document.getElementById('feedbackModal')?.classList.add('show');
+        this.applyLanguage();
     }
 }
 

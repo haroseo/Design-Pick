@@ -359,6 +359,9 @@ const uiTranslations = {
         cat_neon_modern: '네온/모던',
         cat_earth: '어스 톤',
         cat_monochrome: '모노크롬',
+        btn_export_css: 'CSS / Tailwind 내보내기',
+        my_palettes_title: '내 보관함',
+        search_result_empty: '검색 결과가 없습니다.',
         footer_copy: '© 2024 RGBdom. 디자인을 위한 모든 색상.'
     },
     en: {
@@ -397,6 +400,9 @@ const uiTranslations = {
         cat_neon_modern: 'Neon/Modern',
         cat_earth: 'Earth Tone',
         cat_monochrome: 'Monochrome',
+        btn_export_css: 'Export CSS / Tailwind',
+        my_palettes_title: 'My Palettes',
+        search_result_empty: 'No results found.',
         footer_copy: '© 2024 RGBdom. All colors for design.'
     }
 };
