@@ -77,6 +77,7 @@ class ColorPalette {
     }
 
     init() {
+        this.initFeedbackUI(); // 최우선 실행
         if (typeof designGuides !== 'undefined') this.buildGuide();
         this.buildInspirationReel();
         this.buildColorLibrary('all');
@@ -128,8 +129,6 @@ class ColorPalette {
         document.getElementById('closeExportBtn')?.addEventListener('click', () => {
             document.getElementById('exportModal')?.classList.remove('show');
         });
-
-        this.initFeedbackUI();
 
         // MY 탭 전용 이벤트 리스너
         document.getElementById('myPalSearch')?.addEventListener('input', (e) => {
@@ -492,7 +491,10 @@ class ColorPalette {
             if (filterCat !== 'all' && filterCat !== key && !(filterCat==='nature' && key==='earth') && !(filterCat==='neon_modern' && key==='monochrome')) continue;
             const [icon, label] = meta[key] || ['🎨', key];
             html += `<div class="color-category-section"><h3 class="color-category-title"><span>${icon}</span> ${label}</h3><div class="color-category-grid">
-                ${colors.map(c => `<div class="color-library-item" onclick="app.openColorDetail('${c.name}','${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(c.name)}</div></div>`).join('')}
+                ${colors.map(c => {
+                    const displayName = (this.lang === 'en' && c.name_en) ? c.name_en : c.name;
+                    return `<div class="color-library-item" onclick="app.openColorDetail('${displayName}','${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(displayName)}</div></div>`;
+                }).join('')}
             </div></div>`;
         }
         this.colorLibrary.innerHTML = html || '<div style="padding:40px;text-align:center;color:#999;">결과가 없습니다.</div>';
@@ -595,25 +597,25 @@ class ColorPalette {
         };
 
         if (h >= 0 && h < 30) {
-            res.tag = isKr ? 'Energy Booster' : 'Energy Booster';
+            res.tag = 'Energy Booster';
             res.headline = isKr ? '우울한 하루, 당신에게 에너지를 가져다 줄 색!' : 'Depressing day? This color brings you energy!';
             res.sub = isKr ? '열정적이고 따뜻한 이 컬러는 당신의 프로젝트에 생기를 불어넣습니다.' : 'This passionate and warm color brings life to your project.';
             res.advice = isKr ? ['중요한 CTA 버튼에 사용해보세요.', '활동적인 스포츠 브랜드에 완벽합니다.', '흰색 텍스트와 최상의 궁합을 보여줍니다.'] : ['Try it for important CTA buttons.', 'Perfect for active sports brands.', 'Pairs perfectly with white text.'];
             res.usage = isKr ? ['스포츠웨어', '식품 브랜드', '이벤트 페이지'] : ['Sportswear', 'Food Brands', 'Event Pages'];
         } else if (h >= 180 && h < 260) {
-            res.tag = isKr ? 'Trust & Calm' : 'Trust & Calm';
+            res.tag = 'Trust & Calm';
             res.headline = isKr ? '지친 마음을 차분하게 달래주는 깊은 신뢰' : 'Deep trust that calmly soothes the weary mind';
             res.sub = isKr ? '안정감과 전문성을 동시에 전달하는 마법 같은 컬러입니다.' : 'A magical color that conveys both stability and professionalism.';
             res.advice = isKr ? ['핀테크나 비즈니스 앱의 주조색으로 추천합니다.', '그레이 톤과 함께 쓰면 더 세련되어 보입니다.', '사용자에게 신뢰를 주고 싶을 때 사용하세요.'] : ['Recommended as a primary color for fintech apps.', 'Looks more sophisticated with gray tones.', 'Use when you want to give trust to users.'];
             res.usage = isKr ? ['뱅킹 앱', '포트폴리오', '테크 기업'] : ['Banking Apps', 'Portfolio', 'Tech Companies'];
         } else if (s < 15) {
-            res.tag = isKr ? 'Minimalism' : 'Minimalism';
+            res.tag = 'Minimalism';
             res.headline = isKr ? '비움의 미학, 무엇보다 화려한 무채색' : 'Aesthetics of emptiness, more colorful than anything';
             res.sub = isKr ? '절제된 세련미가 돋보이는 모던 디자인의 정석입니다.' : 'The standard of modern design with restrained sophistication.';
             res.advice = isKr ? ['여백의 미를 강조할 때 사용하세요.', '사진이 돋보여야 하는 갤러리 웹사이트에 적합합니다.', '검정색 타이포그래피와 조화롭습니다.'] : ['Use it to emphasize the beauty of blank space.', 'Suitable for gallery websites where photos stand out.', 'Harmonious with black typography.'];
             res.usage = isKr ? ['건축 매거진', '미니멀 쇼핑몰', '패키지 디자인'] : ['Arch. Magazine', 'Minimal Shop', 'Package Design'];
         } else if (l > 80) {
-            res.tag = isKr ? 'Pure & Soft' : 'Pure & Soft';
+            res.tag = 'Pure & Soft';
             res.headline = isKr ? '구름 위를 걷는 듯한 포근한 위로' : 'Cozy comfort like walking on clouds';
             res.sub = isKr ? '부드럽고 깨끗한 인상으로 사용자의 긴장을 풀어줍니다.' : 'A soft and clean impression that relaxes the user.';
             res.advice = isKr ? ['배경색으로 사용하면 텍스트 가독성이 극대화됩니다.', '파스텔 톤 배색으로 따뜻한 분위기를 연출하세요.', '친환경적이고 부드러운 서비스에 좋습니다.'] : ['Using it as a background color maximizes legibility.', 'Create a warm atmosphere with pastel colors.', 'Good for eco-friendly and soft services.'];
@@ -624,12 +626,17 @@ class ColorPalette {
 
     shareCurrentColor() {
         const url = window.location.href;
-        this.fallbackCopy(url, '공유 링크가 복사되었습니다!');
+        const msg = this.lang === 'en' ? 'Link copied to clipboard!' : '공유 링크가 복사되었습니다!';
+        this.fallbackCopy(url, msg);
     }
 
     buildGuide() {
         const grid = document.getElementById('guideGrid'); if (!grid || typeof designGuides === 'undefined') return;
-        grid.innerHTML = designGuides.map(g => `<div class="guide-card"><div class="guide-card-title">${g.title}</div><div class="guide-card-desc">${g.desc}</div><div class="guide-card-visual">${g.colors.map(c => `<div class="gc-box" style="background-color:${c}"></div>`).join('')}</div></div>`).join('');
+        grid.innerHTML = designGuides.map(g => {
+            const title = (this.lang === 'en' && g.title_en) ? g.title_en : g.title;
+            const desc = (this.lang === 'en' && g.desc_en) ? g.desc_en : g.desc;
+            return `<div class="guide-card"><div class="guide-card-title">${title}</div><div class="guide-card-desc">${desc}</div><div class="guide-card-visual">${g.colors.map(c => `<div class="gc-box" style="background-color:${c}"></div>`).join('')}</div></div>`;
+        }).join('');
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -668,11 +675,11 @@ class ColorPalette {
         const idx = this.favorites.findIndex(f => f.hex === hex);
         if (idx !== -1) { 
             this.favorites.splice(idx, 1); 
-            this.showToast('보관함에서 삭제되었습니다.'); 
+            this.showToast(this.lang === 'en' ? 'Removed from library.' : '보관함에서 삭제되었습니다.'); 
         } else { 
             const cat = this.getCategoryFromRgb(this.r, this.g, this.b);
             this.favorites.unshift({ hex, name, isStarred: false, category: cat, createdAt: Date.now() }); 
-            this.showToast('보관함에 저장되었습니다. (♥)'); 
+            this.showToast(this.lang === 'en' ? 'Saved to library! (♥)' : '보관함에 저장되었습니다. (♥)'); 
             this.playSuccessSound(); 
         }
         this.saveLocalFavorites(); this.updateFavBtnState(hex); this.renderFavorites();
@@ -822,7 +829,21 @@ class ColorPalette {
     copyToClipboard(type) { this.fallbackCopy(type === 'hex' ? (this.hexValue?.textContent||'') : `rgb(${this.r}, ${this.g}, ${this.b})`, type === 'hex' ? 'HEX 복사됨' : 'RGB 복사됨'); }
     fallbackCopy(text, msg) { const run = () => { this.showToast(msg); try { this.playSuccessSound(); } catch(e) {} }; if (navigator.clipboard) navigator.clipboard.writeText(text).then(run).catch(() => this.forceExecCopy(text, msg)); else this.forceExecCopy(text, msg); }
     forceExecCopy(text, msg) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); this.showToast(msg); try { this.playSuccessSound(); } catch(e) {} } catch (e) {} document.body.removeChild(ta); }
-    searchColor() { const q = this.sanitizeInput(this.colorInput.value).toLowerCase(); if (!q) { this.searchResults.innerHTML = ''; return; } const res = []; for (const [name, color] of Object.entries(colorNameReferences)) { if (name.toLowerCase().includes(q) || (color.tags || []).some(t => t.includes(q))) res.push({ name, color }); } this.searchResults.innerHTML = res.slice(0, 8).map(({ name, color }) => `<div class="search-result-item" onclick="app.setColorFromHex('${color.hex}')"><div class="search-result-color" style="background-color:${color.hex}"></div><div class="search-result-info"><div class="search-result-name">${name}</div><div class="search-result-hex">${color.hex}</div></div></div>`).join(''); }
+    searchColor() {
+        const q = this.sanitizeInput(this.colorInput.value).toLowerCase();
+        if (!q) { this.searchResults.innerHTML = ''; return; }
+        const res = [];
+        for (const [name, color] of Object.entries(colorNameReferences)) {
+            const nameEn = color.name_en || '';
+            if (name.toLowerCase().includes(q) || nameEn.toLowerCase().includes(q) || (color.tags || []).some(t => t.includes(q))) {
+                res.push({ name, color });
+            }
+        }
+        this.searchResults.innerHTML = res.slice(0, 8).map(({ name, color }) => {
+            const displayName = (this.lang === 'en' && color.name_en) ? color.name_en : name;
+            return `<div class="search-result-item" onclick="app.setColorFromHex('${color.hex}')"><div class="search-result-color" style="background-color:${color.hex}"></div><div class="search-result-info"><div class="search-result-name">${displayName}</div><div class="search-result-hex">${color.hex}</div></div></div>`;
+        }).join('');
+    }
     sanitizeInput(input) { const d = document.createElement('div'); d.textContent = input; return d.innerHTML.substring(0, 60); }
     handleKeyPress(e) {
         if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
@@ -958,9 +979,9 @@ class ColorPalette {
 
         document.getElementById('btnSubmitFb').onclick = async () => {
             const text = document.getElementById('fbText').value;
-            if (!text) return this.showToast('내용을 입력해주세요.');
+            if (!text) return this.showToast(this.lang === 'en' ? 'Please enter feedback.' : '내용을 입력해주세요.');
             
-            this.showToast('피드백이 전송되었습니다. 감사합니다!');
+            this.showToast(this.lang === 'en' ? 'Feedback sent. Thank you!' : '피드백이 전송되었습니다. 감사합니다!');
             document.getElementById('feedbackModal').classList.remove('show');
             document.getElementById('fbText').value = '';
 
