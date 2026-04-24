@@ -77,7 +77,6 @@ class ColorPalette {
     }
 
     init() {
-        this.initFeedbackUI(); // 최우선 실행
         if (typeof designGuides !== 'undefined') this.buildGuide();
         this.buildInspirationReel();
         this.buildColorLibrary('all');
@@ -164,6 +163,7 @@ class ColorPalette {
         document.getElementById('closeDetailBtn')?.addEventListener('click', () => {
             this.closeColorDetail();
         });
+        this.initFeedbackUI();
     }
 
     setLanguage(lang) {
@@ -976,22 +976,27 @@ class ColorPalette {
         });
         stars.forEach((star, idx) => star.classList.toggle('active', idx < rating));
 
-        document.getElementById('btnSubmitFb').onclick = async () => {
-            const text = document.getElementById('fbText').value;
-            if (!text) return this.showToast('내용을 입력해주세요.');
-            
-            this.showToast('피드백이 전송되었습니다. 감사합니다!');
-            document.getElementById('feedbackModal').classList.remove('show');
-            document.getElementById('fbText').value = '';
+        const btnSubmit = document.getElementById('btnSubmitFb');
+        if (btnSubmit) {
+            btnSubmit.onclick = async () => {
+                const textEl = document.getElementById('fbText');
+                if (!textEl) return;
+                const text = textEl.value;
+                if (!text) return this.showToast('내용을 입력해주세요.');
+                
+                this.showToast('피드백이 전송되었습니다. 감사합니다!');
+                document.getElementById('feedbackModal')?.classList.remove('show');
+                textEl.value = '';
 
-            if (this.supabase) {
-                await this.supabase.from('feedbacks').insert([{ rating, text, created_at: new Date() }]);
-            } else {
-                const fbs = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
-                fbs.push({ rating, text, date: new Date() });
-                localStorage.setItem('designpick_feedbacks', JSON.stringify(fbs));
-            }
-        };
+                if (this.supabase) {
+                    await this.supabase.from('feedbacks').insert([{ rating, text, created_at: new Date() }]);
+                } else {
+                    const fbs = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
+                    fbs.push({ rating, text, date: new Date() });
+                    localStorage.setItem('designpick_feedbacks', JSON.stringify(fbs));
+                }
+            };
+        }
     }
 
     openFeedbackModal() {
