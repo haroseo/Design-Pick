@@ -1,13 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="?붿옄?대꼫瑜??꾪븳 RGB ?됱긽 ?붾젅???꾧뎄">
+    <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
     <meta name="theme-color" content="#ffffff">
     <title>Design Pick</title>
-    <link rel="stylesheet" href="style.css?v=36">
-    <link rel="stylesheet" href="improved.css?v=36">
+    <link rel="stylesheet" href="style.css?v=29">
+    <link rel="stylesheet" href="improved.css?v=29">
+
 </head>
 <body>
     <!-- SVG Library -->
@@ -73,14 +74,6 @@
             <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.25.82 4.31 2.18 5.89.28.32.48.71.58 1.14.2 1.05.41 2.97.41 2.97H18s.21-1.92.41-2.97c.1-.43.3-.82.58-1.14C20.34 16.31 21 14.25 21 12c0-4.97-4.03-9-9-9zm0 15h-2v-2h2v2zm0-4h-2V7h2v7z" opacity="0.3"/>
             <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C6.48 2 2 6.48 2 12c0 2.85 1.2 5.41 3.11 7.24.38.36.61.88.61 1.42V21c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-.34c0-.54.23-1.06.61-1.42C20.8 17.41 22 14.85 22 12c0-5.52-4.48-10-10-10zm-1 14h2v2h-2v-2zm0-7h2v5h-2V9z"/>
         </symbol>
-        <symbol id="icon-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </symbol>
-        <symbol id="icon-discord" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-        </symbol>
     </svg>
 
     <!-- Navbar -->
@@ -115,14 +108,11 @@
         </div>
 
         <div class="nav-actions">
-            <button class="btn-help" id="helpBtn" aria-label="?꾩?留?諛?吏?? onclick="if(window.app) window.app.openSupportModal();">
-                <svg class="icon-svg" style="pointer-events:none;"><use href="#icon-help"/></svg>
-            </button>
             <div class="lang-selector">
                 <button class="lang-btn" id="langKrBtn">KR</button>
                 <button class="lang-btn" id="langEnBtn">EN</button>
             </div>
-            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.5" aria-label="蹂쇰ⅷ 議곗젅">
+            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.5" aria-label="볼륨 조절">
             <div class="icon-indicator">
                 <svg class="icon-svg" id="soundIconOn"><use href="#icon-volume"/></svg>
                 <svg class="icon-svg" id="soundIconOff" style="display:none;"><use href="#icon-volume-off"/></svg>
@@ -133,16 +123,16 @@
     <!-- Color Picker Tab -->
     <div id="picker" class="tab-content active">
         <div class="wrapper">
-            <!-- 媛濡??숆렇?쇰? ?덉뒪?좊━ ?몃젅??-->
+            <!-- 가로 동그라미 히스토리 트레이 -->
             <div class="history-tray" id="historyTray"></div>
 
             <div class="main">
-                <!-- ?됱긽 諛뺤뒪 -->
+                <!-- 색상 박스 -->
                 <div class="color-box" id="colorDisplay"></div>
 
-                <!-- ?뺣낫 ?⑤꼸 -->
+                <!-- 정보 패널 -->
                 <div class="info-panel">
-                    <!-- R, G, B 媛?-->
+                    <!-- R, G, B 값 -->
                     <div class="rgb-values">
                         <div class="rgb-item" id="rItem">
                             <span class="rgb-label">R</span>
@@ -158,15 +148,15 @@
                         </div>
                     </div>
 
-                    <!-- ?대쫫 諛??섑듃 ?ㅽ겕??-->
+                    <!-- 이름 및 하트 스크랩 -->
                     <div class="name-fav-row">
                         <div class="color-name-display" id="colorNameDisplay"></div>
-                        <button class="fav-btn" id="favBtn" aria-label="?붾젅?????>
+                        <button class="fav-btn" id="favBtn" aria-label="팔레트 저장">
                             <svg class="icon-svg"><use href="#icon-heart"/></svg>
                         </button>
                     </div>
 
-                    <!-- HEX & ?대?吏 異붿텧 -->
+                    <!-- HEX & 이미지 추출 -->
                     <div class="code-box">
                         <div class="code-item">
                             <span class="code-label">HEX</span>
@@ -174,68 +164,68 @@
                         </div>
                     </div>
 
-                    <!-- 踰꾪듉 -->
+                    <!-- 버튼 -->
                     <div class="button-section">
-                        <button id="resetBtn" class="btn btn-reset" data-i18n="btn_reset">由ъ뀑</button>
-                        <button id="hexCopyBtn" class="btn btn-copy" data-i18n="btn_copy_hex">HEX 蹂듭궗</button>
-                        <button id="rgbCopyBtn" class="btn btn-copy" data-i18n="btn_copy_rgb">RGB 蹂듭궗</button>
+                        <button id="resetBtn" class="btn btn-reset" data-i18n="btn_reset">리셋</button>
+                        <button id="hexCopyBtn" class="btn btn-copy" data-i18n="btn_copy_hex">HEX 복사</button>
+                        <button id="rgbCopyBtn" class="btn btn-copy" data-i18n="btn_copy_rgb">RGB 복사</button>
                     </div>
                     
                     <button id="exportCssBtn" class="btn btn-export" onclick="app.openExportModal()">
-                        <svg class="icon-svg"><use href="#icon-export"/></svg> <span data-i18n="btn_export_css">CSS / Tailwind ?대낫?닿린</span>
+                        <svg class="icon-svg"><use href="#icon-export"/></svg> <span data-i18n="btn_export_css">CSS / Tailwind 내보내기</span>
                     </button>
 
-                    <!-- 紐⑤컮??誘몄꽭議곗젙 -->
+                    <!-- 모바일 미세조정 -->
                     <div class="mobile-adjust">
-                        <p class="mobile-adj-label">誘몄꽭 議곗젙: <span id="mobileAdjLabel">梨꾨꼸 ?좏깮</span></p>
+                        <p class="mobile-adj-label">미세 조정: <span id="mobileAdjLabel">채널 선택</span></p>
                         <div class="mobile-adj-btns">
-                            <button class="adj-btn" onclick="app.mobileAdjust(-10)">??0</button>
-                            <button class="adj-btn" onclick="app.mobileAdjust(-1)">??</button>
+                            <button class="adj-btn" onclick="app.mobileAdjust(-10)">−10</button>
+                            <button class="adj-btn" onclick="app.mobileAdjust(-1)">−1</button>
                             <button class="adj-btn" onclick="app.mobileAdjust(1)">+1</button>
                             <button class="adj-btn" onclick="app.mobileAdjust(10)">+10</button>
                         </div>
                     </div>
 
-                    <!-- ?ㅻ낫??媛?대뱶 (?곗뒪?ы깙) -->
+                    <!-- 키보드 가이드 (데스크탑) -->
                     <div class="keyboard-guide desktop-only">
-                        <p class="guide-title" data-i18n="keyboard_guide_title" style="font-weight: 900; margin-bottom: 8px;">議곗옉 諛⑸쾿</p>
-                        <p class="guide-text" data-i18n="keyboard_guide_1">R / G / B ?대┃: 梨꾨꼸 ?좏깮</p>
-                        <p class="guide-text" data-i18n="keyboard_guide_2">???? ?좏깮 梨꾨꼸 誘몄꽭 議곗젙</p>
-                        <p class="guide-text" data-i18n="keyboard_guide_3">?ㅽ럹?댁뒪諛? 猷곕젢 ?ъ떆??/p>
+                        <p class="guide-title" data-i18n="keyboard_guide_title" style="font-weight: 900; margin-bottom: 8px;">조작 방법</p>
+                        <p class="guide-text" data-i18n="keyboard_guide_1">R / G / B 클릭: 채널 선택</p>
+                        <p class="guide-text" data-i18n="keyboard_guide_2">← →: 선택 채널 미세 조정</p>
+                        <p class="guide-text" data-i18n="keyboard_guide_3">스페이스바: 룰렛 재시작</p>
                     </div>
                 </div>
             </div>
 
-            <!-- ??怨꾩뿴 ?좏깮 -->
+            <!-- 색 계열 선택 -->
             <div class="family-section">
-                <p class="family-section-title" data-i18n="select_family">??怨꾩뿴 ?좏깮</p>
+                <p class="family-section-title" data-i18n="select_family">색 계열 선택</p>
                 <div class="family-chips" id="familyChips">
-                    <button class="family-chip active" data-family="all" style="--chip-c:#555">?꾩껜</button>
-                    <button class="family-chip" data-family="red"     style="--chip-c:#FF3B30">鍮④컯</button>
-                    <button class="family-chip" data-family="orange"  style="--chip-c:#FF9500">二쇳솴</button>
-                    <button class="family-chip" data-family="yellow"  style="--chip-c:#FFCC00">?몃옉</button>
-                    <button class="family-chip" data-family="green"   style="--chip-c:#34C759">珥덈줉</button>
-                    <button class="family-chip" data-family="teal"    style="--chip-c:#32ADE6">泥?줉</button>
-                    <button class="family-chip" data-family="blue"    style="--chip-c:#007AFF">?뚮옉</button>
-                    <button class="family-chip" data-family="purple"  style="--chip-c:#AF52DE">蹂대씪</button>
-                    <button class="family-chip" data-family="pink"    style="--chip-c:#FF2D55">遺꾪솉</button>
-                    <button class="family-chip" data-family="neutral" style="--chip-c:#8E8E93">以묐┰</button>
+                    <button class="family-chip active" data-family="all" style="--chip-c:#555">전체</button>
+                    <button class="family-chip" data-family="red"     style="--chip-c:#FF3B30">빨강</button>
+                    <button class="family-chip" data-family="orange"  style="--chip-c:#FF9500">주황</button>
+                    <button class="family-chip" data-family="yellow"  style="--chip-c:#FFCC00">노랑</button>
+                    <button class="family-chip" data-family="green"   style="--chip-c:#34C759">초록</button>
+                    <button class="family-chip" data-family="teal"    style="--chip-c:#32ADE6">청록</button>
+                    <button class="family-chip" data-family="blue"    style="--chip-c:#007AFF">파랑</button>
+                    <button class="family-chip" data-family="purple"  style="--chip-c:#AF52DE">보라</button>
+                    <button class="family-chip" data-family="pink"    style="--chip-c:#FF2D55">분홍</button>
+                    <button class="family-chip" data-family="neutral" style="--chip-c:#8E8E93">중립</button>
                 </div>
             </div>
 
-            <!-- 鍮꾩듂???됱긽 -->
+            <!-- 비슷한 색상 -->
             <div class="similar-colors-section">
-                <p class="similar-title" data-i18n="detail_similar">鍮꾩듂???됱긽</p>
+                <p class="similar-title" data-i18n="detail_similar">비슷한 색상</p>
                 <div class="similar-colors-list" id="similarColors"></div>
             </div>
 
-            <!-- ?됱긽 寃??-->
+            <!-- 색상 검색 -->
             <div class="color-search">
                 <input
                     type="text"
                     id="colorInput"
                     class="color-input"
-                    placeholder="?됱긽 ?대쫫 寃??(?? 鍮④컯, 誘쇳듃, ?뚮옉)"
+                    placeholder="색상 이름 검색 (예: 빨강, 민트, 파랑)"
                     data-i18n-placeholder="search_placeholder"
                 >
                 <div class="search-results" id="searchResults"></div>
@@ -248,7 +238,7 @@
         <div class="wrapper">
             <div class="inspiration-wrapper">
                 <h2 data-i18n="nav_inspiration">Design Inspiration</h2>
-                <p class="inspiration-subtitle" data-i18n="inspiration_subtitle">硫덉텛硫??붾젅?멸? ?섑??⑸땲?????됱쓣 ?대┃?섎㈃ Color Picker濡??대룞</p>
+                <p class="inspiration-subtitle" data-i18n="inspiration_subtitle">멈추면 팔레트가 나타납니다 • 색을 클릭하면 Color Picker로 이동</p>
 
                 <div class="inspiration-reel-wrapper" id="reelWrapper">
                     <div class="reel-overlay reel-top"></div>
@@ -256,7 +246,7 @@
                     <div class="reel-overlay reel-bottom"></div>
                 </div>
 
-                <p class="space-hint" id="spaceHint">??SPACE / ??쑝濡?硫덉텛湲?/p>
+                <p class="space-hint" id="spaceHint">▶ SPACE / 탭으로 멈추기</p>
 
                 <div class="inspiration-palette" id="inspirationPalette"></div>
             </div>
@@ -267,7 +257,7 @@
     <div id="today" class="tab-content inspo-tab">
         <div class="inspo-card" id="inspoCard">
             <!-- Prev -->
-            <button class="inspo-nav-btn inspo-prev" id="inspoPrev" aria-label="?댁쟾">&#8249;</button>
+            <button class="inspo-nav-btn inspo-prev" id="inspoPrev" aria-label="이전">&#8249;</button>
 
             <!-- Text section -->
             <div class="inspo-text">
@@ -292,7 +282,7 @@
             </div>
 
             <!-- Next -->
-            <button class="inspo-nav-btn inspo-next" id="inspoNext" aria-label="?ㅼ쓬">&#8250;</button>
+            <button class="inspo-nav-btn inspo-next" id="inspoNext" aria-label="다음">&#8250;</button>
         </div>
     </div>
 
@@ -300,12 +290,12 @@
     <div id="story" class="tab-content">
         <div class="wrapper">
             <div class="story-header">
-                <h2 data-i18n="nav_story">?ㅻ뒛???붿옄??吏??/h2>
-                <p class="story-subtitle">湲濡쒕쾶 釉뚮옖?쒖? 湲곗뾽?ㅼ? ???대윴 ?됱긽怨??고듃瑜??좏깮?덉쓣源뚯슂?</p>
+                <h2 data-i18n="nav_story">오늘의 디자인 지식</h2>
+                <p class="story-subtitle">글로벌 브랜드와 기업들은 왜 이런 색상과 폰트를 선택했을까요?</p>
             </div>
             
             <div class="story-grid" id="storyGrid">
-                <!-- JS?먯꽌 ?숈쟻 ?뚮뜑留?-->
+                <!-- JS에서 동적 렌더링 -->
             </div>
         </div>
     </div>
@@ -314,8 +304,8 @@
     <div id="guide" class="tab-content">
         <div class="wrapper">
             <div class="guide-wrapper">
-                <h2 data-i18n="nav_guide">?붿옄??而щ윭 湲곕쾿</h2>
-                <p class="guide-subtitle" data-i18n="guide_subtitle">?됱쓣 ?ㅻ（??湲곕낯?곸씠怨??ㅼ슜?곸씤 吏?앸뱾</p>
+                <h2 data-i18n="nav_guide">디자인 컬러 기법</h2>
+                <p class="guide-subtitle" data-i18n="guide_subtitle">색을 다루는 기본적이고 실용적인 지식들</p>
                 <div class="guide-grid" id="guideGrid"></div>
             </div>
         </div>
@@ -325,10 +315,10 @@
     <div id="colors" class="tab-content">
         <div class="wrapper">
             <div class="colors-wrapper">
-                <h2 data-i18n="nav_library">??留롮? ??蹂닿린</h2>
-                <p class="colors-subtitle" data-i18n="library_subtitle">?⑸룄蹂꾨줈 遺꾨쪟??而щ윭 ?쇱씠釉뚮윭由?/p>
+                <h2 data-i18n="nav_library">더 많은 색 보기</h2>
+                <p class="colors-subtitle" data-i18n="library_subtitle">용도별로 분류된 컬러 라이브러리</p>
                 <div class="lib-filter-chips" id="libFilterChips">
-                    <!-- JS?먯꽌 ?숈쟻 ?뚮뜑留?-->
+                    <!-- JS에서 동적 렌더링 -->
                 </div>
                 <div class="color-library-container">
                     <div class="color-library" id="colorLibrary"></div>
@@ -341,16 +331,16 @@
     <div id="fonts" class="tab-content">
         <div class="wrapper">
             <div class="fonts-header">
-                <h2 data-i18n="nav_fonts">?고듃 異붿쿇</h2>
-                <p class="fonts-subtitle" data-i18n="fonts_subtitle">?붿옄?몄쓽 ?꾩꽦?꾨? ?믪뿬二쇰뒗 留덉뒪?고뵾???고듃 異붿쿇</p>
+                <h2 data-i18n="nav_fonts">폰트 추천</h2>
+                <p class="fonts-subtitle" data-i18n="fonts_subtitle">디자인의 완성도를 높여주는 마스터피스 폰트 추천</p>
                 
                 <div class="font-playground">
-                    <input type="text" id="fontPlayground" placeholder="?ш린??臾멸뎄瑜??낅젰?섏뿬 ?고듃瑜??뚯뒪?명빐蹂댁꽭??.." data-i18n-placeholder="font_playground_placeholder">
+                    <input type="text" id="fontPlayground" placeholder="여기에 문구를 입력하여 폰트를 테스트해보세요..." data-i18n-placeholder="font_playground_placeholder">
                 </div>
             </div>
             
             <div class="fonts-grid" id="fontsGrid">
-                <!-- JS?먯꽌 ?숈쟻 ?뚮뜑留?-->
+                <!-- JS에서 동적 렌더링 -->
             </div>
         </div>
     </div>
@@ -360,32 +350,32 @@
         <div class="wrapper">
             <div class="my-pal-header">
                 <div class="my-pal-title-row">
-                    <h2 id="myPalTitle" style="cursor:default">??蹂닿???<span class="my-count-badge" id="myPalCount">0</span></h2>
-                    <p class="colors-subtitle">?ㅽ겕?⑺븳 ?섎쭔??而щ윭 ?붾젅??/p>
+                    <h2 id="myPalTitle" style="cursor:default">내 보관함 <span class="my-count-badge" id="myPalCount">0</span></h2>
+                    <p class="colors-subtitle">스크랩한 나만의 컬러 팔레트</p>
                 </div>
                 
                 <div class="my-pal-controls">
                     <div class="my-search-box">
                         <svg class="search-icon" width="16" height="16"><use href="#icon-search"/></svg>
-                        <input type="text" id="myPalSearch" placeholder="?대쫫 ?먮뒗 HEX 寃??..">
+                        <input type="text" id="myPalSearch" placeholder="이름 또는 HEX 검색...">
                     </div>
                 </div>
             </div>
 
             <div class="my-filter-container">
                 <div class="my-filter-chips" id="myFilterChips">
-                    <button class="filter-chip active" data-filter="all">?꾩껜</button>
+                    <button class="filter-chip active" data-filter="all">전체</button>
                     <button class="filter-chip" data-filter="starred">
-                        <svg class="chip-icon"><use href="#icon-star-filled"/></svg> 以묒슂
+                        <svg class="chip-icon"><use href="#icon-star-filled"/></svg> 중요
                     </button>
                     <div class="filter-divider"></div>
-                    <button class="filter-chip" data-filter="red">鍮④컯</button>
-                    <button class="filter-chip" data-filter="orange">二쇳솴</button>
-                    <button class="filter-chip" data-filter="yellow">?몃옉</button>
-                    <button class="filter-chip" data-filter="green">珥덈줉</button>
-                    <button class="filter-chip" data-filter="blue">?뚮옉</button>
-                    <button class="filter-chip" data-filter="purple">蹂대씪</button>
-                    <button class="filter-chip" data-filter="neutral">臾댁콈??/button>
+                    <button class="filter-chip" data-filter="red">빨강</button>
+                    <button class="filter-chip" data-filter="orange">주황</button>
+                    <button class="filter-chip" data-filter="yellow">노랑</button>
+                    <button class="filter-chip" data-filter="green">초록</button>
+                    <button class="filter-chip" data-filter="blue">파랑</button>
+                    <button class="filter-chip" data-filter="purple">보라</button>
+                    <button class="filter-chip" data-filter="neutral">무채색</button>
                 </div>
             </div>
 
@@ -396,8 +386,8 @@
     <!-- Export Modal -->
     <div class="modal-overlay" id="exportModal">
         <div class="modal-content export-modal-large">
-            <h3 class="modal-title">?꾨Ц媛???대낫?닿린</h3>
-            <p class="modal-desc">?뚰겕?뚮줈?곗뿉 留욌뒗 ?뺤떇???좏깮?섏꽭??</p>
+            <h3 class="modal-title">전문가용 내보내기</h3>
+            <p class="modal-desc">워크플로우에 맞는 형식을 선택하세요.</p>
             
             <div class="export-sections-wrapper">
                 <!-- Web Development Group -->
@@ -407,14 +397,14 @@
                         <div class="export-card">
                             <div class="card-header">
                                 <span>CSS Variables</span>
-                                <button class="btn-copy-s" onclick="app.copyExport('css')">蹂듭궗</button>
+                                <button class="btn-copy-s" onclick="app.copyExport('css')">복사</button>
                             </div>
                             <pre id="exportCssCode"></pre>
                         </div>
                         <div class="export-card">
                             <div class="card-header">
                                 <span>Tailwind Config</span>
-                                <button class="btn-copy-s" onclick="app.copyExport('tw')">蹂듭궗</button>
+                                <button class="btn-copy-s" onclick="app.copyExport('tw')">복사</button>
                             </div>
                             <pre id="exportTwCode"></pre>
                         </div>
@@ -428,18 +418,18 @@
                         <div class="export-card design-card">
                             <div class="card-info">
                                 <h5>Figma</h5>
-                                <p>蹂듭궗 ???쇨렇留덉뿉??遺숈뿬?ｊ린(Ctrl+V) ?섏꽭??</p>
+                                <p>복사 후 피그마에서 붙여넣기(Ctrl+V) 하세요.</p>
                             </div>
-                            <button class="btn-copy-full" onclick="app.copyExport('figma')">Figma ?덉씠?꾩썐 蹂듭궗</button>
+                            <button class="btn-copy-full" onclick="app.copyExport('figma')">Figma 레이아웃 복사</button>
                         </div>
                         <div class="export-card design-card">
                             <div class="card-info">
                                 <h5>Photoshop & Illustrator</h5>
-                                <p>HEX 由ъ뒪?몃? 蹂듭궗?섏뿬 Swatches???낅젰?섏꽭??</p>
+                                <p>HEX 리스트를 복사하여 Swatches에 입력하세요.</p>
                             </div>
                             <div class="adobe-actions">
                                 <pre id="exportHexCode" style="display:none;"></pre>
-                                <button class="btn-copy-full" onclick="app.copyExport('hexlist')">HEX 由ъ뒪??蹂듭궗</button>
+                                <button class="btn-copy-full" onclick="app.copyExport('hexlist')">HEX 리스트 복사</button>
                             </div>
                         </div>
                     </div>
@@ -447,7 +437,7 @@
             </div>
             
             <div class="modal-footer-actions">
-                <button class="btn btn-close-modal-v2" id="closeExportBtn">?リ린</button>
+                <button class="btn btn-close-modal-v2" id="closeExportBtn">닫기</button>
             </div>
         </div>
     </div>
@@ -465,18 +455,18 @@
                 </button>
                 <div class="detail-nav-actions">
                     <button class="btn-detail-share" onclick="app.shareCurrentColor()">
-                        <svg class="icon-svg"><use href="#icon-export"/></svg> 怨듭쑀?섍린
+                        <svg class="icon-svg"><use href="#icon-export"/></svg> 공유하기
                     </button>
                 </div>
             </header>
 
             <main class="detail-main-content">
-                <!-- ?곷떒: 媛먯꽦 ?ㅻ뱶?쇱씤 & 硫붿씤 ?ㅼ?移?-->
+                <!-- 상단: 감성 헤드라인 & 메인 스와치 -->
                 <section class="detail-hero-section">
                     <div class="hero-text-content">
                         <span class="mood-tag" id="detailMoodTag">Emotional Pick</span>
-                        <h1 class="detail-headline" id="detailHeadline">?됱긽???닿릿 ?밸퀎???댁빞湲?/h1>
-                        <p class="detail-sub-headline" id="detailSubHeadline">Design Pick???쒖븞?섎뒗 ?꾨꼍??而щ윭 媛?대뱶</p>
+                        <h1 class="detail-headline" id="detailHeadline">색상에 담긴 특별한 이야기</h1>
+                        <p class="detail-sub-headline" id="detailSubHeadline">Design Pick이 제안하는 완벽한 컬러 가이드</p>
                     </div>
                     <div class="hero-visual-content">
                         <div id="detailSwatch" class="main-swatch-v2">
@@ -489,65 +479,53 @@
                 </section>
 
                 <div class="detail-grid-layout">
-                    <!-- ?쇱そ: ?뺣낫 諛?媛?대뱶 -->
+                    <!-- 왼쪽: 정보 및 가이드 -->
                     <div class="detail-info-column">
                         <div class="info-card-v2">
-                            <h3 class="card-title-v3">???됱? ?대뼡 ?됱씤媛??</h3>
-                            <p id="detailDescription" class="card-body-v3">?됱긽??????곸꽭???ㅻ챸???ш린???쒖떆?⑸땲??</p>
+                            <h3 class="card-title-v3">이 색은 어떤 색인가요?</h3>
+                            <p id="detailDescription" class="card-body-v3">색상에 대한 상세한 설명이 여기에 표시됩니다.</p>
                         </div>
 
                         <div class="info-card-v2">
-                            <h3 class="card-title-v3">?붿옄???쒖슜 ??/h3>
+                            <h3 class="card-title-v3">디자인 활용 팁</h3>
                             <ul id="detailAdviceList" class="advice-list-v2">
-                                <!-- 媛?대뱶 ?댁슜 ?숈쟻 ?쎌엯 -->
+                                <!-- 가이드 내용 동적 삽입 -->
                             </ul>
                         </div>
 
                         <div class="info-card-v2">
-                            <h3 class="card-title-v3">異붿쿇 ?쒖슜泥?/h3>
+                            <h3 class="card-title-v3">추천 활용처</h3>
                             <div id="detailUsageBadges" class="usage-badge-container">
-                                <!-- 諛곗? ?숈쟻 ?쎌엯 -->
+                                <!-- 배지 동적 삽입 -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- ?ㅻⅨ履? ?쒓컖???뚯뒪??諛??좎궗??-->
+                    <!-- 오른쪽: 시각적 테스트 및 유사색 -->
                     <div class="detail-visual-column">
                         <div class="visual-card-v2">
-                            <h3 class="card-title-v3" data-i18n="detail_contrast">?띿뒪??媛?낆꽦 ?뚯뒪??/h3>
+                            <h3 class="card-title-v3" data-i18n="detail_contrast">텍스트 가독성 테스트</h3>
                             <div class="a11y-test-container">
-                                <div id="testLightText" class="test-box">Abc 媛?섎떎 (Light)</div>
-                                <div id="testDarkText" class="test-box">Abc 媛?섎떎 (Dark)</div>
+                                <div id="testLightText" class="test-box">Abc 가나다 (Light)</div>
+                                <div id="testDarkText" class="test-box">Abc 가나다 (Dark)</div>
                             </div>
                         </div>
 
                         <div class="visual-card-v2">
-                            <h3 class="card-title-v3" data-i18n="detail_similar">鍮꾩듂??媛먯꽦???됱긽</h3>
+                            <h3 class="card-title-v3" data-i18n="detail_similar">비슷한 감성의 색상</h3>
                             <div id="detailSimilarGrid" class="similar-colors-mini">
-                                <!-- ?좎궗???숈쟻 ?쎌엯 -->
+                                <!-- 유사색 동적 삽입 -->
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
         </div>
-    <!-- Support Modal -->
-    <div class="modal-overlay" id="supportModal">
-        <div class="modal-content feedback-modal" style="text-align: center;">
-            <h2 class="fb-title">?꾩?留?諛?吏??<span style="font-size: 24px;">?몝</span></h2>
-            <p class="fb-desc" style="margin-bottom: 24px;">Design Pick???댁슜??二쇱뀛??媛먯궗?⑸땲??<br>踰꾧렇 ?쒕낫, 湲곕뒫 嫄댁쓽 ?먮뒗 ?붿옄???뚰넻?<br>?몄젣??怨듭떇 ?붿뒪肄붾뱶 而ㅻ??덊떚?먯꽌 ?섏쁺?⑸땲??</p>
-            
-            <a href="https://discord.gg/YOUR_INVITE_LINK" target="_blank" class="btn-discord" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #5865F2; color: #fff; padding: 16px; border-radius: 16px; text-decoration: none; font-weight: 800; font-size: 16px; margin-bottom: 16px; transition: transform 0.2s, background 0.2s;">
-                <svg width="24" height="24"><use href="#icon-discord"/></svg> 怨듭떇 ?붿뒪肄붾뱶 李몄뿬?섍린
-            </a>
-            
-            <button class="btn-reset-v2" id="closeSupportBtn" style="width: 100%;">?リ린</button>
-        </div>
     </div>
 
     <!-- Feedback FAB -->
-    <button class="fab-feedback" id="fabFeedback" aria-label="?섍껄 蹂대궡湲? onclick="app.openFeedbackModal()">
-        <svg style="width:24px;height:24px; pointer-events: none;" viewBox="0 0 24 24">
+    <button class="fab-feedback" id="fabFeedback" aria-label="의견 보내기">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
             <path fill="currentColor" d="M20,2H4C2.9,2,2,2.9,2,4v18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z M20,16H5.17L4,17.17V4h16V16z"/>
         </svg>
     </button>
@@ -555,58 +533,58 @@
     <!-- Feedback Modal -->
     <div class="modal-overlay" id="feedbackModal">
         <div class="modal-content feedback-modal">
-            <h3 class="modal-title">?섍껄 蹂대궡湲?/h3>
-            <p class="modal-desc">?붿옄???쎌쓣 ?ъ슜?섎ŉ ?먮? ?먯쓣 ?ㅻ젮二쇱꽭??</p>
+            <h3 class="modal-title">의견 보내기</h3>
+            <p class="modal-desc">디자인 픽을 사용하며 느낀 점을 들려주세요.</p>
             
             <div class="fb-section">
-                <span class="fb-label">留뚯”??/span>
+                <span class="fb-label">만족도</span>
                 <div class="rating-group" id="fbRating">
-                    <span class="rating-star" data-rating="1">??/span>
-                    <span class="rating-star" data-rating="2">??/span>
-                    <span class="rating-star" data-rating="3">??/span>
-                    <span class="rating-star" data-rating="4">??/span>
-                    <span class="rating-star" data-rating="5">??/span>
+                    <span class="rating-star" data-rating="1">★</span>
+                    <span class="rating-star" data-rating="2">★</span>
+                    <span class="rating-star" data-rating="3">★</span>
+                    <span class="rating-star" data-rating="4">★</span>
+                    <span class="rating-star" data-rating="5">★</span>
                 </div>
             </div>
 
             <div class="fb-section">
-                <span class="fb-label">?곸꽭 ?섍껄</span>
-                <textarea id="fbText" placeholder="???섏? ?쒕퉬?ㅻ? ?꾪븳 ?뚯쨷???섍껄??遺?곷뱶由쎈땲??.."></textarea>
+                <span class="fb-label">상세 의견</span>
+                <textarea id="fbText" placeholder="더 나은 서비스를 위한 소중한 의견을 부탁드립니다..."></textarea>
             </div>
 
             <div class="fb-actions-v2">
-                <button class="btn btn-reset-v2" id="btnCancelFb">痍⑥냼</button>
-                <button class="btn btn-submit-v2" id="btnSubmitFb">蹂대궡湲?/button>
+                <button class="btn btn-reset-v2" id="btnCancelFb">취소</button>
+                <button class="btn btn-submit-v2" id="btnSubmitFb">보내기</button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="adminAuthModal">
         <div class="modal-content admin-modal" style="max-width:320px; padding:32px">
-            <h3 class="modal-title" style="font-size:20px">蹂댁븞 ?몄쬆</h3>
-            <p class="modal-desc">愿由ъ옄 鍮꾨?踰덊샇瑜??낅젰?섏꽭??</p>
-            <input type="password" id="adminPassword" placeholder="鍮꾨?踰덊샇 ?낅젰" style="width:100%; padding:14px; border-radius:12px; border:1px solid #eee; background:#f8f8fa; margin-bottom:20px; text-align:center">
+            <h3 class="modal-title" style="font-size:20px">보안 인증</h3>
+            <p class="modal-desc">관리자 비밀번호를 입력하세요.</p>
+            <input type="password" id="adminPassword" placeholder="비밀번호 입력" style="width:100%; padding:14px; border-radius:12px; border:1px solid #eee; background:#f8f8fa; margin-bottom:20px; text-align:center">
             <div class="fb-actions-v2">
-                <button class="btn btn-reset-v2" onclick="document.getElementById('adminAuthModal').classList.remove('show')">痍⑥냼</button>
-                <button class="btn btn-submit-v2" onclick="app.verifyAdmin()">?뺤씤</button>
+                <button class="btn btn-reset-v2" onclick="document.getElementById('adminAuthModal').classList.remove('show')">취소</button>
+                <button class="btn btn-submit-v2" onclick="app.verifyAdmin()">확인</button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content admin-modal">
-            <h3 class="modal-title">愿由ъ옄 ??쒕낫??/h3>
-            <p class="modal-desc">?섏쭛???ъ슜???쇰뱶諛?紐⑸줉?낅땲??</p>
+            <h3 class="modal-title">관리자 대시보드</h3>
+            <p class="modal-desc">수집된 사용자 피드백 목록입니다.</p>
             <div id="adminFeedbackList" class="admin-fb-list"></div>
             <div class="modal-footer-actions" style="margin-top:20px">
-                <button class="btn btn-copy" onclick="app.exportFeedbacks()">?곗씠??異붿텧 (JSON)</button>
-                <button class="btn btn-reset" id="closeAdminBtn">?リ린</button>
+                <button class="btn btn-copy" onclick="app.exportFeedbacks()">데이터 추출 (JSON)</button>
+                <button class="btn btn-reset" id="closeAdminBtn">닫기</button>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="data.js?v=36"></script>
-    <script src="script.js?v=36"></script>
+    <script src="data.js?v=29"></script>
+    <script src="script.js?v=29"></script>
 </body>
 </html>

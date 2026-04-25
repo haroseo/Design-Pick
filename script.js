@@ -84,7 +84,6 @@ class ColorPalette {
         this.buildColorLibrary('all');
         this.updateColor();
         this.displaySimilarColors();
-        this.initFeedbackUI();
 
         this.resetBtn?.addEventListener('click',   () => this.reset());
         this.hexCopyBtn?.addEventListener('click', () => this.copyToClipboard('hex'));
@@ -126,18 +125,6 @@ class ColorPalette {
 
         document.getElementById('closeExportBtn')?.addEventListener('click', () => {
             document.getElementById('exportModal')?.classList.remove('show');
-        });
-
-        document.getElementById('helpBtn')?.addEventListener('click', () => {
-            document.getElementById('supportModal')?.classList.add('show');
-        });
-        document.getElementById('closeSupportBtn')?.addEventListener('click', () => {
-            document.getElementById('supportModal')?.classList.remove('show');
-        });
-        document.getElementById('supportModal')?.addEventListener('click', (e) => {
-            if (e.target === document.getElementById('supportModal')) {
-                document.getElementById('supportModal').classList.remove('show');
-            }
         });
 
         // MY 탭 전용 이벤트 리스너
@@ -729,7 +716,6 @@ class ColorPalette {
         });
     }
     openFeedbackModal() { document.getElementById('feedbackModal')?.classList.add('show'); }
-    openSupportModal() { document.getElementById('supportModal')?.classList.add('show'); }
 
     initFonts() { const playground = document.getElementById('fontPlayground'); if (playground) playground.addEventListener('input', (e) => { const text = e.target.value; document.querySelectorAll('.font-preview-text').forEach(el => el.textContent = text || el.dataset.original); }); }
     renderFonts() {
