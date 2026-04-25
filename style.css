@@ -1242,3 +1242,6 @@ body {
     .palette-color { width: 62px; height: 62px; }
     .adj-btn { font-size: 13px; }
 }
+
+/* Support Modal */
+#supportModal.show { display: flex !important; }
