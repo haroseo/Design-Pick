@@ -467,7 +467,7 @@ class ColorPalette {
         if (tabName === 'colors') this.buildColorLibrary();
         if (tabName === 'guide') this.buildGuide();
         if (tabName === 'fonts') this.renderFonts();
-        if (tabName === 'mypalettes') this.renderMyPalettes();
+        if (tabName === 'mypalettes') this.renderFavorites();
     }
 
     buildGuide() {
@@ -1096,34 +1096,7 @@ class ColorPalette {
         });
     }
 
-    renderMyPalettes() {
-        const grid = document.getElementById('myPalettesGrid'); if (!grid) return;
-        const favs = JSON.parse(localStorage.getItem('designpick_favs') || '[]');
-        if (favs.length === 0) {
-            grid.innerHTML = `<div class="empty-state">${uiTranslations[this.lang].empty_fav}</div>`;
-            return;
-        }
-        grid.innerHTML = favs.map((f, i) => `
-            <div class="my-pal-card">
-                <div class="my-pal-swatch" style="background-color:${f.hex}" onclick="app.setColorFromHex('${f.hex}'); app.switchTab('picker')"></div>
-                <div class="my-pal-info">
-                    <div class="my-pal-name">${f.name}</div>
-                    <div class="my-pal-hex">${f.hex}</div>
-                    <button class="btn-remove-fav" onclick="app.removeFavorite(${i})">
-                        <svg class="icon-svg"><use href="#icon-close"/></svg>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    removeFavorite(index) {
-        const favs = JSON.parse(localStorage.getItem('designpick_favs') || '[]');
-        favs.splice(index, 1);
-        localStorage.setItem('designpick_favs', JSON.stringify(favs));
-        this.renderMyPalettes();
-        this.showToast(this.lang === 'kr' ? '보관함에서 삭제되었습니다.' : 'Removed from library.');
-    }
+    // Redundant methods removed to unify with renderFavorites()
 
     // ═══════════════════════════════════════════════════════════
     //  Admin Dashboard
