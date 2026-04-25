@@ -400,7 +400,7 @@ const uiTranslations = {
         nav_inspiration: '인스피레이션',
         nav_guide: '가이드',
         nav_my: '내 보관함',
-        nav_fonts: '폰트 추천',
+        nav_fonts: 'Fonts',
         font_playground_placeholder: '여기에 문구를 입력하여 폰트를 테스트해보세요...',
         font_designer_note: '디자이너의 노트',
         font_pairing: '추천 페어링',
