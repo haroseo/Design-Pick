@@ -313,6 +313,9 @@ h2 {
 
 /* ─── Tab content fade ─── */
 .tab-content.active {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     animation: fadeInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
