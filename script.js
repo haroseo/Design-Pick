@@ -84,6 +84,7 @@ class ColorPalette {
         this.buildColorLibrary('all');
         this.updateColor();
         this.displaySimilarColors();
+        this.initFeedbackUI();
 
         this.resetBtn?.addEventListener('click',   () => this.reset());
         this.hexCopyBtn?.addEventListener('click', () => this.copyToClipboard('hex'));
