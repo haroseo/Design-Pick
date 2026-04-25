@@ -467,6 +467,23 @@ class ColorPalette {
         if (tabName === 'colors') this.buildColorLibrary();
         if (tabName === 'guide') this.buildGuide();
         if (tabName === 'fonts') this.renderFonts();
+        if (tabName === 'mypalettes') this.renderMyPalettes();
+    }
+
+    buildGuide() {
+        const grid = document.getElementById('guideGrid'); if (!grid || typeof designGuides === 'undefined') return;
+        grid.innerHTML = designGuides.map(g => {
+            const title = (this.lang === 'en' && g.title_en) ? g.title_en : g.title;
+            const desc = (this.lang === 'en' && g.desc_en) ? g.desc_en : g.desc;
+            // 시각적 박스만 보여주고 텍스트(HEX)는 절대 넣지 않음
+            const visualHTML = g.colors.map(c => `<div class="gc-box" style="background-color:${c}"></div>`).join('');
+            return `
+                <div class="guide-card">
+                    <div class="guide-card-title">${title}</div>
+                    <div class="guide-card-desc">${desc}</div>
+                    <div class="guide-card-visual">${visualHTML}</div>
+                </div>`;
+        }).join('');
     }
 
     buildColorLibrary(filterCat = 'all') {
@@ -961,13 +978,39 @@ class ColorPalette {
         const stars = document.querySelectorAll('.rating-star');
         stars.forEach(s => {
             s.onclick = () => {
-                const val = s.dataset.val;
-                document.getElementById('fbRating').value = val;
+                const val = s.dataset.rating;
+                this.currentRating = val;
                 stars.forEach(star => {
-                    star.classList.toggle('active', parseInt(star.dataset.val) <= parseInt(val));
+                    star.classList.toggle('active', parseInt(star.dataset.rating) <= parseInt(val));
                 });
             };
         });
+
+        const cancelBtn = document.getElementById('btnCancelFb');
+        if (cancelBtn) cancelBtn.onclick = () => document.getElementById('feedbackModal')?.classList.remove('show');
+
+        const submitBtn = document.getElementById('btnSubmitFb');
+        if (submitBtn) {
+            submitBtn.onclick = async () => {
+                const textEl = document.getElementById('fbText');
+                const rating = this.currentRating || 5;
+                const text = textEl?.value;
+
+                if (!text) return this.showToast('내용을 입력해주세요.');
+
+                this.showToast('피드백이 전송되었습니다. 감사합니다!');
+                document.getElementById('feedbackModal')?.classList.remove('show');
+                if (textEl) textEl.value = '';
+
+                if (this.supabase) {
+                    await this.supabase.from('feedbacks').insert([{ rating: parseInt(rating), text, created_at: new Date() }]);
+                } else {
+                    const fbs = JSON.parse(localStorage.getItem('designpick_feedbacks') || '[]');
+                    fbs.push({ rating: parseInt(rating), text, date: new Date() });
+                    localStorage.setItem('designpick_feedbacks', JSON.stringify(fbs));
+                }
+            };
+        }
     }
 
     openFeedbackModal() {
@@ -975,7 +1018,7 @@ class ColorPalette {
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Typography (Fonts) Tab
+    //  Fonts Tab
     // ═══════════════════════════════════════════════════════════
 
     initFonts() {
@@ -1051,6 +1094,35 @@ class ColorPalette {
         navigator.clipboard.writeText(stack).then(() => {
             this.showToast(this.lang === 'kr' ? '폰트 스택이 복사되었습니다.' : 'Font stack copied.');
         });
+    }
+
+    renderMyPalettes() {
+        const grid = document.getElementById('myPalettesGrid'); if (!grid) return;
+        const favs = JSON.parse(localStorage.getItem('designpick_favs') || '[]');
+        if (favs.length === 0) {
+            grid.innerHTML = `<div class="empty-state">${uiTranslations[this.lang].empty_fav}</div>`;
+            return;
+        }
+        grid.innerHTML = favs.map((f, i) => `
+            <div class="my-pal-card">
+                <div class="my-pal-swatch" style="background-color:${f.hex}" onclick="app.setColorFromHex('${f.hex}'); app.switchTab('picker')"></div>
+                <div class="my-pal-info">
+                    <div class="my-pal-name">${f.name}</div>
+                    <div class="my-pal-hex">${f.hex}</div>
+                    <button class="btn-remove-fav" onclick="app.removeFavorite(${i})">
+                        <svg class="icon-svg"><use href="#icon-close"/></svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    removeFavorite(index) {
+        const favs = JSON.parse(localStorage.getItem('designpick_favs') || '[]');
+        favs.splice(index, 1);
+        localStorage.setItem('designpick_favs', JSON.stringify(favs));
+        this.renderMyPalettes();
+        this.showToast(this.lang === 'kr' ? '보관함에서 삭제되었습니다.' : 'Removed from library.');
     }
 
     // ═══════════════════════════════════════════════════════════
