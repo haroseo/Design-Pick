@@ -95,6 +95,9 @@
             <button class="nav-tab" data-tab="mypalettes">
                 <svg class="tab-icon"><use href="#icon-heart"/></svg><span>My</span>
             </button>
+            <button class="nav-tab" data-tab="fonts">
+                <svg class="tab-icon"><use href="#icon-image"/></svg><span data-i18n="nav_fonts">Fonts</span>
+            </button>
         </div>
 
         <div class="nav-actions">
@@ -299,6 +302,21 @@
                 <div class="color-library-container">
                     <div class="color-library" id="colorLibrary"></div>
                 </div>
+            </div>
+    <!-- Fonts Tab -->
+    <div id="fonts" class="tab-content">
+        <div class="wrapper">
+            <div class="fonts-header">
+                <h2 data-i18n="nav_fonts">폰트 큐레이션</h2>
+                <p class="fonts-subtitle" data-i18n="fonts_subtitle">디자인의 완성도를 높여주는 마스터피스 폰트 큐레이션</p>
+                
+                <div class="font-playground">
+                    <input type="text" id="fontPlayground" placeholder="여기에 문구를 입력하여 폰트를 테스트해보세요..." data-i18n-placeholder="font_playground_placeholder">
+                </div>
+            </div>
+            
+            <div class="fonts-grid" id="fontsGrid">
+                <!-- JS에서 동적 렌더링 -->
             </div>
         </div>
     </div>

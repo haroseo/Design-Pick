@@ -305,6 +305,93 @@ const designGuides = [
     }
 ];
 
+const designFonts = [
+    {
+        id: 'f01',
+        name: 'Inter',
+        family: "'Inter', sans-serif",
+        url: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap',
+        category: 'Modern / UI',
+        category_kr: '모던 / 인터페이스',
+        pair: 'Roboto',
+        note: '현대 웹 디자인의 표준과도 같은 폰트입니다. 압도적인 가독성을 자랑합니다.',
+        note_en: 'The gold standard for modern web UI. Boasts incredible legibility.',
+        sample: 'Design is not just what it looks like and feels like.'
+    },
+    {
+        id: 'f02',
+        name: 'Playfair Display',
+        family: "'Playfair Display', serif",
+        url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap',
+        category: 'Luxury / Editorial',
+        category_kr: '럭셔리 / 에디토리얼',
+        pair: 'Montserrat',
+        note: '고전적인 품격과 현대적인 세련미가 공존합니다. 제목용으로 탁월합니다.',
+        note_en: 'Classical elegance meets modern sophistication. Perfect for headlines.',
+        sample: 'The detail is not the detail. It is the design.'
+    },
+    {
+        id: 'f03',
+        name: 'Montserrat',
+        family: "'Montserrat', sans-serif",
+        url: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap',
+        category: 'Geometric / Tech',
+        category_kr: '지오메트릭 / 테크',
+        pair: 'Open Sans',
+        note: '기하학적인 균형미가 돋보입니다. 브랜딩과 대담한 타이포그래피에 추천합니다.',
+        note_en: 'Beautiful geometric balance. Recommended for branding and bold typography.',
+        sample: 'Everything is designed. Few things are designed well.'
+    },
+    {
+        id: 'f04',
+        name: 'Lora',
+        family: "'Lora', serif",
+        url: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap',
+        category: 'Soft / Literary',
+        category_kr: '감성 / 문학적',
+        pair: 'Merriweather',
+        note: '부드러운 곡선이 인상적인 세리프입니다. 장문의 본문이나 감성적인 글에 적합합니다.',
+        note_en: 'A serif with soft curves. Ideal for long-form body text or emotional content.',
+        sample: 'Good design is honest.'
+    },
+    {
+        id: 'f05',
+        name: 'Space Mono',
+        family: "'Space Mono', monospace",
+        url: 'https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap',
+        category: 'Tech / Retro',
+        category_kr: '테크 / 레트로',
+        pair: 'Helvetica',
+        note: '기하학적이고 그로테스크한 느낌의 모노스페이스입니다. 힙한 테크 디자인에 제격입니다.',
+        note_en: 'A geometric, grotesque-style monospace. Perfect for hip tech designs.',
+        sample: '0101 Code meets Art.'
+    },
+    {
+        id: 'f06',
+        name: 'Syne',
+        family: "'Syne', sans-serif",
+        url: 'https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap',
+        category: 'Art / Avant-garde',
+        category_kr: '예술 / 아방가르드',
+        pair: 'Inter',
+        note: '아방가르드하고 독창적인 형태를 가졌습니다. 예술적인 포스터나 강렬한 제목에 추천합니다.',
+        note_en: 'Avant-garde and unique letterforms. Great for artistic posters or bold headlines.',
+        sample: 'Typography is the voice of design.'
+    },
+    {
+        id: 'f07',
+        name: 'Nanum Myeongjo',
+        family: "'Nanum Myeongjo', serif",
+        url: 'https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap',
+        category: 'Korean Classic',
+        category_kr: '한국적 클래식',
+        pair: 'Pretendard',
+        note: '한국적인 정서와 정갈한 아름다움이 담긴 서체입니다. 신뢰감 있는 인상을 줍니다.',
+        note_en: 'A typeface with Korean sentiment and clean beauty. Gives a trustworthy impression.',
+        sample: '디자인은 보이지 않는 곳까지 완벽해야 합니다.'
+    }
+];
+
 const uiTranslations = {
     kr: {
         nav_picker: '컬러 피커',
@@ -313,6 +400,11 @@ const uiTranslations = {
         nav_inspiration: '인스피레이션',
         nav_guide: '가이드',
         nav_my: '내 보관함',
+        nav_fonts: '폰트 큐레이션',
+        font_playground_placeholder: '여기에 문구를 입력하여 폰트를 테스트해보세요...',
+        font_designer_note: '디자이너의 노트',
+        font_pairing: '추천 페어링',
+        font_copy_stack: 'CSS 스택 복사',
         detail_mood: '색상 성격',
         detail_advice: '디자인 조언',
         detail_usage: '활용 분야',
@@ -334,6 +426,7 @@ const uiTranslations = {
         inspiration_subtitle: '멈추면 팔레트가 나타납니다 • 색을 클릭하면 Color Picker로 이동',
         guide_subtitle: '색을 다루는 기본적인 실용적인 지식들',
         library_subtitle: '용도별로 분류된 컬러 라이브러리',
+        fonts_subtitle: '디자인의 완성도를 높여주는 마스터피스 폰트 큐레이션',
         cat_all: '전체보기',
         cat_ui_web: 'UI/웹',
         cat_brand_global: '브랜딩',
@@ -354,6 +447,11 @@ const uiTranslations = {
         nav_inspiration: 'Motion',
         nav_guide: 'Guide',
         nav_my: 'My Library',
+        nav_fonts: 'Typography',
+        font_playground_placeholder: 'Type here to test fonts...',
+        font_designer_note: "Designer's Note",
+        font_pairing: 'Pairing',
+        font_copy_stack: 'Copy CSS Stack',
         detail_mood: 'Mood',
         detail_advice: 'Design Advice',
         detail_usage: 'Usage',
@@ -375,6 +473,7 @@ const uiTranslations = {
         inspiration_subtitle: 'Stop to see palette • Click color to jump to Picker',
         guide_subtitle: 'Basic and practical knowledge of color',
         library_subtitle: 'Color library categorized by usage',
+        fonts_subtitle: 'Masterpiece font curation to elevate your design',
         cat_all: 'All',
         cat_ui_web: 'UI/Web',
         cat_brand_global: 'Branding',

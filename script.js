@@ -59,6 +59,7 @@ class ColorPalette {
         this.mySearchQuery = '';
         this.adminClicks = 0;
         this.audioCtx = null;
+        this.fontLoaded = new Set();
 
         // 다국어 초기화
         this.lang = localStorage.getItem('designpick_lang') || 'kr';
@@ -99,8 +100,8 @@ class ColorPalette {
 
         document.getElementById('inspoPrev')?.addEventListener('click', () => this.inspoPrev());
         document.getElementById('inspoNext')?.addEventListener('click', () => this.inspoNext());
-        document.getElementById('langKrBtn')?.addEventListener('click', () => this.setLanguage('kr'));
-        document.getElementById('langEnBtn')?.addEventListener('click', () => this.setLanguage('en'));
+        document.getElementById('langKrBtn')?.addEventListener('click', () => { this.setLanguage('kr'); this.renderFonts(); });
+        document.getElementById('langEnBtn')?.addEventListener('click', () => { this.setLanguage('en'); this.renderFonts(); });
 
         this.showInspoCard(0);
         setTimeout(() => this.startRoulette(), 400);
@@ -166,6 +167,8 @@ class ColorPalette {
             this.closeColorDetail();
         });
         this.initFeedbackUI();
+        this.initFonts();
+        this.renderFonts();
     }
 
     setLanguage(lang) {
@@ -193,7 +196,6 @@ class ColorPalette {
         document.getElementById('langKrBtn')?.classList.toggle('active', this.lang === 'kr');
         document.getElementById('langEnBtn')?.classList.toggle('active', this.lang === 'en');
     }
-
 
     // ═══════════════════════════════════════════════════════════
     //  Color Family & RGB Roulette
@@ -462,6 +464,9 @@ class ColorPalette {
         if (tabName === 'inspiration') { if (!this.inspirationStopped) this.startInspirationReel(); }
         else { this.reelRunning = false; this.reelDecelerating = false; cancelAnimationFrame(this.reelRAF); }
         if (tabName === 'today') this.showInspoCard(this.todayIndex);
+        if (tabName === 'colors') this.buildColorLibrary();
+        if (tabName === 'guide') this.buildGuide();
+        if (tabName === 'fonts') this.renderFonts();
     }
 
     buildColorLibrary(filterCat = 'all') {
@@ -629,15 +634,6 @@ class ColorPalette {
     shareCurrentColor() {
         const url = window.location.href;
         this.fallbackCopy(url, '공유 링크가 복사되었습니다!');
-    }
-
-    buildGuide() {
-        const grid = document.getElementById('guideGrid'); if (!grid || typeof designGuides === 'undefined') return;
-        grid.innerHTML = designGuides.map(g => {
-            const title = (this.lang === 'en' && g.title_en) ? g.title_en : g.title;
-            const desc = (this.lang === 'en' && g.desc_en) ? g.desc_en : g.desc;
-            return `<div class="guide-card"><div class="guide-card-title">${title}</div><div class="guide-card-desc">${desc}</div><div class="guide-card-visual">${g.colors.map(c => `<div class="gc-box" style="background-color:${c}"></div>`).join('')}</div></div>`;
-        }).join('');
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -976,6 +972,85 @@ class ColorPalette {
 
     openFeedbackModal() {
         document.getElementById('feedbackModal')?.classList.add('show');
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  Typography (Fonts) Tab
+    // ═══════════════════════════════════════════════════════════
+
+    initFonts() {
+        const playground = document.getElementById('fontPlayground');
+        if (playground) {
+            playground.addEventListener('input', (e) => {
+                const text = e.target.value;
+                document.querySelectorAll('.font-preview-text').forEach(el => {
+                    el.textContent = text || el.dataset.original;
+                });
+            });
+        }
+    }
+
+    renderFonts() {
+        const grid = document.getElementById('fontsGrid');
+        if (!grid || typeof designFonts === 'undefined') return;
+
+        grid.innerHTML = designFonts.map(f => {
+            // 동적 폰트 로드
+            if (!this.fontLoaded.has(f.id)) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = f.url;
+                document.head.appendChild(link);
+                this.fontLoaded.add(f.id);
+            }
+
+            const cat = this.lang === 'kr' ? f.category_kr : f.category;
+            const note = this.lang === 'kr' ? f.note : f.note_en;
+            const noteLabel = uiTranslations[this.lang].font_designer_note;
+            const pairLabel = uiTranslations[this.lang].font_pairing;
+            const copyLabel = uiTranslations[this.lang].font_copy_stack;
+
+            return `
+                <div class="font-card-v2" style="font-family: ${f.family}">
+                    <div class="font-card-header">
+                        <div class="font-info-meta">
+                            <span class="font-cat-badge">${cat}</span>
+                            <h3 class="font-main-name">${f.name}</h3>
+                        </div>
+                        <button class="btn-font-copy" onclick="app.copyFontStack(\"${f.family}\")">${copyLabel}</button>
+                    </div>
+                    <div class="font-preview-area">
+                        <p class="font-preview-text" data-original="${f.sample}" style="color: ${this.currentColor}">${f.sample}</p>
+                    </div>
+                    <div class="font-card-footer">
+                        <div class="designer-note-box">
+                            <span class="note-label">${noteLabel}</span>
+                            <p class="note-content">${note}</p>
+                        </div>
+                        <div class="font-pairing-box">
+                            <span class="pair-label">${pairLabel}:</span>
+                            <span class="pair-value">${f.pair}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // 현재 선택된 문구 반영
+        const playground = document.getElementById('fontPlayground');
+        if (playground && playground.value) {
+            const text = playground.value;
+            document.querySelectorAll('.font-preview-text').forEach(el => {
+                el.textContent = text;
+            });
+        }
+    }
+
+    copyFontStack(family) {
+        const stack = `font-family: ${family};`;
+        navigator.clipboard.writeText(stack).then(() => {
+            this.showToast(this.lang === 'kr' ? '폰트 스택이 복사되었습니다.' : 'Font stack copied.');
+        });
     }
 
     // ═══════════════════════════════════════════════════════════
