@@ -127,6 +127,18 @@ class ColorPalette {
             document.getElementById('exportModal')?.classList.remove('show');
         });
 
+        document.getElementById('helpBtn')?.addEventListener('click', () => {
+            document.getElementById('supportModal')?.classList.add('show');
+        });
+        document.getElementById('closeSupportBtn')?.addEventListener('click', () => {
+            document.getElementById('supportModal')?.classList.remove('show');
+        });
+        document.getElementById('supportModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('supportModal')) {
+                document.getElementById('supportModal').classList.remove('show');
+            }
+        });
+
         // MY 탭 전용 이벤트 리스너
         document.getElementById('myPalSearch')?.addEventListener('input', (e) => {
             this.mySearchQuery = e.target.value.toLowerCase();
@@ -716,6 +728,7 @@ class ColorPalette {
         });
     }
     openFeedbackModal() { document.getElementById('feedbackModal')?.classList.add('show'); }
+    openSupportModal() { document.getElementById('supportModal')?.classList.add('show'); }
 
     initFonts() { const playground = document.getElementById('fontPlayground'); if (playground) playground.addEventListener('input', (e) => { const text = e.target.value; document.querySelectorAll('.font-preview-text').forEach(el => el.textContent = text || el.dataset.original); }); }
     renderFonts() {

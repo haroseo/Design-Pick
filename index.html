@@ -6,8 +6,8 @@
     <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
     <meta name="theme-color" content="#ffffff">
     <title>Design Pick</title>
-    <link rel="stylesheet" href="style.css?v=29">
-    <link rel="stylesheet" href="improved.css?v=29">
+    <link rel="stylesheet" href="style.css?v=30">
+    <link rel="stylesheet" href="improved.css?v=30">
 
 </head>
 <body>
@@ -74,6 +74,14 @@
             <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.25.82 4.31 2.18 5.89.28.32.48.71.58 1.14.2 1.05.41 2.97.41 2.97H18s.21-1.92.41-2.97c.1-.43.3-.82.58-1.14C20.34 16.31 21 14.25 21 12c0-4.97-4.03-9-9-9zm0 15h-2v-2h2v2zm0-4h-2V7h2v7z" opacity="0.3"/>
             <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C6.48 2 2 6.48 2 12c0 2.85 1.2 5.41 3.11 7.24.38.36.61.88.61 1.42V21c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-.34c0-.54.23-1.06.61-1.42C20.8 17.41 22 14.85 22 12c0-5.52-4.48-10-10-10zm-1 14h2v2h-2v-2zm0-7h2v5h-2V9z"/>
         </symbol>
+        <symbol id="icon-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </symbol>
+        <symbol id="icon-discord" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </symbol>
     </svg>
 
     <!-- Navbar -->
@@ -108,6 +116,9 @@
         </div>
 
         <div class="nav-actions">
+            <button class="btn-help" id="helpBtn" aria-label="도움말 및 지원">
+                <svg class="icon-svg"><use href="#icon-help"/></svg>
+            </button>
             <div class="lang-selector">
                 <button class="lang-btn" id="langKrBtn">KR</button>
                 <button class="lang-btn" id="langEnBtn">EN</button>
@@ -521,6 +532,18 @@
                 </div>
             </main>
         </div>
+    <!-- Support Modal -->
+    <div class="modal-overlay" id="supportModal">
+        <div class="modal-content feedback-modal" style="text-align: center;">
+            <h2 class="fb-title">도움말 및 지원 <span style="font-size: 24px;">👋</span></h2>
+            <p class="fb-desc" style="margin-bottom: 24px;">Design Pick을 이용해 주셔서 감사합니다!<br>버그 제보, 기능 건의 또는 디자인 소통은<br>언제나 공식 디스코드 커뮤니티에서 환영합니다.</p>
+            
+            <a href="https://discord.gg/YOUR_INVITE_LINK" target="_blank" class="btn-discord" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #5865F2; color: #fff; padding: 16px; border-radius: 16px; text-decoration: none; font-weight: 800; font-size: 16px; margin-bottom: 16px; transition: transform 0.2s, background 0.2s;">
+                <svg width="24" height="24"><use href="#icon-discord"/></svg> 공식 디스코드 참여하기
+            </a>
+            
+            <button class="btn-reset-v2" id="closeSupportBtn" style="width: 100%;">닫기</button>
+        </div>
     </div>
 
     <!-- Feedback FAB -->
@@ -584,7 +607,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="data.js?v=29"></script>
-    <script src="script.js?v=29"></script>
+    <script src="data.js?v=30"></script>
+    <script src="script.js?v=30"></script>
 </body>
 </html>
