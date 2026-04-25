@@ -79,6 +79,7 @@ class ColorPalette {
 
     init() {
         if (typeof designGuides !== 'undefined') this.buildGuide();
+        if (typeof designStories !== 'undefined') this.buildStory();
         this.buildInspirationReel();
         this.buildColorLibrary('all');
         this.updateColor();
@@ -445,8 +446,40 @@ class ColorPalette {
         if (tabName === 'today') this.showInspoCard(this.todayIndex);
         if (tabName === 'colors') this.buildColorLibrary();
         if (tabName === 'guide') this.buildGuide();
+        if (tabName === 'story') this.buildStory();
         if (tabName === 'fonts') this.renderFonts();
         if (tabName === 'mypalettes') this.renderFavorites();
+    }
+
+    buildStory() {
+        const grid = document.getElementById('storyGrid');
+        if (!grid || typeof designStories === 'undefined') return;
+        
+        grid.innerHTML = designStories.map(s => {
+            const title = (this.lang === 'en' && s.title_en) ? s.title_en : s.title;
+            const desc = (this.lang === 'en' && s.description_en) ? s.description_en : s.description;
+            
+            const colorsHTML = s.hexColors.map(c => 
+                `<div class="story-color-box" style="background-color: ${c}" onclick="app.setColorFromHex('${c}'); app.switchTab('picker');" title="${c}"></div>`
+            ).join('');
+
+            return `
+                <div class="story-card">
+                    <div class="story-brand">${s.brand}</div>
+                    <h3 class="story-title">${title}</h3>
+                    <p class="story-desc">${desc}</p>
+                    
+                    <div class="story-section-title">🎨 핵심 팔레트 (클릭하여 선택)</div>
+                    <div class="story-colors">${colorsHTML}</div>
+                    
+                    <div class="story-section-title" style="margin-top: 16px;">✍️ 시그니처 폰트</div>
+                    <div class="story-font-box">
+                        <div class="story-font-name">${s.font}</div>
+                        <div class="story-font-desc">${s.fontDesc}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
     buildColorLibrary(filterCat = 'all') {

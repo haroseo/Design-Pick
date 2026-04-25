@@ -6,8 +6,8 @@
     <meta name="description" content="디자이너를 위한 RGB 색상 팔레트 도구">
     <meta name="theme-color" content="#ffffff">
     <title>Design Pick</title>
-    <link rel="stylesheet" href="style.css?v=27">
-    <link rel="stylesheet" href="improved.css?v=27">
+    <link rel="stylesheet" href="style.css?v=28">
+    <link rel="stylesheet" href="improved.css?v=28">
 
 </head>
 <body>
@@ -70,6 +70,10 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </symbol>
+        <symbol id="icon-story" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.25.82 4.31 2.18 5.89.28.32.48.71.58 1.14.2 1.05.41 2.97.41 2.97H18s.21-1.92.41-2.97c.1-.43.3-.82.58-1.14C20.34 16.31 21 14.25 21 12c0-4.97-4.03-9-9-9zm0 15h-2v-2h2v2zm0-4h-2V7h2v7z" opacity="0.3"/>
+            <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C6.48 2 2 6.48 2 12c0 2.85 1.2 5.41 3.11 7.24.38.36.61.88.61 1.42V21c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-.34c0-.54.23-1.06.61-1.42C20.8 17.41 22 14.85 22 12c0-5.52-4.48-10-10-10zm-1 14h2v2h-2v-2zm0-7h2v5h-2V9z"/>
+        </symbol>
     </svg>
 
     <!-- Navbar -->
@@ -86,6 +90,12 @@
             <button class="nav-tab" data-tab="today">
                 <svg class="tab-icon"><use href="#icon-today"/></svg><span>Today</span>
             </button>
+            <button class="nav-tab" data-tab="story">
+                <svg class="tab-icon"><use href="#icon-story"/></svg><span data-i18n="nav_story">Story</span>
+            </button>
+            <button class="nav-tab" data-tab="fonts">
+                <svg class="tab-icon"><use href="#icon-image"/></svg><span data-i18n="nav_fonts">Font</span>
+            </button>
             <button class="nav-tab" data-tab="guide">
                 <svg class="tab-icon"><use href="#icon-guide"/></svg><span>Guide</span>
             </button>
@@ -94,9 +104,6 @@
             </button>
             <button class="nav-tab" data-tab="mypalettes">
                 <svg class="tab-icon"><use href="#icon-heart"/></svg><span>My</span>
-            </button>
-            <button class="nav-tab" data-tab="fonts">
-                <svg class="tab-icon"><use href="#icon-image"/></svg><span data-i18n="nav_fonts">폰트 추천</span>
             </button>
         </div>
 
@@ -276,6 +283,20 @@
 
             <!-- Next -->
             <button class="inspo-nav-btn inspo-next" id="inspoNext" aria-label="다음">&#8250;</button>
+        </div>
+    </div>
+
+    <!-- Brand Design Story Tab -->
+    <div id="story" class="tab-content">
+        <div class="wrapper">
+            <div class="story-header">
+                <h2 data-i18n="nav_story">오늘의 디자인 지식</h2>
+                <p class="story-subtitle">글로벌 브랜드와 기업들은 왜 이런 색상과 폰트를 선택했을까요?</p>
+            </div>
+            
+            <div class="story-grid" id="storyGrid">
+                <!-- JS에서 동적 렌더링 -->
+            </div>
         </div>
     </div>
 
@@ -563,7 +584,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="data.js?v=27"></script>
-    <script src="script.js?v=27"></script>
+    <script src="data.js?v=28"></script>
+    <script src="script.js?v=28"></script>
 </body>
 </html>

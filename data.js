@@ -488,3 +488,51 @@ const uiTranslations = {
         footer_copy: '© 2024 RGBdom. All colors for design.'
     }
 };
+
+// ─── Design Stories (오늘의 디자인 지식) ──────────────────────────────────────────
+const designStories = [
+    {
+        id: "story-apple",
+        brand: "Apple",
+        title: "콘텐츠를 돋보이게 하는 '궁극의 무채색'",
+        title_en: "The Ultimate Neutral Color that Highlights Content",
+        description: "애플은 UI에서 색상을 극도로 제한하여 사용합니다. 스페이스 그레이와 화이트, 블랙을 베이스로 깔아두고, 오직 사용자가 집중해야 할 핵심 버튼이나 알림에만 색을 씁니다. 이는 운영체제 자체가 돋보이는 것이 아니라, 사용자가 즐기는 '콘텐츠(사진, 영상, 앱)'가 주인공이 되도록 만드는 애플의 철학입니다.",
+        description_en: "Apple uses colors extremely sparingly in its UI. By laying down Space Gray, White, and Black as a base, colors are reserved exclusively for key buttons or notifications. This philosophy ensures that the 'content' is the protagonist, not the OS itself.",
+        hexColors: ["#000000", "#1D1D1F", "#F5F5F7", "#007AFF"],
+        font: "San Francisco",
+        fontDesc: "작은 애플워치 화면부터 거대한 모니터까지 완벽한 가독성을 유지하기 위해 자체 개발한 폰트입니다."
+    },
+    {
+        id: "story-spotify",
+        brand: "Spotify",
+        title: "어둠 속에서 빛나는 음악의 에너지",
+        title_en: "The Energy of Music Shining in the Dark",
+        description: "스포티파이의 앱은 완전히 새까만 다크 테마를 기본으로 합니다. 이는 시각적 피로를 줄여줄 뿐만 아니라, 아티스트들의 다채로운 '앨범 아트워크'를 마치 갤러리처럼 돋보이게 합니다. 여기에 스포티파이 특유의 '네온 그린'이 포인트 컬러로 들어가 음악의 생동감과 에너지를 강렬하게 전달합니다.",
+        description_en: "Spotify's app uses a deep dark theme by default. This not only reduces eye strain but also makes artists' colorful 'album artworks' pop out like a gallery. The signature 'Neon Green' acts as a vibrant accent.",
+        hexColors: ["#121212", "#282828", "#1DB954", "#FFFFFF"],
+        font: "Circular",
+        fontDesc: "기하학적이고 동글동글한 산세리프 폰트로, 음악이 주는 친근하고 감성적인 느낌을 시각화했습니다."
+    },
+    {
+        id: "story-toss",
+        brand: "Toss",
+        title: "금융의 무거움을 덜어낸 '친근한 블루'",
+        title_en: "A Friendly Blue that Lightens the Weight of Finance",
+        description: "전통적인 은행 앱들이 딱딱하고 어두운 파란색으로 '보수적인 신뢰'를 강조했다면, 토스는 채도가 높고 경쾌한 '토스 블루'를 선택했습니다. 여기에 불필요한 선(Line)을 모두 없애고 넓은 여백을 활용하여, 금융 앱 특유의 심리적 장벽을 대폭 낮추고 '누구나 쉽게 쓰는 금융'이라는 메시지를 UI에 담아냈습니다.",
+        description_en: "While traditional banks used dark blue for 'conservative trust', Toss chose a vibrant, cheerful 'Toss Blue'. Removing unnecessary lines and using wide margins lowered the psychological barrier of finance.",
+        hexColors: ["#FFFFFF", "#F2F4F6", "#3182F6", "#191F28"],
+        font: "Tossface (Emoji) / SUIT",
+        fontDesc: "딱딱한 금융 용어 대신, 직관적인 자체 이모지(Tossface)를 개발하여 사용자 경험을 친근하게 바꿨습니다."
+    },
+    {
+        id: "story-netflix",
+        brand: "Netflix",
+        title: "영화관의 붉은 커튼을 스마트폰으로",
+        title_en: "Bringing the Red Curtain of the Cinema to the Smartphone",
+        description: "넷플릭스의 강렬한 '넷플릭스 레드(Netflix Red)'는 과거 클래식 영화관의 붉은 커튼과 푹신한 벨벳 의자를 연상시킵니다. 어두운 방에서 넷플릭스를 켤 때, 이 붉은색 로고는 사용자에게 '이제부터 영화가 시작된다'는 짜릿한 기대감을 심어주는 강력한 브랜딩 도구로 작용합니다.",
+        description_en: "Netflix's intense 'Netflix Red' evokes the red curtains and velvet seats of classic cinemas. Turning on Netflix in a dark room builds the thrilling anticipation that 'the movie is about to start'.",
+        hexColors: ["#000000", "#141414", "#E50914", "#FFFFFF"],
+        font: "Netflix Sans",
+        fontDesc: "영화 포스터처럼 화면을 꽉 채우는 강렬한 헤드라인을 위해, 자간을 좁혀도 가독성이 높은 폰트를 만들었습니다."
+    }
+];
