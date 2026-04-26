@@ -753,10 +753,42 @@ class ColorPalette {
         list.innerHTML = feedbacks.map(f => `<div class="admin-fb-item"><div class="admin-fb-meta"><span class="admin-fb-rating">${'★'.repeat(f.rating)}</span><span class="admin-fb-date">${new Date(f.created_at || f.date).toLocaleString()}</span></div><div class="admin-fb-text">${this.sanitizeInput(f.text)}</div></div>`).join('');
     }
     exportFeedbacks() { const fbs = localStorage.getItem('designpick_feedbacks') || '[]'; const blob = new Blob([fbs], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `designpick_feedbacks_${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); this.showToast('데이터를 다운로드합니다.'); }
+
+    /* ─── Theme Management ─── */
+    initTheme() {
+        this.currentTheme = localStorage.getItem('designpick_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', this.currentTheme);
+        this.updateThemeIcons();
+    }
+
+    toggleTheme() {
+        this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+        localStorage.setItem('designpick_theme', this.currentTheme);
+        document.documentElement.setAttribute('data-theme', this.currentTheme);
+        this.updateThemeIcons();
+        this.playClickSound();
+    }
+
+    updateThemeIcons() {
+        const sun = document.getElementById('themeIconSun');
+        const moon = document.getElementById('themeIconMoon');
+        if (!sun || !moon) return;
+        if (this.currentTheme === 'dark') {
+            sun.style.display = 'none';
+            moon.style.display = 'block';
+        } else {
+            sun.style.display = 'block';
+            moon.style.display = 'none';
+        }
+    }
 }
 
 let app;
 window.addEventListener('DOMContentLoaded', () => {
     app = new ColorPalette();
     document.querySelectorAll('.nav-tab').forEach(btn => btn.addEventListener('click', function () { app.switchTab(this.getAttribute('data-tab')); }));
+    
+    // Theme Init
+    app.initTheme();
+    document.getElementById('themeToggleBtn')?.addEventListener('click', () => app.toggleTheme());
 });
