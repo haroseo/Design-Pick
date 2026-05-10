@@ -663,7 +663,7 @@ const mockupGuide = [
 
 
 // ─── Update: Color Stories (10+) ──────────────────────────────────────────
-colorStories.push(
+designStories.push(
     { id: "story-hermes", brand: "Hermès", title: "우연이 만든 럭셔리 오렌지", title_en: "Luxury Orange Created by Chance", description: "에르메스의 상징적인 주황색 박스는 사실 제2차 세계대전 중 원래 쓰던 염료가 부족해져 어쩔 수 없이 남은 주황색을 쓴 것에서 시작되었습니다. 지금은 전 세계에서 가장 설레는 오렌지색이 되었습니다.", description_en: "Hermès' iconic orange box started during WWII due to a dye shortage. Now it is the most exciting orange in the world.", hexColors: ["#F37021", "#4A2B23", "#FFFFFF", "#000000"], font: "Baskerville", fontDesc: "클래식한 세리프체로 럭셔리 브랜드의 무게감을 전달합니다." },
     { id: "story-ikea", brand: "IKEA", title: "스웨덴의 국기, 세계의 가구가 되다", title_en: "Sweden's Flag Becomes World's Furniture", description: "이케아의 블루와 옐로우는 스웨덴 국기에서 그대로 가져온 색상입니다. 파란색은 신뢰를, 노란색은 행복과 긍정을 의미하며 매장에서 눈에 가장 잘 띄는 보색 대비를 이룹니다.", description_en: "IKEA's Blue and Yellow come directly from the Swedish flag, representing trust and happiness with high visibility.", hexColors: ["#0051BA", "#FFDA1A", "#FFFFFF", "#111111"], font: "Noto Sans", fontDesc: "실용적이고 대중적인 가구처럼, 가장 읽기 편하고 장식 없는 산세리프체를 씁니다." },
     { id: "story-discord", brand: "Discord", title: "게이머의 밤을 지키는 블러플", title_en: "Blurple Guarding Gamers' Nights", description: "디스코드의 메인 색상인 '블러플(Blurple)'은 파란색(Blue)과 보라색(Purple)이 섞인 독특한 색입니다. 어두운 방에서 게임을 할 때 눈부심을 줄여주면서도 매우 트렌디한 느낌을 줍니다.", description_en: "Discord's Blurple is a mix of Blue and Purple. It reduces glare in dark gaming rooms while looking trendy.", hexColors: ["#5865F2", "#36393F", "#2F3136", "#FFFFFF"], font: "Ginto", fontDesc: "디스코드만의 장난스러우면서도 볼드한 성격을 나타내는 독점 폰트." },
