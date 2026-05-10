@@ -183,38 +183,24 @@
                 <button onclick="app.switchTab('learn')" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; color: var(--text-color); font-weight: 600;">← 돌아가기 (Academy)</button>
             </div>
             <div class="fonts-header">
-                <h2>타이포그래피 기초</h2>
+                <h2>타이포그래피</h2>
                 <p class="fonts-subtitle">텍스트를 디자인하는 가장 강력한 무기</p>
             </div>
-            <div id="typographyContent" class="guide-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px;"></div>
+            <div id="typographyContent" class="guide-grid" style="display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 40px; max-width: 900px; margin-left: auto; margin-right: auto;"></div>
         </div>
     </div>
 
-    <!-- Grid & Layout Tab (Sub-tab) -->
-    <div id="gridlayout" class="tab-content">
+    <!-- UI/UX Tab (Sub-tab) -->
+    <div id="uiux" class="tab-content">
         <div class="wrapper">
             <div class="back-nav" style="margin-bottom: 20px;">
                 <button onclick="app.switchTab('learn')" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; color: var(--text-color); font-weight: 600;">← 돌아가기 (Academy)</button>
             </div>
             <div class="fonts-header">
-                <h2>그리드 & 레이아웃</h2>
-                <p class="fonts-subtitle">화면을 안정적으로 지탱하는 황금 비율과 뼈대</p>
+                <h2>UI/UX 실무 가이드</h2>
+                <p class="fonts-subtitle">그리드 시스템부터 컴포넌트 패턴까지 완벽한 사용자 경험 설계법</p>
             </div>
-            <div id="gridlayoutContent" class="guide-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px;"></div>
-        </div>
-    </div>
-
-    <!-- UI Patterns Tab (Sub-tab) -->
-    <div id="uipatterns" class="tab-content">
-        <div class="wrapper">
-            <div class="back-nav" style="margin-bottom: 20px;">
-                <button onclick="app.switchTab('learn')" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; color: var(--text-color); font-weight: 600;">← 돌아가기 (Academy)</button>
-            </div>
-            <div class="fonts-header">
-                <h2>UI 컴포넌트 패턴</h2>
-                <p class="fonts-subtitle">버튼부터 네비게이션까지, 완벽한 사용자 경험 설계법</p>
-            </div>
-            <div id="uipatternsContent" class="guide-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px;"></div>
+            <div id="uiuxContent" class="guide-grid" style="display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 40px; max-width: 900px; margin-left: auto; margin-right: auto;"></div>
         </div>
     </div>
 
@@ -225,10 +211,10 @@
                 <button onclick="app.switchTab('learn')" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; color: var(--text-color); font-weight: 600;">← 돌아가기 (Academy)</button>
             </div>
             <div class="fonts-header">
-                <h2>포트폴리오 취업 가이드</h2>
-                <p class="fonts-subtitle">면접관의 시선을 사로잡는 케이스 스터디 작성법</p>
+                <h2>포트폴리오 & 취업 가이드</h2>
+                <p class="fonts-subtitle">면접관의 시선을 사로잡는 케이스 스터디와 이력서 작성법</p>
             </div>
-            <div id="portfolioContent" class="guide-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px;"></div>
+            <div id="portfolioContent" class="guide-grid" style="display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 40px; max-width: 900px; margin-left: auto; margin-right: auto;"></div>
         </div>
     </div>
 
@@ -469,22 +455,16 @@
                 <!-- Card 7 -->
                 <div class="learn-card" onclick="app.switchTab('typography')" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
                     <div style="font-size: 40px; margin-bottom: 16px;">✍️</div>
-                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">타이포그래피 기초</h3>
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">타이포그래피</h3>
                     <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5;">글꼴의 해부학, 행간, 자간 등 텍스트 디자인의 모든 것</p>
                 </div>
                 <!-- Card 8 -->
-                <div class="learn-card" onclick="app.switchTab('gridlayout')" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
-                    <div style="font-size: 40px; margin-bottom: 16px;">📏</div>
-                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">그리드 & 레이아웃</h3>
-                    <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5;">화면을 안정적으로 분할하고 정렬하는 8px 그리드 시스템</p>
+                <div class="learn-card" onclick="app.switchTab('uiux')" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
+                    <div style="font-size: 40px; margin-bottom: 16px;">🧩</div>
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">UI/UX 실무 가이드</h3>
+                    <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5;">그리드 시스템부터 버튼, 네비게이션 등 주요 컴포넌트 설계법</p>
                 </div>
                 <!-- Card 9 -->
-                <div class="learn-card" onclick="app.switchTab('uipatterns')" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
-                    <div style="font-size: 40px; margin-bottom: 16px;">🧩</div>
-                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">UI 컴포넌트 패턴</h3>
-                    <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5;">버튼, 인풋, 네비게이션 등 자주 쓰이는 UI 요소 설계법</p>
-                </div>
-                <!-- Card 10 -->
                 <div class="learn-card" onclick="app.switchTab('portfolio')" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
                     <div style="font-size: 40px; margin-bottom: 16px;">📁</div>
                     <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">포트폴리오 & 취업 가이드</h3>
@@ -865,27 +845,27 @@
 
     <!-- Update Log Modal -->
     <div id="updateLogModal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="font-size: 20px; font-weight: 700;">사이트 업데이트 노트</h2>
-                <button class="btn-icon" onclick="document.getElementById('updateLogModal').classList.remove('show')" style="border:none; background:none; font-size:24px; cursor:pointer; color:var(--text-color);">&times;</button>
+        <div class="modal-content" style="max-width: 680px; max-height: 85vh; padding: 40px; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2 style="font-size: 24px; font-weight: 800;">🚀 사이트 업데이트 노트</h2>
+                <button class="btn-icon" onclick="document.getElementById('updateLogModal').classList.remove('show')" style="border:none; background:none; font-size:28px; cursor:pointer; color:var(--text-color);">&times;</button>
             </div>
             
-            <div style="margin-bottom: 20px; display: flex; justify-content: flex-end;">
-                <select id="updateLogSort" onchange="const c = document.getElementById('updateLogContainer'); const items = Array.from(c.children); items.sort((a,b) => (this.value === 'newest' ? -1 : 1) * (a.dataset.time < b.dataset.time ? -1 : 1)); items.forEach(i => c.appendChild(i));" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-size: 13px; outline: none; cursor: pointer;">
+            <div style="margin-bottom: 24px; display: flex; justify-content: flex-end;">
+                <select id="updateLogSort" onchange="const c = document.getElementById('updateLogContainer'); const items = Array.from(c.children); items.sort((a,b) => (this.value === 'newest' ? -1 : 1) * (a.dataset.time < b.dataset.time ? -1 : 1)); items.forEach(i => c.appendChild(i));" style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; font-weight: 600;">
                     <option value="newest">최근 등록순</option>
                     <option value="oldest">오래된 순</option>
                 </select>
             </div>
 
             <div id="updateLogContainer">
-                <details class="update-log-item" data-time="20260510" style="margin-bottom: 12px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;" open>
-                    <summary style="padding: 16px; font-size: 15px; font-weight: 700; cursor: pointer; color: var(--text-color); list-style: none; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary-color, #ff007f);">
+                <details class="update-log-item" data-time="20260510" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" open>
+                    <summary style="padding: 20px 24px; font-size: 16px; font-weight: 700; cursor: pointer; color: var(--text-color); list-style: none; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-color, #ff007f); background: rgba(0,0,0,0.02);">
                         <span>[2026.05.10 업데이트 내용]</span>
-                        <span style="font-size: 12px; opacity: 0.5;">▼</span>
+                        <span style="font-size: 14px; opacity: 0.5;">▼</span>
                     </summary>
-                    <div style="padding: 0 16px 16px 16px;">
-                        <ul style="font-size: 14px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0; margin-top: 8px;">
+                    <div style="padding: 16px 24px 24px 24px;">
+                        <ul style="font-size: 15px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
                             <li><b>아카데미 탭 신설</b>: 흩어져 있던 디자인 자료를 하나의 대시보드로 통합</li>
                             <li><b>브랜딩 실무 가이드 추가</b>: 전문 지식과 쉬운 예시를 결합한 브랜드 정체성 구축 가이드</li>
                             <li><b>컬러 디테일 뷰 고도화</b>: 색상 코드 변환기(CMYK 등) 및 컬러 조화 팔레트 기능 제공</li>
@@ -895,13 +875,13 @@
                         </ul>
                     </div>
                 </details>
-                <details class="update-log-item" data-time="20260418" style="margin-bottom: 12px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
-                    <summary style="padding: 16px; font-size: 15px; font-weight: 600; cursor: pointer; color: var(--text-color); list-style: none; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #888; opacity: 0.8;">
+                <details class="update-log-item" data-time="20260418" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <summary style="padding: 20px 24px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text-color); list-style: none; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #888; background: rgba(0,0,0,0.02); opacity: 0.9;">
                         <span>[2026.04.18 업데이트 내용]</span>
-                        <span style="font-size: 12px; opacity: 0.5;">▼</span>
+                        <span style="font-size: 14px; opacity: 0.5;">▼</span>
                     </summary>
-                    <div style="padding: 0 16px 16px 16px;">
-                        <ul style="font-size: 13px; line-height: 1.6; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0; margin-top: 8px;">
+                    <div style="padding: 16px 24px 24px 24px;">
+                        <ul style="font-size: 14px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
                             <li>다크/라이트 모드 테마 적용 (V30 롤백)</li>
                             <li>실시간 룰렛 컬러 피커 기능 추가</li>
                             <li>사용자 피드백 시스템 도입</li>
