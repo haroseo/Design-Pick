@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://haroseo.github.io/Design-Pick/sitemap.xml
