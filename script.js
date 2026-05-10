@@ -547,6 +547,29 @@ class ColorPalette {
         hexLabel.textContent = hex;
         rgbLabel.textContent = rgbStr;
 
+        const { h, s, l } = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+        const kValue = Math.min(1 - rgb.r/255, 1 - rgb.g/255, 1 - rgb.b/255);
+        const cmyk = kValue === 1 ? [0,0,0,100] : [Math.round((1 - rgb.r/255 - kValue)/(1 - kValue)*100), Math.round((1 - rgb.g/255 - kValue)/(1 - kValue)*100), Math.round((1 - rgb.b/255 - kValue)/(1 - kValue)*100), Math.round(kValue*100)];
+
+        const detailConvHex = document.getElementById('detailConvHex');
+        const detailConvRgb = document.getElementById('detailConvRgb');
+        const detailConvHsl = document.getElementById('detailConvHsl');
+        const detailConvCmyk = document.getElementById('detailConvCmyk');
+        if(detailConvHex) detailConvHex.textContent = hex;
+        if(detailConvRgb) detailConvRgb.textContent = rgbStr;
+        if(detailConvHsl) detailConvHsl.textContent = `hsl(${h}, ${s}%, ${l}%)`;
+        if(detailConvCmyk) detailConvCmyk.textContent = `cmyk(${cmyk.join('%, ')}%)`;
+
+        // Harmonies
+        const toHex = (hue) => { const c = this.hslToRgb(hue, s, l); return this.rgbToHex(c.r, c.g, c.b); };
+        const renderHarm = (id, hues) => {
+            const el = document.getElementById(id);
+            if(el) el.innerHTML = hues.map(hue => `<div style="flex:1; background:${toHex(hue)}; cursor:pointer" title="${toHex(hue)}" onclick="app.openColorDetail('Harmony Color', '${toHex(hue)}')"></div>`).join('');
+        };
+        renderHarm('harmonyComp', [h, (h + 180) % 360]);
+        renderHarm('harmonyAna', [(h + 330) % 360, h, (h + 30) % 360]);
+        renderHarm('harmonyTri', [h, (h + 120) % 360, (h + 240) % 360]);
+
         const wisdom = this.getColorWisdom(rgb.r, rgb.g, rgb.b);
         headline.textContent = wisdom.headline;
         subHeadline.textContent = wisdom.sub;
@@ -791,4 +814,24 @@ window.addEventListener('DOMContentLoaded', () => {
     // Theme Init
     app.initTheme();
     document.getElementById('themeToggleBtn')?.addEventListener('click', () => app.toggleTheme());
+
+    // Render Academy Guides
+    function renderAcademyGuides() {
+        const renderGrid = (id, data) => {
+            const container = document.getElementById(id);
+            if (!container || !data) return;
+            container.innerHTML = data.map(item => `
+                <div class="info-card-v2" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px;">
+                    <h3 class="card-title-v3" style="font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text-color);">${item.title}</h3>
+                    <div class="card-body-v3" style="color: var(--secondary-text); font-size: 15px; line-height: 1.6;">${item.content}</div>
+                </div>
+            `).join('');
+        };
+        
+        if (typeof logoDesignGuide !== 'undefined') renderGrid('logoDesignContent', logoDesignGuide);
+        if (typeof designFieldsGuide !== 'undefined') renderGrid('designFieldsContent', designFieldsGuide);
+        if (typeof mockupGuide !== 'undefined') renderGrid('mockupsContent', mockupGuide);
+        if (typeof brandingGuide !== 'undefined') renderGrid('brandingContent', brandingGuide);
+    }
+    renderAcademyGuides();
 });
