@@ -832,6 +832,9 @@ window.addEventListener('DOMContentLoaded', () => {
         if (typeof designFieldsGuide !== 'undefined') renderGrid('designFieldsContent', designFieldsGuide);
         if (typeof mockupGuide !== 'undefined') renderGrid('mockupsContent', mockupGuide);
         if (typeof brandingGuide !== 'undefined') renderGrid('brandingContent', brandingGuide);
+        if (typeof typographyGuide !== 'undefined') renderGrid('typographyContent', typographyGuide);
+        if (typeof uiuxGuide !== 'undefined') renderGrid('uiuxContent', uiuxGuide);
+        if (typeof portfolioGuide !== 'undefined') renderGrid('portfolioContent', portfolioGuide);
     }
     renderAcademyGuides();
 });
