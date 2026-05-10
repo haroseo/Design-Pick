@@ -860,7 +860,7 @@
 
             <div id="updateLogContainer">
                 <div class="update-log-item" data-time="20260510" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <div class="update-log-summary" onclick="const wrapper = this.nextElementSibling; const arrow = this.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';" style="padding: 20px 24px; font-size: 16px; font-weight: 700; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-color, #ff007f); background: rgba(0,0,0,0.02);">
+                    <div class="update-log-summary" onclick="(function(el){ const wrapper = el.nextElementSibling; const arrow = el.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)'; })(this);" style="padding: 20px 24px; font-size: 16px; font-weight: 700; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-color, #ff007f); background: rgba(0,0,0,0.02);">
                         <span>[2026.05.10 업데이트 내용]</span>
                         <span class="arrow" style="font-size: 14px; opacity: 0.5; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(180deg); display: inline-block;">▼</span>
                     </div>
@@ -881,7 +881,7 @@
                 </div>
 
                 <div class="update-log-item" data-time="20260418" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <div class="update-log-summary" onclick="const wrapper = this.nextElementSibling; const arrow = this.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';" style="padding: 20px 24px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #888; background: rgba(0,0,0,0.02); opacity: 0.9;">
+                    <div class="update-log-summary" onclick="(function(el){ const wrapper = el.nextElementSibling; const arrow = el.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)'; })(this);" style="padding: 20px 24px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #888; background: rgba(0,0,0,0.02); opacity: 0.9;">
                         <span>[2026.04.18 업데이트 내용]</span>
                         <span class="arrow" style="font-size: 14px; opacity: 0.5; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(0deg); display: inline-block;">▼</span>
                     </div>
