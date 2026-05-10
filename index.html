@@ -845,7 +845,7 @@
 
     <!-- Update Log Modal -->
     <div id="updateLogModal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 680px; max-height: 85vh; padding: 40px; overflow-y: auto;">
+        <div class="modal-content" style="width: 100%; max-width: 680px; height: 600px; max-height: 85vh; padding: 40px; overflow-y: auto;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <h2 style="font-size: 24px; font-weight: 800;">🚀 사이트 업데이트 노트</h2>
                 <button class="btn-icon" onclick="document.getElementById('updateLogModal').classList.remove('show')" style="border:none; background:none; font-size:28px; cursor:pointer; color:var(--text-color);">&times;</button>
@@ -859,35 +859,44 @@
             </div>
 
             <div id="updateLogContainer">
-                <details class="update-log-item" data-time="20260510" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" open>
-                    <summary style="padding: 20px 24px; font-size: 16px; font-weight: 700; cursor: pointer; color: var(--text-color); list-style: none; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-color, #ff007f); background: rgba(0,0,0,0.02);">
+                <div class="update-log-item" data-time="20260510" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <div class="update-log-summary" onclick="const wrapper = this.nextElementSibling; const arrow = this.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';" style="padding: 20px 24px; font-size: 16px; font-weight: 700; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-color, #ff007f); background: rgba(0,0,0,0.02);">
                         <span>[2026.05.10 업데이트 내용]</span>
-                        <span style="font-size: 14px; opacity: 0.5;">▼</span>
-                    </summary>
-                    <div style="padding: 16px 24px 24px 24px;">
-                        <ul style="font-size: 15px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
-                            <li><b>아카데미 탭 신설</b>: 흩어져 있던 디자인 자료를 하나의 대시보드로 통합</li>
-                            <li><b>브랜딩 실무 가이드 추가</b>: 전문 지식과 쉬운 예시를 결합한 브랜드 정체성 구축 가이드</li>
-                            <li><b>컬러 디테일 뷰 고도화</b>: 색상 코드 변환기(CMYK 등) 및 컬러 조화 팔레트 기능 제공</li>
-                            <li><b>폰트 라이브러 추가</b>: 실무에서 가장 많이 쓰이는 폰트 30여 종 대량 업데이트</li>
-                            <li><b>컬러 스토리 업데이트</b>: 애플, 파타고니아 등 최신 글로벌 브랜드 이야기 13종 추가</li>
-                            <li><b>SEO 및 구조 개선</b>: 페이지 구조 개선 및 UI 가독성 향상</li>
-                        </ul>
+                        <span class="arrow" style="font-size: 14px; opacity: 0.5; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(180deg); display: inline-block;">▼</span>
                     </div>
-                </details>
-                <details class="update-log-item" data-time="20260418" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <summary style="padding: 20px 24px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text-color); list-style: none; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #888; background: rgba(0,0,0,0.02); opacity: 0.9;">
+                    <div class="update-log-content-wrapper" style="display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                        <div style="overflow: hidden;">
+                            <div style="padding: 16px 24px 24px 24px;">
+                                <ul style="font-size: 15px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
+                                    <li><b>아카데미 탭 신설</b>: 흩어져 있던 디자인 자료를 하나의 대시보드로 통합</li>
+                                    <li><b>브랜딩 실무 가이드 추가</b>: 전문 지식과 쉬운 예시를 결합한 브랜드 정체성 구축 가이드</li>
+                                    <li><b>컬러 디테일 뷰 고도화</b>: 색상 코드 변환기(CMYK 등) 및 컬러 조화 팔레트 기능 제공</li>
+                                    <li><b>폰트 라이브러 추가</b>: 실무에서 가장 많이 쓰이는 폰트 30여 종 대량 업데이트</li>
+                                    <li><b>컬러 스토리 업데이트</b>: 애플, 파타고니아 등 최신 글로벌 브랜드 이야기 13종 추가</li>
+                                    <li><b>SEO 및 구조 개선</b>: 페이지 구조 개선 및 UI 가독성 향상</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="update-log-item" data-time="20260418" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <div class="update-log-summary" onclick="const wrapper = this.nextElementSibling; const arrow = this.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';" style="padding: 20px 24px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #888; background: rgba(0,0,0,0.02); opacity: 0.9;">
                         <span>[2026.04.18 업데이트 내용]</span>
-                        <span style="font-size: 14px; opacity: 0.5;">▼</span>
-                    </summary>
-                    <div style="padding: 16px 24px 24px 24px;">
-                        <ul style="font-size: 14px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
-                            <li>다크/라이트 모드 테마 적용 (V30 롤백)</li>
-                            <li>실시간 룰렛 컬러 피커 기능 추가</li>
-                            <li>사용자 피드백 시스템 도입</li>
-                        </ul>
+                        <span class="arrow" style="font-size: 14px; opacity: 0.5; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(0deg); display: inline-block;">▼</span>
                     </div>
-                </details>
+                    <div class="update-log-content-wrapper" style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                        <div style="overflow: hidden;">
+                            <div style="padding: 16px 24px 24px 24px;">
+                                <ul style="font-size: 14px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
+                                    <li>다크/라이트 모드 테마 적용 (V30 롤백)</li>
+                                    <li>실시간 룰렛 컬러 피커 기능 추가</li>
+                                    <li>사용자 피드백 시스템 도입</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
