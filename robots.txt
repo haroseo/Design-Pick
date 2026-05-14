@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://haroseo.github.io/Design-Pick/sitemap.xml
+# 검색엔진 최적화 크롤러
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+User-agent: NaverBot
+Allow: /
+
+Sitemap: https://designs.kro.kr/sitemap.xml

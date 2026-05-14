@@ -1,9 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- 메인 홈 -->
   <url>
-    <loc>https://haroseo.github.io/Design-Pick/</loc>
-    <lastmod>2026-05-10</lastmod>
+    <loc>https://designs.kro.kr/</loc>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://designs.kro.kr/"/>
   </url>
+
+  <!-- 컬러 피커 -->
+  <url>
+    <loc>https://designs.kro.kr/#picker</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 디자인 영감 -->
+  <url>
+    <loc>https://designs.kro.kr/#inspiration</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 오늘의 픽 -->
+  <url>
+    <loc>https://designs.kro.kr/#today</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 컬러 라이브러리 -->
+  <url>
+    <loc>https://designs.kro.kr/#colors</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- 디자인 아카데미 -->
+  <url>
+    <loc>https://designs.kro.kr/#learn</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- 폰트 라이브러리 -->
+  <url>
+    <loc>https://designs.kro.kr/#fonts</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 로고 디자인 마스터 -->
+  <url>
+    <loc>https://designs.kro.kr/#logodesign</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 타이포그래피 -->
+  <url>
+    <loc>https://designs.kro.kr/#typography</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- UI/UX 가이드 -->
+  <url>
+    <loc>https://designs.kro.kr/#uiux</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 브랜딩 -->
+  <url>
+    <loc>https://designs.kro.kr/#branding</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 포트폴리오 가이드 -->
+  <url>
+    <loc>https://designs.kro.kr/#portfolio</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- 갤러리 -->
+  <url>
+    <loc>https://designs.kro.kr/#gallery</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
 </urlset>
