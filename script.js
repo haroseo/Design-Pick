@@ -732,6 +732,18 @@ class ColorPalette {
     displaySimilarColors() { if (!this.similarColors || typeof findSimilarColors === 'undefined') return; this.similarColors.innerHTML = findSimilarColors(this.r, this.g, this.b, 8).map(({ name, hex }) => `<div class="similar-color-group"><div class="similar-color-item" style="background-color:${hex}" onclick="app.selectSimilarColor('${hex}','${name}')"><div class="similar-color-tooltip"><span class="tooltip-name">${name}</span><span class="tooltip-hex">${hex}</span></div></div><span class="similar-color-label">${name}</span></div>`).join(''); }
     selectSimilarColor(hex, name) { this.setColorFromHex(hex); this.showToast(name); }
     rgbToHex(r, g, b) { return '#' + [r, g, b].map(x => { const h = x.toString(16); return h.length === 1 ? '0' + h : h; }).join('').toUpperCase(); }
+    
+    sanitizeInput(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, (m) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;'
+        })[m]);
+    }
+
     hexToRgb(hex) { const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return r ? { r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16) } : null; }
     setColorFromHex(hex) { if (!hex) return; try { this.playClickSound(); } catch(e) {} const rgb = this.hexToRgb(hex); if (rgb) { this.r = rgb.r; this.g = rgb.g; this.b = rgb.b; this.selectedChannel = null; this.isRouletting = false; this.updateColor(); } }
     reset() { this.r = this.g = this.b = 0; this.updateColor(); this.showToast('리셋되었습니다'); setTimeout(() => this.startRoulette(), 300); }
