@@ -1,394 +1,2194 @@
-// ─── Designer Colors (용도별 분류) ──────────────────────────────────────────
+// ─── Designer Colors (용도별 분류 - 대폭 확장) ───────────────────────────────────
 const designerColors = {
-    ui_web: [
-        { name: '버셀 블루', name_en: 'Vercel Blue', hex: '#0070F3' },
-        { name: '성공 그린', name_en: 'Success Green', hex: '#00C853' },
-        { name: '경고 앰버', name_en: 'Warning Amber', hex: '#FF6F00' },
-        { name: '오류 레드', name_en: 'Error Red', hex: '#FF1744' },
-        { name: '정보 틸', name_en: 'Info Teal', hex: '#00BCD4' },
-        { name: '링크 블루', name_en: 'Link Blue', hex: '#1976D2' },
-        { name: '비활성 그레이', name_en: 'Inactive Gray', hex: '#9E9E9E' },
-        { name: '다크 배경', name_en: 'Dark Background', hex: '#121212' },
-        { name: '카드 화이트', name_en: 'Card White', hex: '#FAFAFA' },
-        { name: '보더 그레이', name_en: 'Border Gray', hex: '#E0E0E0' },
-        { name: '포커스 블루', name_en: 'Focus Blue', hex: '#2563EB' },
-        { name: '섀도우 블랙', name_en: 'Shadow Black', hex: '#0F172A' },
+    "ui_web": [
+        {
+            "name": "버셀 블루",
+            "name_en": "Vercel Blue",
+            "hex": "#0070F3"
+        },
+        {
+            "name": "성공 그린",
+            "name_en": "Success Green",
+            "hex": "#00C853"
+        },
+        {
+            "name": "경고 앰버",
+            "name_en": "Warning Amber",
+            "hex": "#FF6F00"
+        },
+        {
+            "name": "오류 레드",
+            "name_en": "Error Red",
+            "hex": "#FF1744"
+        },
+        {
+            "name": "정보 틸",
+            "name_en": "Info Teal",
+            "hex": "#00BCD4"
+        },
+        {
+            "name": "링크 블루",
+            "name_en": "Link Blue",
+            "hex": "#1976D2"
+        },
+        {
+            "name": "비활성 그레이",
+            "name_en": "Inactive Gray",
+            "hex": "#9E9E9E"
+        },
+        {
+            "name": "다크 배경",
+            "name_en": "Dark Background",
+            "hex": "#121212"
+        },
+        {
+            "name": "카드 화이트",
+            "name_en": "Card White",
+            "hex": "#FAFAFA"
+        },
+        {
+            "name": "보더 그레이",
+            "name_en": "Border Gray",
+            "hex": "#E0E0E0"
+        },
+        {
+            "name": "포커스 블루",
+            "name_en": "Focus Blue",
+            "hex": "#2563EB"
+        },
+        {
+            "name": "토스 파랑",
+            "name_en": "Toss Blue",
+            "hex": "#3182F6"
+        },
+        {
+            "name": "카카오 노랑",
+            "name_en": "Kakao Yellow",
+            "hex": "#FEE500"
+        },
+        {
+            "name": "네이버 초록",
+            "name_en": "Naver Green",
+            "hex": "#03C75A"
+        },
+        {
+            "name": "피그마 보라",
+            "name_en": "Figma Purple",
+            "hex": "#A259FF"
+        },
+        {
+            "name": "테일윈드 틸",
+            "name_en": "Tailwind Teal",
+            "hex": "#0D9488"
+        },
+        {
+            "name": "스포카 그레이",
+            "name_en": "Spoqa Gray",
+            "hex": "#657786"
+        },
+        {
+            "name": "벨로그 초록",
+            "name_en": "Velog Green",
+            "hex": "#20C997"
+        },
+        {
+            "name": "쿠팡 로켓레드",
+            "name_en": "Coupang Red",
+            "hex": "#E1251B"
+        },
+        {
+            "name": "당근 오렌지",
+            "name_en": "Karrot Orange",
+            "hex": "#FF7E36"
+        },
+        {
+            "name": "무신사 블랙",
+            "name_en": "Musinsa Black",
+            "hex": "#111111"
+        },
+        {
+            "name": "라인 그린",
+            "name_en": "Line Green",
+            "hex": "#06C755"
+        },
+        {
+            "name": "노션 먹색",
+            "name_en": "Notion Ink",
+            "hex": "#37352F"
+        },
+        {
+            "name": "깃허브 다크",
+            "name_en": "GitHub Dark",
+            "hex": "#24292E"
+        },
+        {
+            "name": "어도비 레드",
+            "name_en": "Adobe Red",
+            "hex": "#FF0000"
+        },
+        {
+            "name": "슬랙 아보진",
+            "name_en": "Slack Aubergine",
+            "hex": "#4A154B"
+        },
+        {
+            "name": "애플 실버",
+            "name_en": "Apple Silver",
+            "hex": "#E5E5EA"
+        },
+        {
+            "name": "페이스북 블루",
+            "name_en": "Facebook Blue",
+            "hex": "#1877F2"
+        },
+        {
+            "name": "인스타 그라디언트",
+            "name_en": "Instagram Pink",
+            "hex": "#E1306C"
+        },
+        {
+            "name": "리액트 블루",
+            "name_en": "React Blue",
+            "hex": "#61DAFB"
+        }
     ],
-    brand_global: [
-        { name: '애플 스페이스그레이', name_en: 'Apple SpaceGray', hex: '#1D1D1F' },
-        { name: '구글 레드', name_en: 'Google Red', hex: '#EA4335' },
-        { name: '스포티파이 그린', name_en: 'Spotify Green', hex: '#1DB954' },
-        { name: '넷플릭스 레드', name_en: 'Netflix Red', hex: '#E50914' },
-        { name: '슬랙 퍼플', name_en: 'Slack Purple', hex: '#4A154B' },
-        { name: '디스코드 블러플', name_en: 'Discord Blurple', hex: '#5865F2' },
-        { name: '유튜브 레드', name_en: 'Youtube Red', hex: '#FF0000' },
-        { name: '인스타그램 퍼플', name_en: 'Instagram Purple', hex: '#C13584' },
-        { name: '메타 블루', name_en: 'Meta Blue', hex: '#0866FF' },
-        { name: '트위터 블루', name_en: 'Twitter Blue', hex: '#1DA1F2' },
-        { name: '아마존 오렌지', name_en: 'Amazon Orange', hex: '#FF9900' },
-        { name: '마이크로소프트 블루', name_en: 'MS Blue', hex: '#0078D4' },
-        { name: '텐센트 블루', name_en: 'Tencent Blue', hex: '#1878F3' },
-        { name: '틱톡 블랙', name_en: 'Tiktok Black', hex: '#010101' },
-        { name: '링크드인 블루', name_en: 'LinkedIn Blue', hex: '#0A66C2' },
-        { name: '에어비앤비 레드', name_en: 'Airbnb Red', hex: '#FF5A5F' },
+    "brand_global": [
+        {
+            "name": "애플 스페이스그레이",
+            "name_en": "Apple SpaceGray",
+            "hex": "#1D1D1F"
+        },
+        {
+            "name": "구글 레드",
+            "name_en": "Google Red",
+            "hex": "#EA4335"
+        },
+        {
+            "name": "구글 블루",
+            "name_en": "Google Blue",
+            "hex": "#4285F4"
+        },
+        {
+            "name": "구글 옐로우",
+            "name_en": "Google Yellow",
+            "hex": "#FBBC05"
+        },
+        {
+            "name": "구글 그린",
+            "name_en": "Google Green",
+            "hex": "#34A853"
+        },
+        {
+            "name": "스포티파이 그린",
+            "name_en": "Spotify Green",
+            "hex": "#1DB954"
+        },
+        {
+            "name": "넷플릭스 레드",
+            "name_en": "Netflix Red",
+            "hex": "#E50914"
+        },
+        {
+            "name": "디스코드 블러플",
+            "name_en": "Discord Blurple",
+            "hex": "#5865F2"
+        },
+        {
+            "name": "유튜브 레드",
+            "name_en": "Youtube Red",
+            "hex": "#FF0000"
+        },
+        {
+            "name": "아마존 오렌지",
+            "name_en": "Amazon Orange",
+            "hex": "#FF9900"
+        },
+        {
+            "name": "마이크로소프트 블루",
+            "name_en": "MS Blue",
+            "hex": "#0078D4"
+        },
+        {
+            "name": "링크드인 블루",
+            "name_en": "LinkedIn Blue",
+            "hex": "#0A66C2"
+        },
+        {
+            "name": "에어비앤비 코랄",
+            "name_en": "Airbnb Coral",
+            "hex": "#FF5A5F"
+        },
+        {
+            "name": "스타벅스 그린",
+            "name_en": "Starbucks Green",
+            "hex": "#00704A"
+        },
+        {
+            "name": "코카콜라 레드",
+            "name_en": "Coca-Cola Red",
+            "hex": "#F40009"
+        },
+        {
+            "name": "이케아 옐로우",
+            "name_en": "IKEA Yellow",
+            "hex": "#FFCC00"
+        },
+        {
+            "name": "이케아 블루",
+            "name_en": "IKEA Blue",
+            "hex": "#003399"
+        },
+        {
+            "name": "나이키 오렌지",
+            "name_en": "Nike Orange",
+            "hex": "#FF6600"
+        },
+        {
+            "name": "아디다스 블랙",
+            "name_en": "Adidas Black",
+            "hex": "#000000"
+        },
+        {
+            "name": "펩시 블루",
+            "name_en": "Pepsi Blue",
+            "hex": "#004B87"
+        },
+        {
+            "name": "티파니 블루",
+            "name_en": "Tiffany Blue",
+            "hex": "#81D8D0"
+        },
+        {
+            "name": "헤르메스 오렌지",
+            "name_en": "Hermes Orange",
+            "hex": "#F37021"
+        },
+        {
+            "name": "샤넬 블랙",
+            "name_en": "Chanel Black",
+            "hex": "#000000"
+        },
+        {
+            "name": "페라리 레드",
+            "name_en": "Ferrari Red",
+            "hex": "#FF2800"
+        },
+        {
+            "name": "포르쉐 레더브라운",
+            "name_en": "Porsche Brown",
+            "hex": "#8C6239"
+        },
+        {
+            "name": "스타일리시 핀터레스트",
+            "name_en": "Pinterest Red",
+            "hex": "#BD081C"
+        },
+        {
+            "name": "스트라이프 퍼플",
+            "name_en": "Stripe Purple",
+            "hex": "#635BFF"
+        },
+        {
+            "name": "트위치 보라",
+            "name_en": "Twitch Purple",
+            "hex": "#9146FF"
+        },
+        {
+            "name": "줌 하늘",
+            "name_en": "Zoom Blue",
+            "hex": "#2D8CFF"
+        },
+        {
+            "name": "테슬라 레드",
+            "name_en": "Tesla Red",
+            "hex": "#CC0000"
+        }
     ],
-    nature: [
-        { name: '포레스트 그린', name_en: 'Forest Green', hex: '#228B22' },
-        { name: '스카이 블루', name_en: 'Sky Blue', hex: '#87CEEB' },
-        { name: '딥 오션', name_en: 'Deep Ocean', hex: '#006994' },
-        { name: '선셋 오렌지', name_en: 'Sunset Orange', hex: '#FF4500' },
-        { name: '체리 블라썸', name_en: 'Cherry Blossom', hex: '#FFB7C5' },
-        { name: '골든 샌드', name_en: 'Golden Sand', hex: '#C2B280' },
-        { name: '모스 그린', name_en: 'Moss Green', hex: '#8A9A5B' },
-        { name: '라벤더 필드', name_en: 'Lavender Field', hex: '#967BB6' },
-        { name: '오로라 그린', name_en: 'Aurora Green', hex: '#00FFCC' },
-        { name: '산호초', name_en: 'Coral Reef', hex: '#FF6B6B' },
-        { name: '크리스탈 레이크', name_en: 'Crystal Lake', hex: '#5DADE2' },
-        { name: '가을 단풍', name_en: 'Autumn Leaf', hex: '#D35400' },
+    "nature": [
+        {
+            "name": "포레스트 그린",
+            "name_en": "Forest Green",
+            "hex": "#228B22"
+        },
+        {
+            "name": "스카이 블루",
+            "name_en": "Sky Blue",
+            "hex": "#87CEEB"
+        },
+        {
+            "name": "딥 오션",
+            "name_en": "Deep Ocean",
+            "hex": "#006994"
+        },
+        {
+            "name": "선셋 오렌지",
+            "name_en": "Sunset Orange",
+            "hex": "#FF4500"
+        },
+        {
+            "name": "체리 블라썸",
+            "name_en": "Cherry Blossom",
+            "hex": "#FFB7C5"
+        },
+        {
+            "name": "골든 샌드",
+            "name_en": "Golden Sand",
+            "hex": "#C2B280"
+        },
+        {
+            "name": "모스 그린",
+            "name_en": "Moss Green",
+            "hex": "#8A9A5B"
+        },
+        {
+            "name": "라벤더 필드",
+            "name_en": "Lavender Field",
+            "hex": "#967BB6"
+        },
+        {
+            "name": "오로라 그린",
+            "name_en": "Aurora Green",
+            "hex": "#00FFCC"
+        },
+        {
+            "name": "산호초",
+            "name_en": "Coral Reef",
+            "hex": "#FF6B6B"
+        },
+        {
+            "name": "크리스탈 레이크",
+            "name_en": "Crystal Lake",
+            "hex": "#5DADE2"
+        },
+        {
+            "name": "가을 단풍",
+            "name_en": "Autumn Leaf",
+            "hex": "#D35400"
+        },
+        {
+            "name": "유칼립투스",
+            "name_en": "Eucalyptus",
+            "hex": "#5F8575"
+        },
+        {
+            "name": "라임 스파클",
+            "name_en": "Lime Sparkle",
+            "hex": "#A4F135"
+        },
+        {
+            "name": "피오니 핑크",
+            "name_en": "Peony Pink",
+            "hex": "#FF7F9F"
+        },
+        {
+            "name": "사막 모래",
+            "name_en": "Desert Sand",
+            "hex": "#EDC9AF"
+        },
+        {
+            "name": "올리브 리프",
+            "name_en": "Olive Leaf",
+            "hex": "#708238"
+        },
+        {
+            "name": "미드나잇 스카이",
+            "name_en": "Midnight Sky",
+            "hex": "#191970"
+        },
+        {
+            "name": "새벽 안개",
+            "name_en": "Morning Mist",
+            "hex": "#E1E6E2"
+        },
+        {
+            "name": "화산암 차콜",
+            "name_en": "Volcanic Ash",
+            "hex": "#4A4A4A"
+        },
+        {
+            "name": "민들레 노랑",
+            "name_en": "Dandelion",
+            "hex": "#F4D03F"
+        },
+        {
+            "name": "바다 거품",
+            "name_en": "Seafoam",
+            "hex": "#9FE2BF"
+        },
+        {
+            "name": "적토 파우더",
+            "name_en": "Clay Powder",
+            "hex": "#C27D68"
+        },
+        {
+            "name": "대나무 줄기",
+            "name_en": "Bamboo Stem",
+            "hex": "#4F7942"
+        },
+        {
+            "name": "플럼 바이올렛",
+            "name_en": "Plum Violet",
+            "hex": "#5B2C6F"
+        },
+        {
+            "name": "메리골드 주황",
+            "name_en": "Marigold",
+            "hex": "#F39C12"
+        },
+        {
+            "name": "빙하 블루",
+            "name_en": "Glacier Blue",
+            "hex": "#A9CCE3"
+        },
+        {
+            "name": "젖은 잔디",
+            "name_en": "Wet Grass",
+            "hex": "#27AE60"
+        },
+        {
+            "name": "라즈베리",
+            "name_en": "Raspberry",
+            "hex": "#D81B60"
+        },
+        {
+            "name": "단풍잎 골드",
+            "name_en": "Autumn Gold",
+            "hex": "#D4AC0D"
+        }
     ],
-    pastel: [
-        { name: '베이비 핑크', name_en: 'Baby Pink', hex: '#FFD1DC' },
-        { name: '라벤더 미스트', name_en: 'Lavender Mist', hex: '#E6E6FA' },
-        { name: '민트 크림', name_en: 'Mint Cream', hex: '#B5EAD7' },
-        { name: '피치 블러쉬', name_en: 'Peach Blush', hex: '#FFCBA4' },
-        { name: '베이비 블루', name_en: 'Baby Blue', hex: '#AED6F1' },
-        { name: '버터 옐로우', name_en: 'Butter Yellow', hex: '#FFF0AA' },
-        { name: '라일락', name_en: 'Lilac', hex: '#D7B2FF' },
+    "pastel": [
+        {
+            "name": "베이비 핑크",
+            "name_en": "Baby Pink",
+            "hex": "#FFD1DC"
+        },
+        {
+            "name": "라벤더 미스트",
+            "name_en": "Lavender Mist",
+            "hex": "#E6E6FA"
+        },
+        {
+            "name": "민트 크림",
+            "name_en": "Mint Cream",
+            "hex": "#B5EAD7"
+        },
+        {
+            "name": "피치 블러쉬",
+            "name_en": "Peach Blush",
+            "hex": "#FFCBA4"
+        },
+        {
+            "name": "베이비 블루",
+            "name_en": "Baby Blue",
+            "hex": "#AED6F1"
+        },
+        {
+            "name": "버터 옐로우",
+            "name_en": "Butter Yellow",
+            "hex": "#FFF0AA"
+        },
+        {
+            "name": "라일락",
+            "name_en": "Lilac",
+            "hex": "#D7B2FF"
+        },
+        {
+            "name": "페일 로즈",
+            "name_en": "Pale Rose",
+            "hex": "#FADBD8"
+        },
+        {
+            "name": "살구 샤베트",
+            "name_en": "Apricot Sorbet",
+            "hex": "#FDEBD0"
+        },
+        {
+            "name": "그린티 라떼",
+            "name_en": "Greentea Latte",
+            "hex": "#D5F5E3"
+        },
+        {
+            "name": "파우더 시안",
+            "name_en": "Powder Cyan",
+            "hex": "#D1F2EB"
+        },
+        {
+            "name": "포그 그레이",
+            "name_en": "Fog Gray",
+            "hex": "#EAEDED"
+        },
+        {
+            "name": "소다 시럽",
+            "name_en": "Soda Syrup",
+            "hex": "#D6EAF8"
+        },
+        {
+            "name": "밀크티 브라운",
+            "name_en": "Milktea Brown",
+            "hex": "#E5D3B3"
+        },
+        {
+            "name": "블러쉬 베이지",
+            "name_en": "Blush Beige",
+            "hex": "#F5EBE0"
+        },
+        {
+            "name": "라벤더 로즈",
+            "name_en": "Lavender Rose",
+            "hex": "#F3CFC6"
+        },
+        {
+            "name": "페일 세이지",
+            "name_en": "Pale Sage",
+            "hex": "#C2D5C6"
+        },
+        {
+            "name": "더스티 블루",
+            "name_en": "Dusty Blue",
+            "hex": "#A3B8CC"
+        },
+        {
+            "name": "크림 화이트",
+            "name_en": "Cream White",
+            "hex": "#FFFDD0"
+        },
+        {
+            "name": "허니 파우더",
+            "name_en": "Honey Powder",
+            "hex": "#F9E79F"
+        },
+        {
+            "name": "바닐라 빈",
+            "name_en": "Vanilla Bean",
+            "hex": "#F5F5DC"
+        },
+        {
+            "name": "딸기 우유",
+            "name_en": "Strawberry Milk",
+            "hex": "#FFC0CB"
+        },
+        {
+            "name": "피스타치오 그린",
+            "name_en": "Pistachio Green",
+            "hex": "#93C572"
+        },
+        {
+            "name": "소프트 코랄",
+            "name_en": "Soft Coral",
+            "hex": "#F8AD9D"
+        },
+        {
+            "name": "헤이즐넛",
+            "name_en": "Hazelnut",
+            "hex": "#CFB997"
+        },
+        {
+            "name": "코지 그레이",
+            "name_en": "Cozy Gray",
+            "hex": "#EAEAEA"
+        },
+        {
+            "name": "페일 골드",
+            "name_en": "Pale Gold",
+            "hex": "#E8D3A7"
+        },
+        {
+            "name": "아쿠아 마린 마일드",
+            "name_en": "Mild Aquamarine",
+            "hex": "#A3E4D7"
+        },
+        {
+            "name": "오키드 틴트",
+            "name_en": "Orchid Tint",
+            "hex": "#EBDEF0"
+        },
+        {
+            "name": "코튼 바이올렛",
+            "name_en": "Cotton Violet",
+            "hex": "#D2B4DE"
+        }
     ],
-    neon_modern: [
-        { name: '네온 핑크', name_en: 'Neon Pink', hex: '#FF10F0' },
-        { name: '일렉트릭 블루', name_en: 'Electric Blue', hex: '#00B4FF' },
-        { name: '네온 그린', name_en: 'Neon Green', hex: '#39FF14' },
-        { name: '사이버 옐로우', name_en: 'Cyber Yellow', hex: '#FFE600' },
-        { name: '핫 오렌지', name_en: 'Hot Orange', hex: '#FF6A00' },
-        { name: '매트릭스 그린', name_en: 'Matrix Green', hex: '#00FF41' },
-        { name: 'UV 퍼플', name_en: 'UV Purple', hex: '#7B00FF' },
-        { name: '레이저 레드', name_en: 'Laser Red', hex: '#FF003F' },
+    "neon_modern": [
+        {
+            "name": "네온 핑크",
+            "name_en": "Neon Pink",
+            "hex": "#FF10F0"
+        },
+        {
+            "name": "일렉트릭 블루",
+            "name_en": "Electric Blue",
+            "hex": "#00B4FF"
+        },
+        {
+            "name": "네온 그린",
+            "name_en": "Neon Green",
+            "hex": "#39FF14"
+        },
+        {
+            "name": "사이버 옐로우",
+            "name_en": "Cyber Yellow",
+            "hex": "#FFE600"
+        },
+        {
+            "name": "핫 오렌지",
+            "name_en": "Hot Orange",
+            "hex": "#FF6A00"
+        },
+        {
+            "name": "매트릭스 그린",
+            "name_en": "Matrix Green",
+            "hex": "#00FF41"
+        },
+        {
+            "name": "UV 퍼플",
+            "name_en": "UV Purple",
+            "hex": "#7B00FF"
+        },
+        {
+            "name": "레이저 레드",
+            "name_en": "Laser Red",
+            "hex": "#FF003F"
+        },
+        {
+            "name": "일렉트릭 바이올렛",
+            "name_en": "Electric Violet",
+            "hex": "#8F00FF"
+        },
+        {
+            "name": "플로레센트 라임",
+            "name_en": "Fluorescent Lime",
+            "hex": "#CCFF00"
+        },
+        {
+            "name": "사이버 시안",
+            "name_en": "Cyber Cyan",
+            "hex": "#00FFFF"
+        },
+        {
+            "name": "프로톤 골드",
+            "name_en": "Proton Gold",
+            "hex": "#FFCC33"
+        },
+        {
+            "name": "네온 마젠타",
+            "name_en": "Neon Magenta",
+            "hex": "#FF007F"
+        },
+        {
+            "name": "플라즈마 오렌지",
+            "name_en": "Plasma Orange",
+            "hex": "#FF4E00"
+        },
+        {
+            "name": "제논 스카이",
+            "name_en": "Xenon Sky",
+            "hex": "#0099FF"
+        },
+        {
+            "name": "디지털 그린",
+            "name_en": "Digital Green",
+            "hex": "#00FA9A"
+        },
+        {
+            "name": "볼트 주황",
+            "name_en": "Volt Tangerine",
+            "hex": "#FF5E00"
+        },
+        {
+            "name": "라듐 옐로우",
+            "name_en": "Radium Yellow",
+            "hex": "#DAF7A6"
+        },
+        {
+            "name": "일렉트릭 틸",
+            "name_en": "Electric Teal",
+            "hex": "#00E5FF"
+        },
+        {
+            "name": "네온 에메랄드",
+            "name_en": "Neon Emerald",
+            "hex": "#50C878"
+        },
+        {
+            "name": "볼티지 바이올렛",
+            "name_en": "Voltage Violet",
+            "hex": "#9400D3"
+        },
+        {
+            "name": "크립톤 시안",
+            "name_en": "Krypton Cyan",
+            "hex": "#33FFCC"
+        },
+        {
+            "name": "글로우 라즈베리",
+            "name_en": "Glow Raspberry",
+            "hex": "#E91E63"
+        },
+        {
+            "name": "애시드 옐로우",
+            "name_en": "Acid Yellow",
+            "hex": "#DFFF00"
+        },
+        {
+            "name": "프로톤 핑크",
+            "name_en": "Proton Pink",
+            "hex": "#FF69B4"
+        },
+        {
+            "name": "사이버 테크 레드",
+            "name_en": "Cyber Red",
+            "hex": "#FF0055"
+        },
+        {
+            "name": "글로잉 바이올렛",
+            "name_en": "Glowing Violet",
+            "hex": "#A020F0"
+        },
+        {
+            "name": "애시드 오렌지",
+            "name_en": "Acid Orange",
+            "hex": "#FF8C00"
+        },
+        {
+            "name": "일렉트릭 인디고",
+            "name_en": "Electric Indigo",
+            "hex": "#4B0082"
+        },
+        {
+            "name": "플로레센트 그린",
+            "name_en": "Fluo Green",
+            "hex": "#ADFF2F"
+        }
     ],
-    earth: [
-        { name: '테라코타', name_en: 'Terracotta', hex: '#C27A54' },
-        { name: '탄 베이지', name_en: 'Tan Beige', hex: '#D2B48C' },
-        { name: '시에나', name_en: 'Sienna', hex: '#A0522D' },
-        { name: '카키', name_en: 'Khaki', hex: '#C3AA7E' },
-        { name: '샌드스톤', name_en: 'Sandstone', hex: '#DEB887' },
-        { name: '다크 초콜렛', name_en: 'Dark Chocolate', hex: '#4E2623' },
-        { name: '올리브 드랩', name_en: 'Olive Drab', hex: '#6B7C3A' },
+    "earth": [
+        {
+            "name": "테라코타",
+            "name_en": "Terracotta",
+            "hex": "#C27A54"
+        },
+        {
+            "name": "탄 베이지",
+            "name_en": "Tan Beige",
+            "hex": "#D2B48C"
+        },
+        {
+            "name": "시에나",
+            "name_en": "Sienna",
+            "hex": "#A0522D"
+        },
+        {
+            "name": "카키",
+            "name_en": "Khaki",
+            "hex": "#C3AA7E"
+        },
+        {
+            "name": "샌드스톤",
+            "name_en": "Sandstone",
+            "hex": "#DEB887"
+        },
+        {
+            "name": "다크 초콜렛",
+            "name_en": "Dark Chocolate",
+            "hex": "#4E2623"
+        },
+        {
+            "name": "올리브 드랩",
+            "name_en": "Olive Drab",
+            "hex": "#6B7C3A"
+        },
+        {
+            "name": "황토색",
+            "name_en": "Ochre",
+            "hex": "#CC7722"
+        },
+        {
+            "name": "로 브라운",
+            "name_en": "Raw Brown",
+            "hex": "#5C4033"
+        },
+        {
+            "name": "시나몬",
+            "name_en": "Cinnamon",
+            "hex": "#D2691E"
+        },
+        {
+            "name": "토프 그레이",
+            "name_en": "Taupe Gray",
+            "hex": "#483C32"
+        },
+        {
+            "name": "번트 테라코타",
+            "name_en": "Burnt Terracotta",
+            "hex": "#8A3324"
+        },
+        {
+            "name": "사막 머드",
+            "name_en": "Desert Mud",
+            "hex": "#704D3C"
+        },
+        {
+            "name": "세이지 섀도우",
+            "name_en": "Sage Shadow",
+            "hex": "#929B8C"
+        },
+        {
+            "name": "드라이 리프",
+            "name_en": "Dry Leaf",
+            "hex": "#A0785C"
+        },
+        {
+            "name": "카퍼 골드",
+            "name_en": "Copper Gold",
+            "hex": "#B87333"
+        },
+        {
+            "name": "진흙 진갈색",
+            "name_en": "Clay Brown",
+            "hex": "#6E473B"
+        },
+        {
+            "name": "피트 모스",
+            "name_en": "Peat Moss",
+            "hex": "#3E3D32"
+        },
+        {
+            "name": "앰버 허니",
+            "name_en": "Amber Honey",
+            "hex": "#C68E17"
+        },
+        {
+            "name": "드라이 우드",
+            "name_en": "Dry Wood",
+            "hex": "#855E42"
+        },
+        {
+            "name": "파인 콘",
+            "name_en": "Pine Cone",
+            "hex": "#6A5D4D"
+        },
+        {
+            "name": "포레스트 바크",
+            "name_en": "Forest Bark",
+            "hex": "#2B1B10"
+        },
+        {
+            "name": "어텀 올리브",
+            "name_en": "Autumn Olive",
+            "hex": "#556B2F"
+        },
+        {
+            "name": "어스 클레이",
+            "name_en": "Earth Clay",
+            "hex": "#D9A066"
+        },
+        {
+            "name": "마호가니",
+            "name_en": "Mahogany",
+            "hex": "#C04000"
+        },
+        {
+            "name": "진저 스파이스",
+            "name_en": "Ginger Spice",
+            "hex": "#B06500"
+        },
+        {
+            "name": "스톤 카키",
+            "name_en": "Stone Khaki",
+            "hex": "#8FBC8F"
+        },
+        {
+            "name": "번트 번버",
+            "name_en": "Burnt Umber",
+            "hex": "#8A3324"
+        },
+        {
+            "name": "코코아 빈",
+            "name_en": "Cocoa Bean",
+            "hex": "#3D2314"
+        },
+        {
+            "name": "토스카나 황토",
+            "name_en": "Tuscan Sun",
+            "hex": "#E29B27"
+        }
     ],
-    monochrome: [
-        { name: '퓨어 블랙', name_en: 'Pure Black', hex: '#000000' },
-        { name: '다크 차콜', name_en: 'Dark Charcoal', hex: '#212121' },
-        { name: '차콜 그레이', name_en: 'Charcoal Gray', hex: '#424242' },
-        { name: '미디엄 그레이', name_en: 'Medium Gray', hex: '#616161' },
-        { name: '실버', name_en: 'Silver', hex: '#9E9E9E' },
-        { name: '라이트 그레이', name_en: 'Light Gray', hex: '#E0E0E0' },
-        { name: '퓨어 화이트', name_en: 'Pure White', hex: '#FFFFFF' },
+    "monochrome": [
+        {
+            "name": "퓨어 블랙",
+            "name_en": "Pure Black",
+            "hex": "#000000"
+        },
+        {
+            "name": "다크 차콜",
+            "name_en": "Dark Charcoal",
+            "hex": "#212121"
+        },
+        {
+            "name": "차콜 그레이",
+            "name_en": "Charcoal Gray",
+            "hex": "#424242"
+        },
+        {
+            "name": "미디엄 그레이",
+            "name_en": "Medium Gray",
+            "hex": "#616161"
+        },
+        {
+            "name": "실버",
+            "name_en": "Silver",
+            "hex": "#9E9E9E"
+        },
+        {
+            "name": "라이트 그레이",
+            "name_en": "Light Gray",
+            "hex": "#E0E0E0"
+        },
+        {
+            "name": "퓨어 화이트",
+            "name_en": "Pure White",
+            "hex": "#FFFFFF"
+        },
+        {
+            "name": "젯 블랙",
+            "name_en": "Jet Black",
+            "hex": "#0A0A0A"
+        },
+        {
+            "name": "옵시디언",
+            "name_en": "Obsidian",
+            "hex": "#0B0C10"
+        },
+        {
+            "name": "아이언 그레이",
+            "name_en": "Iron Gray",
+            "hex": "#525252"
+        },
+        {
+            "name": "아스팔트 차콜",
+            "name_en": "Asphalt Charcoal",
+            "hex": "#1C1C1C"
+        },
+        {
+            "name": "건메탈",
+            "name_en": "Gunmetal",
+            "hex": "#2A3439"
+        },
+        {
+            "name": "스노우 화이트",
+            "name_en": "Snow White",
+            "hex": "#FAFAFA"
+        },
+        {
+            "name": "쿨 실버",
+            "name_en": "Cool Silver",
+            "hex": "#F0F2F5"
+        },
+        {
+            "name": "티타늄 그레이",
+            "name_en": "Titanium Gray",
+            "hex": "#8A8D91"
+        },
+        {
+            "name": "백금 플래티넘",
+            "name_en": "Platinum",
+            "hex": "#E5E4E2"
+        },
+        {
+            "name": "진주빛 펄",
+            "name_en": "Pearl White",
+            "hex": "#F0EAD6"
+        },
+        {
+            "name": "연기색",
+            "name_en": "Smoke Gray",
+            "hex": "#708090"
+        },
+        {
+            "name": "비둘기 그레이",
+            "name_en": "Dove Gray",
+            "hex": "#D4D4D2"
+        },
+        {
+            "name": "아이스 클라우드",
+            "name_en": "Ice Cloud",
+            "hex": "#F4F6F7"
+        },
+        {
+            "name": "옵시디언 라이트",
+            "name_en": "Obsidian Light",
+            "hex": "#1F2833"
+        },
+        {
+            "name": "쉐도우 그레이",
+            "name_en": "Shadow Gray",
+            "hex": "#7A7A7A"
+        },
+        {
+            "name": "소프트 코크스",
+            "name_en": "Coke Gray",
+            "hex": "#303030"
+        },
+        {
+            "name": "슬레이트 그레이",
+            "name_en": "Slate Gray",
+            "hex": "#708090"
+        },
+        {
+            "name": "스톤 실버",
+            "name_en": "Stone Silver",
+            "hex": "#B2BABB"
+        },
+        {
+            "name": "미러 크롬",
+            "name_en": "Mirror Chrome",
+            "hex": "#D5D8DC"
+        },
+        {
+            "name": "그라파이트",
+            "name_en": "Graphite",
+            "hex": "#272727"
+        },
+        {
+            "name": "오프화이트",
+            "name_en": "Off-White",
+            "hex": "#FAF9F6"
+        },
+        {
+            "name": "본 마일드 화이트",
+            "name_en": "Bone White",
+            "hex": "#F9F6EE"
+        },
+        {
+            "name": "다크 이클립스",
+            "name_en": "Dark Eclipse",
+            "hex": "#181C20"
+        }
     ]
 };
 
+// ─── 대표 컬러 명칭 데이터베이스 (검색 기능 강화) ──────────────────────────────────
 const colorNameReferences = {
-    '가을 단풍': { hex: '#D35400', name_en: 'Autumn Leaf', tags: ['autumn', '오렌지', '붉은'] },
-    '감청색': { hex: '#1428A0', name_en: 'Royal Blue', tags: ['business', '전문', '파랑'] },
-    '검정': { hex: '#000000', name_en: 'Black', tags: ['contrast', '우아', '어둠'] },
-    '골드': { hex: '#FFD700', name_en: 'Gold', tags: ['premium', '화려', '럭셔리'] },
-    '녹색': { hex: '#00B050', name_en: 'Green', tags: ['natural', '성장', '자연'] },
-    '네이비': { hex: '#001F5B', name_en: 'Navy', tags: ['formal', '클래식', '신뢰'] },
-    '네온 그린': { hex: '#39FF14', name_en: 'Neon Green', tags: ['neon', '형광', '밝은'] },
-    '라벤더': { hex: '#967BB6', name_en: 'Lavender', tags: ['soft', '우아', '보라'] },
-    '민트': { hex: '#00B8A9', name_en: 'Mint', tags: ['fresh', '차분', '자연'] },
-    '베이지': { hex: '#C8A882', name_en: 'Beige', tags: ['elegant', '전통', '따뜻함'] },
-    '보라': { hex: '#7851A9', name_en: 'Purple', tags: ['luxury', '창의', '우아'] },
-    '분홍': { hex: '#FF69B4', name_en: 'Pink', tags: ['pink', '귀여움', '부드러움'] },
-    '빨강': { hex: '#FF0000', name_en: 'Red', tags: ['primary', '강렬', '위험'] },
-    '살몬': { hex: '#FA8072', name_en: 'Salmon', tags: ['warm', '소프트', '핑크'] },
-    '스카이블루': { hex: '#87CEEB', name_en: 'Sky Blue', tags: ['sky', '하늘', '맑음'] },
-    '시안': { hex: '#00BCD4', name_en: 'Cyan', tags: ['tech', '혁신', '청량'] },
-    '아이보리': { hex: '#FFFFF0', name_en: 'Ivory', tags: ['warm', '부드러운', '화이트'] },
-    '오렌지': { hex: '#FF6B00', name_en: 'Orange', tags: ['energy', '활동', '따뜻함'] },
-    '청록': { hex: '#20B2AA', name_en: 'Teal', tags: ['cool', '편안', '바다'] },
-    '회색': { hex: '#808080', name_en: 'Gray', tags: ['neutral', '중립', '차분'] },
-    '흰색': { hex: '#FFFFFF', name_en: 'White', tags: ['clean', '공간', '순수'] },
+    "가을 단풍": {
+        "hex": "#D35400",
+        "name_en": "Autumn Leaf",
+        "tags": [
+            "autumn",
+            "오렌지",
+            "붉은",
+            "가을"
+        ]
+    },
+    "감청색": {
+        "hex": "#1428A0",
+        "name_en": "Royal Blue",
+        "tags": [
+            "business",
+            "전문",
+            "파랑",
+            "신뢰"
+        ]
+    },
+    "검정": {
+        "hex": "#000000",
+        "name_en": "Black",
+        "tags": [
+            "contrast",
+            "우아",
+            "어둠",
+            "블랙"
+        ]
+    },
+    "골드": {
+        "hex": "#FFD700",
+        "name_en": "Gold",
+        "tags": [
+            "premium",
+            "화려",
+            "럭셔리",
+            "황금"
+        ]
+    },
+    "녹색": {
+        "hex": "#00B050",
+        "name_en": "Green",
+        "tags": [
+            "natural",
+            "성장",
+            "자연",
+            "그린"
+        ]
+    },
+    "네이비": {
+        "hex": "#001F5B",
+        "name_en": "Navy",
+        "tags": [
+            "formal",
+            "클래식",
+            "신뢰",
+            "남색"
+        ]
+    },
+    "네온 그린": {
+        "hex": "#39FF14",
+        "name_en": "Neon Green",
+        "tags": [
+            "neon",
+            "형광",
+            "밝은",
+            "초록"
+        ]
+    },
+    "라벤더": {
+        "hex": "#967BB6",
+        "name_en": "Lavender",
+        "tags": [
+            "soft",
+            "우아",
+            "보라",
+            "퍼플"
+        ]
+    },
+    "민트": {
+        "hex": "#00B8A9",
+        "name_en": "Mint",
+        "tags": [
+            "fresh",
+            "차분",
+            "자연",
+            "민트초코"
+        ]
+    },
+    "베이지": {
+        "hex": "#C8A882",
+        "name_en": "Beige",
+        "tags": [
+            "elegant",
+            "전통",
+            "따뜻함",
+            "샌드"
+        ]
+    },
+    "보라": {
+        "hex": "#7851A9",
+        "name_en": "Purple",
+        "tags": [
+            "luxury",
+            "창의",
+            "우아",
+            "퍼플"
+        ]
+    },
+    "분홍": {
+        "hex": "#FF69B4",
+        "name_en": "Pink",
+        "tags": [
+            "pink",
+            "귀여움",
+            "부드러움",
+            "핑크"
+        ]
+    },
+    "빨강": {
+        "hex": "#FF0000",
+        "name_en": "Red",
+        "tags": [
+            "primary",
+            "강렬",
+            "위험",
+            "레드"
+        ]
+    },
+    "살몬": {
+        "hex": "#FA8072",
+        "name_en": "Salmon",
+        "tags": [
+            "warm",
+            "소프트",
+            "핑크",
+            "연어"
+        ]
+    },
+    "스카이블루": {
+        "hex": "#87CEEB",
+        "name_en": "Sky Blue",
+        "tags": [
+            "sky",
+            "하늘",
+            "맑음",
+            "파랑"
+        ]
+    },
+    "시안": {
+        "hex": "#00BCD4",
+        "name_en": "Cyan",
+        "tags": [
+            "tech",
+            "혁신",
+            "청량",
+            "하늘"
+        ]
+    },
+    "아이보리": {
+        "hex": "#FFFFF0",
+        "name_en": "Ivory",
+        "tags": [
+            "warm",
+            "부드러운",
+            "화이트",
+            "크림"
+        ]
+    },
+    "오렌지": {
+        "hex": "#FF6B00",
+        "name_en": "Orange",
+        "tags": [
+            "energy",
+            "활동",
+            "따뜻함",
+            "주황"
+        ]
+    },
+    "청록": {
+        "hex": "#20B2AA",
+        "name_en": "Teal",
+        "tags": [
+            "cool",
+            "편안",
+            "바다",
+            "틸"
+        ]
+    },
+    "회색": {
+        "hex": "#808080",
+        "name_en": "Gray",
+        "tags": [
+            "neutral",
+            "중립",
+            "차분",
+            "그레이"
+        ]
+    },
+    "흰색": {
+        "hex": "#FFFFFF",
+        "name_en": "White",
+        "tags": [
+            "clean",
+            "공간",
+            "순수",
+            "화이트"
+        ]
+    },
+    "토스 블루": {
+        "hex": "#3182F6",
+        "name_en": "Toss Blue",
+        "tags": [
+            "finance",
+            "startup",
+            "blue",
+            "신뢰",
+            "금융"
+        ]
+    },
+    "네이버 그린": {
+        "hex": "#03C75A",
+        "name_en": "Naver Green",
+        "tags": [
+            "portal",
+            "korea",
+            "green",
+            "네이버",
+            "초록"
+        ]
+    },
+    "카카오 옐로우": {
+        "hex": "#FEE500",
+        "name_en": "Kakao Yellow",
+        "tags": [
+            "messenger",
+            "yellow",
+            "카카오",
+            "노랑"
+        ]
+    },
+    "스포티파이 그린": {
+        "hex": "#1DB954",
+        "name_en": "Spotify Green",
+        "tags": [
+            "music",
+            "spotify",
+            "green",
+            "스포티파이"
+        ]
+    },
+    "넷플릭스 레드": {
+        "hex": "#E50914",
+        "name_en": "Netflix Red",
+        "tags": [
+            "movie",
+            "red",
+            "넷플릭스",
+            "빨강"
+        ]
+    },
+    "피그마 퍼플": {
+        "hex": "#A259FF",
+        "name_en": "Figma Purple",
+        "tags": [
+            "design",
+            "purple",
+            "피그마",
+            "보라"
+        ]
+    },
+    "티파니 블루": {
+        "hex": "#81D8D0",
+        "name_en": "Tiffany Blue",
+        "tags": [
+            "luxury",
+            "mint",
+            "티파니",
+            "하늘"
+        ]
+    },
+    "황토색": {
+        "hex": "#CC7722",
+        "name_en": "Ochre",
+        "tags": [
+            "earth",
+            "brown",
+            "황토",
+            "흙"
+        ]
+    },
+    "라임": {
+        "hex": "#A4F135",
+        "name_en": "Lime",
+        "tags": [
+            "fresh",
+            "green",
+            "라임",
+            "연두"
+        ]
+    },
+    "피치": {
+        "hex": "#FFCBA4",
+        "name_en": "Peach",
+        "tags": [
+            "pastel",
+            "orange",
+            "복숭아",
+            "피치"
+        ]
+    },
+    "라일락": {
+        "hex": "#D7B2FF",
+        "name_en": "Lilac",
+        "tags": [
+            "pastel",
+            "purple",
+            "라일락",
+            "보라"
+        ]
+    },
+    "올리브": {
+        "hex": "#708238",
+        "name_en": "Olive",
+        "tags": [
+            "nature",
+            "green",
+            "올리브",
+            "녹색"
+        ]
+    },
+    "산호": {
+        "hex": "#FF6B6B",
+        "name_en": "Coral",
+        "tags": [
+            "ocean",
+            "pink",
+            "산호",
+            "코랄"
+        ]
+    },
+    "코퍼": {
+        "hex": "#B87333",
+        "name_en": "Copper",
+        "tags": [
+            "metal",
+            "brown",
+            "구리",
+            "동"
+        ]
+    },
+    "플럼": {
+        "hex": "#5B2C6F",
+        "name_en": "Plum",
+        "tags": [
+            "wine",
+            "purple",
+            "자두",
+            "보라"
+        ]
+    },
+    "초콜릿": {
+        "hex": "#4E2623",
+        "name_en": "Chocolate",
+        "tags": [
+            "brown",
+            "sweet",
+            "초코",
+            "갈색"
+        ]
+    },
+    "실버": {
+        "hex": "#9E9E9E",
+        "name_en": "Silver",
+        "tags": [
+            "metal",
+            "gray",
+            "실버",
+            "은색"
+        ]
+    },
+    "건메탈": {
+        "hex": "#2A3439",
+        "name_en": "Gunmetal",
+        "tags": [
+            "dark",
+            "gray",
+            "철색",
+            "어두운"
+        ]
+    },
+    "체리 블러썸": {
+        "hex": "#FFB7C5",
+        "name_en": "Cherry Blossom",
+        "tags": [
+            "spring",
+            "pink",
+            "벚꽃",
+            "분홍"
+        ]
+    },
+    "머스타드": {
+        "hex": "#D4AC0D",
+        "name_en": "Mustard",
+        "tags": [
+            "yellow",
+            "sauce",
+            "겨자",
+            "노랑"
+        ]
+    }
 };
 
+// ─── 인스피레이션 & 래퍼런스 카드 ──────────────────────────────────────────
 const designInspiration = [
-    { name: '미니멀 모던', name_en: 'Minimal Modern', colors: ['#000000', '#FFFFFF', '#8B8B8B', '#E8E8E8'] },
-    { name: '네온 나이트', name_en: 'Neon Night', colors: ['#FF10F0', '#FFE600', '#00B4FF', '#7B00FF'] },
-    { name: '해양 휴가', name_en: 'Ocean Vacation', colors: ['#005377', '#00A8E8', '#00D9FF', '#B5EAD7'] },
-    { name: '서로운 일몰', name_en: 'Deep Sunset', colors: ['#FF6B35', '#FFB627', '#C27A54', '#4E2623'] },
-    { name: '숲의 꿈', name_en: 'Forest Dream', colors: ['#228B22', '#8A9A5B', '#DEB887', '#006994'] },
-    { name: '리퀴드 글래스', name_en: 'Liquid Glass', colors: ['#E0F7FF', '#AED6F1', '#5DADE2', '#1A5276'] },
-    { name: '다크 엘리건스', name_en: 'Dark Elegance', colors: ['#000000', '#212121', '#424242', '#9E9E9E'] },
-    { name: '코랄 선셋', name_en: 'Coral Sunset', colors: ['#FF7F50', '#FF6B9D', '#FFD1DC', '#FFCBA4'] },
-    { name: '어반 테크', name_en: 'Urban Tech', colors: ['#0070F3', '#212121', '#E0E0E0', '#FAFAFA'] },
-    { name: '파스텔 드림', name_en: 'Pastel Dream', colors: ['#FFD1DC', '#B5EAD7', '#AED6F1', '#FFF0AA'] },
-    { name: '브랜드 파워', name_en: 'Brand Power', colors: ['#E50914', '#1DB954', '#5865F2', '#FF9900'] },
-    { name: '어스 톤', name_en: 'Earth Tone', colors: ['#C27A54', '#A0522D', '#DEB887', '#6B7C3A'] },
+    {
+        "name": "미니멀 모던",
+        "name_en": "Minimal Modern",
+        "colors": [
+            "#000000",
+            "#FFFFFF",
+            "#8B8B8B",
+            "#E8E8E8"
+        ]
+    },
+    {
+        "name": "네온 나이트",
+        "name_en": "Neon Night",
+        "colors": [
+            "#FF10F0",
+            "#FFE600",
+            "#00B4FF",
+            "#7B00FF"
+        ]
+    },
+    {
+        "name": "해양 휴가",
+        "name_en": "Ocean Vacation",
+        "colors": [
+            "#005377",
+            "#00A8E8",
+            "#00D9FF",
+            "#B5EAD7"
+        ]
+    },
+    {
+        "name": "서로운 일몰",
+        "name_en": "Deep Sunset",
+        "colors": [
+            "#FF6B35",
+            "#FFB627",
+            "#C27A54",
+            "#4E2623"
+        ]
+    },
+    {
+        "name": "숲의 꿈",
+        "name_en": "Forest Dream",
+        "colors": [
+            "#228B22",
+            "#8A9A5B",
+            "#DEB887",
+            "#006994"
+        ]
+    },
+    {
+        "name": "리퀴드 글래스",
+        "name_en": "Liquid Glass",
+        "colors": [
+            "#E0F7FF",
+            "#AED6F1",
+            "#5DADE2",
+            "#1A5276"
+        ]
+    },
+    {
+        "name": "다크 엘리건스",
+        "name_en": "Dark Elegance",
+        "colors": [
+            "#000000",
+            "#212121",
+            "#424242",
+            "#9E9E9E"
+        ]
+    },
+    {
+        "name": "코랄 선셋",
+        "name_en": "Coral Sunset",
+        "colors": [
+            "#FF7F50",
+            "#FF6B9D",
+            "#FFD1DC",
+            "#FFCBA4"
+        ]
+    },
+    {
+        "name": "어반 테크",
+        "name_en": "Urban Tech",
+        "colors": [
+            "#0070F3",
+            "#212121",
+            "#E0E0E0",
+            "#FAFAFA"
+        ]
+    },
+    {
+        "name": "파스텔 드림",
+        "name_en": "Pastel Dream",
+        "colors": [
+            "#FFD1DC",
+            "#B5EAD7",
+            "#AED6F1",
+            "#FFF0AA"
+        ]
+    },
+    {
+        "name": "브랜드 파워",
+        "name_en": "Brand Power",
+        "colors": [
+            "#E50914",
+            "#1DB954",
+            "#5865F2",
+            "#FF9900"
+        ]
+    },
+    {
+        "name": "어스 톤",
+        "name_en": "Earth Tone",
+        "colors": [
+            "#C27A54",
+            "#A0522D",
+            "#DEB887",
+            "#6B7C3A"
+        ]
+    },
+    {
+        "name": "사이버 펑크",
+        "name_en": "Cyberpunk Glow",
+        "colors": [
+            "#FF0055",
+            "#00FFCC",
+            "#7B00FF",
+            "#0F0F1A"
+        ]
+    },
+    {
+        "name": "토스 미니멀",
+        "name_en": "Toss Minimal",
+        "colors": [
+            "#3182F6",
+            "#FFFFFF",
+            "#F2F4F6",
+            "#191F28"
+        ]
+    },
+    {
+        "name": "스타벅스 오가닉",
+        "name_en": "Starbucks Green",
+        "colors": [
+            "#00704A",
+            "#272727",
+            "#EAE6DF",
+            "#FFFDD0"
+        ]
+    },
+    {
+        "name": "스포티파이 테크",
+        "name_en": "Spotify Dark",
+        "colors": [
+            "#1DB954",
+            "#121212",
+            "#191414",
+            "#FFFFFF"
+        ]
+    }
 ];
-
 const designCards = [
     {
-        id: '01',
-        name: 'Night × Kiwi',
-        category: '스포츠웨어 / 테크 / 스트릿 브랜딩',
-        category_en: 'Sportswear / Tech / Street Branding',
-        description: '어둠을 뚫고 나오는 형광의 대비\n강한 긴장감과 젊은 에너지를 동시에 만듭니다.',
-        description_en: 'Fluorescent contrast emerging from darkness\nCreates strong tension and youthful energy simultaneously.',
-        colors: [{ name: 'Night', hex: '#222222' }, { name: 'Kiwi', hex: '#89E900' }],
+        "id": "01",
+        "name": "Night × Kiwi",
+        "category": "스포츠웨어 / 테크 / 스트릿 브랜딩",
+        "category_en": "Sportswear / Tech / Street Branding",
+        "description": "어둠을 뚫고 나오는 형광의 대비\n강한 긴장감과 젊은 에너지를 동시에 만듭니다.",
+        "description_en": "Fluorescent contrast emerging from darkness\nCreates strong tension and youthful energy simultaneously.",
+        "colors": [
+            {
+                "name": "Night",
+                "hex": "#222222"
+            },
+            {
+                "name": "Kiwi",
+                "hex": "#89E900"
+            }
+        ]
     },
     {
-        id: '02',
-        name: 'Cloud × Blue',
-        category: 'IT / 핀테크 / 모던 브랜딩',
-        category_en: 'IT / Fintech / Modern Branding',
-        description: '깨끗한 여백 위에 적힌 투명한 신뢰\n차갑지 않으면서 전문성을 전달합니다.',
-        description_en: 'Vivid trust written on clean space\nConveys professionalism without being cold.',
-        colors: [{ name: 'Canvas Cloud', hex: '#EDF1F5' }, { name: 'Electric Blue', hex: '#0145F2' }],
+        "id": "02",
+        "name": "Cloud × Blue",
+        "category": "IT / 핀테크 / 모던 브랜딩",
+        "category_en": "IT / Fintech / Modern Branding",
+        "description": "깨끗한 여백 위에 적힌 투명한 신뢰\n차갑지 않으면서 전문성을 전달합니다.",
+        "description_en": "Vivid trust written on clean space\nConveys professionalism without being cold.",
+        "colors": [
+            {
+                "name": "Canvas Cloud",
+                "hex": "#EDF1F5"
+            },
+            {
+                "name": "Electric Blue",
+                "hex": "#0145F2"
+            }
+        ]
     },
     {
-        id: '03',
-        name: 'Night × Imperial',
-        category: '럭셔리 브랜딩 / 프리미엄 패키지 / 시네마틱',
-        category_en: 'Luxury Branding / Premium Package / Cinematic',
-        description: '어둠 속에서 피어오르는 붉은 기품\n시선을 단번에 사로잡으면서도 무게감을 잃지 않습니다.',
-        description_en: 'Red elegance rising in the darkness\nCaptures attention while maintaining weight.',
-        colors: [{ name: 'Night', hex: '#000F08' }, { name: 'Imperial', hex: '#FB3640' }],
+        "id": "03",
+        "name": "Night × Imperial",
+        "category": "럭셔리 브랜딩 / 프리미엄 패키지 / 시네마틱",
+        "category_en": "Luxury Branding / Premium Package / Cinematic",
+        "description": "어둠 속에서 피어오르는 붉은 기품\n시선을 단번에 사로잡으면서도 무게감을 잃지 않습니다.",
+        "description_en": "Red elegance rising in the darkness\nCaptures attention while maintaining weight.",
+        "colors": [
+            {
+                "name": "Night",
+                "hex": "#000F08"
+            },
+            {
+                "name": "Imperial",
+                "hex": "#FB3640"
+            }
+        ]
     },
     {
-        id: '04',
-        name: 'ICE × MINT',
-        category: '카페 / 뷰티 / 웰니스 브랜딩',
-        category_en: 'Cafe / Beauty / Wellness Branding',
-        description: '순수한 우유빛 위에 얹힌 상큼한 민트\n부드러우면서도 선명한 인상을 남깁니다.',
-        description_en: 'Fresh mint on top of pure milky white\nLeaves a soft yet distinct impression.',
-        colors: [{ name: 'Ice Latte', hex: '#E4DDD3' }, { name: 'The Mint', hex: '#00A19B' }],
+        "id": "04",
+        "name": "ICE × MINT",
+        "category": "카페 / 뷰티 / 웰니스 브랜딩",
+        "category_en": "Cafe / Beauty / Wellness Branding",
+        "description": "순수한 우유빛 위에 얹힌 상큼한 민트\n부드러우면서도 선명한 인상을 남깁니다.",
+        "description_en": "Fresh mint on top of pure milky white\nLeaves a soft yet distinct impression.",
+        "colors": [
+            {
+                "name": "Ice Latte",
+                "hex": "#E4DDD3"
+            },
+            {
+                "name": "The Mint",
+                "hex": "#00A19B"
+            }
+        ]
     },
     {
-        id: '05',
-        name: 'Wattle × Bottle Green',
-        category: '유기농 푸드 / 친환경 브랜딩 / 아웃도어',
-        category_en: 'Organic Food / Eco-friendly / Outdoor',
-        description: '숲의 깊이와 햇살의 생기가 만나는 자리\n자연주의 속에서도 눈에 띄는 생동감을 만듭니다.',
-        description_en: 'Where forest depth meets sunlight vitality\nCreates striking vividness within naturalism.',
-        colors: [{ name: 'Wattle', hex: '#CCDA47' }, { name: 'Bottle Green', hex: '#0A3625' }],
+        "id": "05",
+        "name": "Wattle × Bottle Green",
+        "category": "유기농 푸드 / 친환경 브랜딩 / 아웃도어",
+        "category_en": "Organic Food / Eco-friendly / Outdoor",
+        "description": "숲의 깊이와 햇살의 생기가 만나는 자리\n자연주의 속에서도 눈에 띄는 생동감을 만듭니다.",
+        "description_en": "Where forest depth meets sunlight vitality\nCreates striking vividness within naturalism.",
+        "colors": [
+            {
+                "name": "Wattle",
+                "hex": "#CCDA47"
+            },
+            {
+                "name": "Bottle Green",
+                "hex": "#0A3625"
+            }
+        ]
     },
     {
-        id: '06',
-        name: 'Sand × Rust',
-        category: '인테리어 / 홈리빙 / 빈티지 브랜딩',
-        category_en: 'Interior / Home Living / Vintage Branding',
-        description: '사막의 따뜻한 모래 위에 얹힌 녹슨 붉음\n오래된 것들이 가지는 고요한 아름다움.',
-        description_en: 'Rusted red on top of warm desert sand\nThe quiet beauty of old things.',
-        colors: [{ name: 'Sand', hex: '#E8D5B7' }, { name: 'Rust', hex: '#B7410E' }],
+        "id": "06",
+        "name": "Sand × Rust",
+        "category": "인테리어 / 홈리빙 / 빈티지 브랜딩",
+        "category_en": "Interior / Home Living / Vintage Branding",
+        "description": "사막의 따뜻한 모래 위에 얹힌 녹슨 붉음\n오래된 것들이 가지는 고요한 아름다움.",
+        "description_en": "Rusted red on top of warm desert sand\nThe quiet beauty of old things.",
+        "colors": [
+            {
+                "name": "Sand",
+                "hex": "#E8D5B7"
+            },
+            {
+                "name": "Rust",
+                "hex": "#B7410E"
+            }
+        ]
     },
     {
-        id: '07',
-        name: 'Ink × Gold',
-        category: '출판 / 리테일 / 하이엔드 브랜딩',
-        category_en: 'Publishing / Retail / High-end Branding',
-        description: '깊은 먹빛 위에 빛나는 황금의 대비\n고전적이면서도 현대적인 품격을 담았습니다.',
-        description_en: 'Brilliant gold contrast on deep ink\nEmbodies both classical and modern elegance.',
-        colors: [{ name: 'Ink', hex: '#1A1A2E' }, { name: 'Gold', hex: '#D4AF37' }],
+        "id": "07",
+        "name": "Ink × Gold",
+        "category": "출판 / 리테일 / 하이엔드 브랜딩",
+        "category_en": "Publishing / Retail / High-end Branding",
+        "description": "깊은 먹빛 위에 빛나는 황금의 대비\n고전적이면서도 현대적인 품격을 담았습니다.",
+        "description_en": "Brilliant gold contrast on deep ink\nEmbodies both classical and modern elegance.",
+        "colors": [
+            {
+                "name": "Ink",
+                "hex": "#1A1A2E"
+            },
+            {
+                "name": "Gold",
+                "hex": "#D4AF37"
+            }
+        ]
     },
     {
-        id: '08',
-        name: 'Blush × Slate',
-        category: '패션 / 웨딩 / 라이프스타일 브랜딩',
-        category_en: 'Fashion / Wedding / Lifestyle Branding',
-        description: '부드러운 살구빛과 차가운 슬레이트의 균형\n감성적이면서도 트렌디한 인상을 전달합니다.',
-        description_en: 'Balance of soft blush and cold slate\nConveys an emotional yet sophisticated impression.',
-        colors: [{ name: 'Blush', hex: '#F4A7B9' }, { name: 'Slate', hex: '#475569' }],
+        "id": "08",
+        "name": "Blush × Slate",
+        "category": "패션 / 웨딩 / 라이프스타일 브랜딩",
+        "category_en": "Fashion / Wedding / Lifestyle Branding",
+        "description": "부드러운 살구빛과 차가운 슬레이트의 균형\n감성적이면서도 트렌디한 인상을 전달합니다.",
+        "description_en": "Balance of soft blush and cold slate\nConveys an emotional yet sophisticated impression.",
+        "colors": [
+            {
+                "name": "Blush",
+                "hex": "#F4A7B9"
+            },
+            {
+                "name": "Slate",
+                "hex": "#475569"
+            }
+        ]
     },
     {
-        id: '09',
-        name: 'Void × Neon',
-        category: '게임 / 음악 / 스트릿웨어 브랜딩',
-        category_en: 'Game / Music / Streetwear Branding',
-        description: '완전한 어둠 속에서 터져 나오는 형광\n강렬하고 미래적인 에너지를 표현합니다.',
-        description_en: 'Neon bursting out of complete darkness\nExpresses intense and futuristic energy.',
-        colors: [{ name: 'Void', hex: '#0D0D0D' }, { name: 'Neon', hex: '#FF10F0' }],
+        "id": "09",
+        "name": "Toss Blue × Pure White",
+        "category": "핀테크 / 모바일 앱 / 테크 기업",
+        "category_en": "Fintech / Mobile App / Tech",
+        "description": "극강의 여백과 청량한 블루\n금융의 무거움을 털어내고 신뢰와 미래를 선사합니다.",
+        "description_en": "Ultra white space with crisp Toss Blue\nRemoves financial weight to provide trust and future.",
+        "colors": [
+            {
+                "name": "Toss Blue",
+                "hex": "#3182F6"
+            },
+            {
+                "name": "Pure White",
+                "hex": "#FFFFFF"
+            }
+        ]
     },
     {
-        id: '10',
-        name: 'Coral × Midnight',
-        category: '엔터테인먼트 / K-POP / 영상 브랜딩',
-        category_en: 'Entertainment / K-POP / Video Branding',
-        description: '생동감 넘치는 코랄과 깊은 미드나잇의 대비\n힙하면서도 무게감 있는 브랜드를 만듭니다.',
-        description_en: 'Vibrant coral contrast with deep midnight\nCreates a hip yet weighty brand identity.',
-        colors: [{ name: 'Coral', hex: '#FF6B6B' }, { name: 'Midnight', hex: '#191970' }],
-    },
-    {
-        id: '11',
-        name: 'Cream × Forest',
-        category: '유기농 브랜드 / 카페 / 농산물',
-        category_en: 'Organic Brand / Cafe / Produce',
-        description: '크리미한 배경과 숲의 깊이가 더해진 조화\n자연스럽고 건강한 이미지를 만듭니다.',
-        description_en: 'Harmony of creamy background and forest depth\nCreates a natural and healthy image.',
-        colors: [{ name: 'Cream', hex: '#FFF8DC' }, { name: 'Forest', hex: '#2D5A27' }],
-    },
-    {
-        id: '12',
-        name: 'Denim × Wheat',
-        category: '캐주얼 패션 / 아웃도어 라이프',
-        category_en: 'Casual Fashion / Outdoor Life',
-        description: '워크웨어의 견고함과 밀밭의 따뜻함\n일상 속 진정성 있는 스타일을 표현합니다.',
-        description_en: 'Ruggedness of workwear and warmth of wheat fields\nExpresses authentic everyday style.',
-        colors: [{ name: 'Denim', hex: '#1560BD' }, { name: 'Wheat', hex: '#F5DEB3' }],
-    },
-    {
-        id: '13',
-        name: 'Samsung One UI Vivid',
-        category: '모바일 인터페이스 / 역동적 사용자 경험',
-        category_en: 'Mobile Interface / Dynamic UX',
-        description: '삼성 One UI 특유의 생동감 넘치는 블루와 화이트\n깨끗하고 반응성 좋은 모바일 디자인을 완성합니다.',
-        description_en: 'Samsung One UI\'s signature vivid blue and white. Completes a clean and responsive mobile design.',
-        colors: [{ name: 'Samsung Blue', hex: '#034EA2' }, { name: 'One UI White', hex: '#FFFFFF' }],
-    },
-    {
-        id: '14',
-        name: 'Apple Glassmorphism',
-        category: 'OS 인터페이스 / 미니멀 프리미엄',
-        category_en: 'OS Interface / Minimal Premium',
-        description: '애플의 투명한 유리 질감과 고대비 텍스트\n공간감이 느껴지는 세련된 UI를 제안합니다.',
-        description_en: 'Apple\'s transparent glass texture and high-contrast text. Proposes a sophisticated UI with a sense of space.',
-        colors: [{ name: 'Glass Frost', hex: '#F5F5F7' }, { name: 'Deep Space', hex: '#1D1D1F' }],
-    },
-];
-
-const designGuides = [
-    { 
-        title: '60-30-10 법칙', 
-        title_en: '60-30-10 Rule',
-        desc: '주조색 60%, 보조색 30%, 포인트색 10%의 황금 비율로 균형 잡힌 디자인을 완성하세요.', 
-        desc_en: 'Create a balanced design with the golden ratio: 60% primary, 30% secondary, and 10% accent color.',
-        colors: ['#F5F5F7', '#D1D1D6', '#FF9500'] 
-    },
-    { 
-        title: '보색 대비 활용', 
-        title_en: 'Complementary Contrast',
-        desc: '색상환에서 서로 마주 보는 두 색상을 조합하는 방식입니다. 강렬한 시각적 효과를 줍니다.', 
-        desc_en: 'A method of combining two colors facing each other on the color wheel for a striking visual effect.',
-        colors: ['#FF3B30', '#34C759'] 
-    },
-    { 
-        title: '유사색 (Analogous)', 
-        title_en: 'Analogous Colors',
-        desc: '색상환에서 서로 인접한 3색을 사용합니다. 눈이 편안하고 조화로운 분위기를 연출합니다.', 
-        desc_en: 'Uses three adjacent colors on the color wheel. Creates a comfortable and harmonious atmosphere.',
-        colors: ['#007AFF', '#5856D6', '#AF52DE'] 
-    },
-    { 
-        title: '톤온톤 (Tone-on-Tone)', 
-        title_en: 'Tone-on-Tone',
-        desc: '동일한 색상에서 채도와 명도만 다르게 조합합니다. 매우 안정적이고 깔끔한 이미지를 줍니다.', 
-        desc_en: 'Combines the same hue with different saturation and brightness. Gives a stable and clean image.',
-        colors: ['#0A84FF', '#64D2FF', '#B0E2FF'] 
-    },
-    { 
-        title: '모노크롬 (Monochrome)', 
-        title_en: 'Monochrome',
-        desc: '하나의 색상을 베이스로 화이트, 블랙을 섞어 명도를 조절합니다. 극강의 심플함을 보여줍니다.', 
-        desc_en: 'Uses a single base color and adjusts brightness with white and black. Shows extreme simplicity.',
-        colors: ['#111111', '#888888', '#EEEEEE'] 
-    },
-    { 
-        title: 'Apple: 글래스모피즘', 
-        title_en: 'Apple: Glassmorphism',
-        desc: '배경을 흐리게 처리(Blur)하고 반투명한 레이어를 쌓아 공간감을 만듭니다. 프리미엄한 느낌을 줍니다.', 
-        desc_en: 'Creates a sense of space by blurring the background and stacking semi-transparent layers. Gives a premium feel.',
-        colors: ['#FFFFFF', 'rgba(255,255,255,0.1)', '#000000'] 
-    },
-    { 
-        title: 'Google: 머티리얼 쉐도우', 
-        title_en: 'Google: Material Shadows',
-        desc: '빛의 방향에 따른 그림자 깊이로 요소의 위계를 정합니다. 직관적인 클릭 범위를 알려줍니다.', 
-        desc_en: 'Determines the hierarchy of elements through shadow depth according to the light direction. Indicates intuitive click areas.',
-        colors: ['#4285F4', '#EA4335', '#FBBC05'] 
+        "id": "10",
+        "name": "Starbucks Green × Cream",
+        "category": "F&B / 오가닉 / 커피 프랜차이즈",
+        "category_en": "F&B / Organic / Coffee Franchise",
+        "description": "도심 속 자연을 형상화하는 오가닉 그린\n차분하면서도 정돈된 편안함을 고객에게 제공합니다.",
+        "description_en": "Organic green embodying urban nature\nProvides calm, organized comfort to customers.",
+        "colors": [
+            {
+                "name": "Starbucks Green",
+                "hex": "#00704A"
+            },
+            {
+                "name": "Cream Latte",
+                "hex": "#FFFDD0"
+            }
+        ]
     }
 ];
 
+// ─── 명품 가독성 폰트 (Mono 폰트 제외) ────────────────────────────────────────────
 const designFonts = [
     {
-        id: 'f01',
-        name: 'Inter',
-        family: "'Inter', sans-serif",
-        url: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap',
-        category: 'Modern / UI',
-        category_kr: '모던 / 인터페이스',
-        pair: 'Roboto',
-        note: '현대 웹 디자인의 표준과도 같은 폰트입니다. 압도적인 가독성을 자랑합니다.',
-        note_en: 'The gold standard for modern web UI. Boasts incredible legibility.',
-        sample: 'Design is not just what it looks like and feels like.'
+        "id": "f01",
+        "name": "Pretendard",
+        "family": "'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+        "url": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css",
+        "category": "Readable Text",
+        "category_kr": "가독성 본문용 (고딕)",
+        "pair": "Inter",
+        "note": "현대 한국 웹/앱 인터페이스의 독보적인 표준입니다. 글자 정렬과 가독성 설계가 완벽합니다.",
+        "note_en": "The absolute standard for Korean web/app UI. Perfect legibility and alignment.",
+        "sample": "디자인은 단순한 모양이 아닌, 문제가 해결되는 방식입니다."
     },
     {
-        id: 'f02',
-        name: 'Playfair Display',
-        family: "'Playfair Display', serif",
-        url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap',
-        category: 'Luxury / Editorial',
-        category_kr: '럭셔리 / 에디토리얼',
-        pair: 'Montserrat',
-        note: '고전적인 품격과 현대적인 세련미가 공존합니다. 제목용으로 탁월합니다.',
-        note_en: 'Classical elegance meets modern sophistication. Perfect for headlines.',
-        sample: 'The detail is not the detail. It is the design.'
+        "id": "f02",
+        "name": "Inter",
+        "family": "'Inter', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap",
+        "category": "UI/UX Sans",
+        "category_kr": "가독성 본문용 (영문)",
+        "pair": "Pretendard",
+        "note": "글로벌 IT 기업들이 표준으로 채택하는 UI 최적화 영문 폰트입니다.",
+        "note_en": "The gold standard for modern web UI. Chosen by major tech corporations.",
+        "sample": "Design is not just what it looks like and feels like."
     },
     {
-        id: 'f03',
-        name: 'Montserrat',
-        family: "'Montserrat', sans-serif",
-        url: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap',
-        category: 'Geometric / Tech',
-        category_kr: '지오메트릭 / 테크',
-        pair: 'Open Sans',
-        note: '기하학적인 균형미가 돋보입니다. 브랜딩과 대담한 타이포그래피에 추천합니다.',
-        note_en: 'Beautiful geometric balance. Recommended for branding and bold typography.',
-        sample: 'Everything is designed. Few things are designed well.'
+        "id": "f03",
+        "name": "SUIT",
+        "family": "'SUIT', sans-serif",
+        "url": "https://cdn.jsdelivr.net/gh/sun-typeface/SUIT/fonts/static/woff2/SUIT.css",
+        "category": "Geometric UI",
+        "category_kr": "기하학적 본문용 (한글)",
+        "pair": "Poppins",
+        "note": "곡선과 직선의 비례가 기하학적으로 무척 세련된 현대적인 본문 서체입니다.",
+        "note_en": "Modern Korean UI typeface with sophisticated geometric curves and proportions.",
+        "sample": "가장 직관적이면서 사용하기 쉬운 레이아웃을 완성합니다."
     },
     {
-        id: 'f04',
-        name: 'Lora',
-        family: "'Lora', serif",
-        url: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap',
-        category: 'Soft / Literary',
-        category_kr: '감성 / 문학적',
-        pair: 'Merriweather',
-        note: '부드러운 곡선이 인상적인 세리프입니다. 장문의 본문이나 감성적인 글에 적합합니다.',
-        note_en: 'A serif with soft curves. Ideal for long-form body text or emotional content.',
-        sample: 'Good design is honest.'
+        "id": "f04",
+        "name": "Poppins",
+        "family": "'Poppins', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap",
+        "category": "Geometric Sans",
+        "category_kr": "트렌디한 라운드 (영문)",
+        "pair": "Lora",
+        "note": "기하학적으로 둥글고 밝은 인상을 지녀, 스타트업과 테크 기업 브랜딩에 적합합니다.",
+        "note_en": "Geometric and friendly rounded font. Highly popular in startup branding.",
+        "sample": "Everything is designed. Few things are designed well."
     },
     {
-        id: 'f05',
-        name: 'Space Mono',
-        family: "'Space Mono', monospace",
-        url: 'https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap',
-        category: 'Tech / Retro',
-        category_kr: '테크 / 레트로',
-        pair: 'Helvetica',
-        note: '기하학적이고 그로테스크한 느낌의 모노스페이스입니다. 힙한 테크 디자인에 제격입니다.',
-        note_en: 'A geometric, grotesque-style monospace. Perfect for hip tech designs.',
-        sample: '0101 Code meets Art.'
+        "id": "f05",
+        "name": "Montserrat",
+        "family": "'Montserrat', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap",
+        "category": "Geometric Sans",
+        "category_kr": "주목성 높은 제목용 (영문)",
+        "pair": "Open Sans",
+        "note": "기하학적이고 단단한 구조의 폰트로, 크고 두꺼운 타이틀이나 헤드라인에 아주 강렬합니다.",
+        "note_en": "Strong geometric sans-serif. Ideal for big, bold typography and headlines.",
+        "sample": "The detail is not the detail. It is the design."
     },
     {
-        id: 'f06',
-        name: 'Syne',
-        family: "'Syne', sans-serif",
-        url: 'https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap',
-        category: 'Art / Avant-garde',
-        category_kr: '예술 / 아방가르드',
-        pair: 'Inter',
-        note: '아방가르드하고 독창적인 형태를 가졌습니다. 예술적인 포스터나 강렬한 제목에 추천합니다.',
-        note_en: 'Avant-garde and unique letterforms. Great for artistic posters or bold headlines.',
-        sample: 'Typography is the voice of design.'
+        "id": "f06",
+        "name": "Gmarket Sans",
+        "family": "'GmarketSans', sans-serif",
+        "url": "https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/GmarketSansMTBold.woff",
+        "category": "Impact Display",
+        "category_kr": "주목성 높은 제목용 (한글)",
+        "pair": "Pretendard",
+        "note": "정사각형 틀에 꽉 찬 기하학적 형태. 포스터, 광고 배너 등의 타이틀로 독보적입니다.",
+        "note_en": "Filled geometric shape in a square box. Highly popular for banner headlines.",
+        "sample": "시선을 단번에 사로잡는 강력한 브랜딩 서체."
     },
     {
-        id: 'f07',
-        name: 'Nanum Myeongjo',
-        family: "'Nanum Myeongjo', serif",
-        url: 'https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap',
-        category: 'Korean Classic',
-        category_kr: '한국적 클래식',
-        pair: 'Pretendard',
-        note: '한국적인 정서와 정갈한 아름다움이 담긴 서체입니다. 신뢰감 있는 인상을 줍니다.',
-        note_en: 'A typeface with Korean sentiment and clean beauty. Gives a trustworthy impression.',
-        sample: '디자인은 보이지 않는 곳까지 완벽해야 합니다.'
+        "id": "f07",
+        "name": "Nanum Square Neo",
+        "family": "'NanumSquareNeo', sans-serif",
+        "url": "https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2",
+        "category": "Modern Sans",
+        "category_kr": "세련된 각진 고딕 (한글)",
+        "pair": "Roboto",
+        "note": "나눔스퀘어의 후속작으로, 한층 더 정돈된 기하학적 획 대비와 깔끔한 끝처리를 제공합니다.",
+        "note_en": "Newer geometric Sans for Korean, showcasing sharp terminals and clean balance.",
+        "sample": "조금 더 똑바르고 빈틈없는 디자인의 시작."
+    },
+    {
+        "id": "f08",
+        "name": "Nanum Myeongjo",
+        "family": "'Nanum Myeongjo', serif",
+        "url": "https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap",
+        "category": "Korean Serif",
+        "category_kr": "품격 있는 세리프 (한글)",
+        "pair": "Pretendard",
+        "note": "정갈한 삐침과 한국적인 품격이 담긴 전통 명조 서체입니다. 신뢰감과 감성을 함께 전합니다.",
+        "note_en": "Classic Korean serif typeface. Conveys a warm, trustworthy, and emotional tone.",
+        "sample": "글자 하나에 진심과 정성을 정갈하게 눌러 담았습니다."
+    },
+    {
+        "id": "f09",
+        "name": "Playfair Display",
+        "family": "'Playfair Display', serif",
+        "url": "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap",
+        "category": "Luxury Serif",
+        "category_kr": "우아한 세리프 (영문)",
+        "pair": "Montserrat",
+        "note": "패션, 뷰티, 하이엔드 럭셔리 브랜드에서 널리 쓰이는 매우 우아하고 획 대비가 뚜렷한 세리프입니다.",
+        "note_en": "High-contrast elegant serif. Widely used for luxury editorial and headlines.",
+        "sample": "Simplicity is the ultimate sophistication."
+    },
+    {
+        "id": "f10",
+        "name": "Lora",
+        "family": "'Lora', serif",
+        "url": "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap",
+        "category": "Readable Serif",
+        "category_kr": "감성적인 본문용 (영문)",
+        "pair": "Inter",
+        "note": "부드럽고 둥글둥글한 곡선미를 지닌 세리프로, 에세이나 긴 설명문 등의 가독성에 특화되었습니다.",
+        "note_en": "Soft, contemporary serif. Designed to be highly readable for body texts.",
+        "sample": "Good design makes a product useful."
+    },
+    {
+        "id": "f11",
+        "name": "Roboto",
+        "family": "'Roboto', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap",
+        "category": "UI/UX Sans",
+        "category_kr": "구글 표준 본문 (영문)",
+        "pair": "Roboto Slab",
+        "note": "안드로이드 OS 표준 서체. 둥근 획과 기하학적 균형이 만나 중립적이면서 완벽한 가독성을 가집니다.",
+        "note_en": "The standard font for Google Android. Neutral, reliable, and legible.",
+        "sample": "Experience is the product, and details make it."
+    },
+    {
+        "id": "f12",
+        "name": "Spoqa Han Sans Neo",
+        "family": "'Spoqa Han Sans Neo', sans-serif",
+        "url": "https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css",
+        "category": "Commerce Sans",
+        "category_kr": "커머스 최적화 고딕 (한글)",
+        "pair": "Roboto",
+        "note": "숫자와 기호가 무척 예쁘며, 오픈마켓이나 쇼핑몰 서비스의 촘촘한 UI 가독성에 최적화되었습니다.",
+        "note_en": "Perfect font for e-commerce UIs, with highly optimized numbers and symbols.",
+        "sample": "총 결제 금액: 38,500원 (무료 배송 및 할인율 20% 적용)"
+    },
+    {
+        "id": "f13",
+        "name": "Noto Sans KR",
+        "family": "'Noto Sans KR', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap",
+        "category": "Standard Sans",
+        "category_kr": "범용 표준 고딕 (한글)",
+        "pair": "Roboto",
+        "note": "구글과 어도비의 다국어 문자 프로젝트. 웹 폰트 로딩과 크로스 브라우징이 가장 안정적입니다.",
+        "note_en": "The most widely used Korean Google font. Highly stable and versatile.",
+        "sample": "모든 장치와 화면에서 어긋남 없이 깨끗하게 표시됩니다."
+    },
+    {
+        "id": "f14",
+        "name": "Merriweather",
+        "family": "'Merriweather', serif",
+        "url": "https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap",
+        "category": "Readable Serif",
+        "category_kr": "화면용 두꺼운 세리프 (영문)",
+        "pair": "Open Sans",
+        "note": "컴퓨터 화면에서 읽을 때 눈의 피로를 최소화하도록 획의 굵기가 약간 묵직하게 조절되었습니다.",
+        "note_en": "A heavy serif designed specifically for screen legibility and ease of reading.",
+        "sample": "Books are a uniquely portable magic."
+    },
+    {
+        "id": "f15",
+        "name": "Raleway",
+        "family": "'Raleway', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&display=swap",
+        "category": "Elegant Sans",
+        "category_kr": "세련된 산세리프 (영문)",
+        "pair": "Roboto",
+        "note": "획 끝의 크로싱 디테일이 매우 세련되어, 럭셔리 포스터나 미니멀 잡지 레이아웃에 어울립니다.",
+        "note_en": "Elegant, stylish sans-serif with subtle characterful crossings in letters.",
+        "sample": "Less is more. Minimalism at its best."
+    },
+    {
+        "id": "f16",
+        "name": "Ubuntu",
+        "family": "'Ubuntu', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap",
+        "category": "Tech Sans",
+        "category_kr": "미래지향적 테크 (영문)",
+        "pair": "Open Sans",
+        "note": "우분투 리눅스의 시그니처 폰트. 특유의 타원형 곡선 구조가 테크니컬한 감성을 만듭니다.",
+        "note_en": "Signature font of Ubuntu. Unique oval curve design gives a high-tech vibe.",
+        "sample": "Connecting technology and human interface."
+    },
+    {
+        "id": "f17",
+        "name": "Nunito",
+        "family": "'Nunito', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap",
+        "category": "Rounded Sans",
+        "category_kr": "친근한 라운드 (영문)",
+        "pair": "Lora",
+        "note": "글자 마감이 둥글게 깎여 있어 무척 따뜻하고 귀여운 분위기나 앱의 안내 문구에 잘 맞습니다.",
+        "note_en": "Fully rounded terminals. Warm, friendly, and soft tone of voice.",
+        "sample": "Welcome to our platform! Enjoy your creative journey."
+    },
+    {
+        "id": "f18",
+        "name": "Rubik",
+        "family": "'Rubik', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap",
+        "category": "Chunky Sans",
+        "category_kr": "묵직하고 꽉 찬 느낌 (영문)",
+        "pair": "Pretendard",
+        "note": "굵고 단단하며 꽉 찬 느낌의 폰트입니다. 게임 UI나 개성 넘치는 테크 뱃지용으로 많이 씁니다.",
+        "note_en": "Heavy, chunky geometric font. Fits well with gaming and modern dashboards.",
+        "sample": "CRITICAL VALUE DETECTED."
+    },
+    {
+        "id": "f19",
+        "name": "Work Sans",
+        "family": "'Work Sans', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;800&display=swap",
+        "category": "Grotesque Sans",
+        "category_kr": "정교한 화면용 (영문)",
+        "pair": "Inter",
+        "note": "초기 영문 서체의 불규칙성을 현대적으로 리파인하여 본문 속에서 정교한 가독성을 뿜어냅니다.",
+        "note_en": "Refined Grotesque sans-serif built specifically for screen-first environments.",
+        "sample": "Making ideas visual and visible."
+    },
+    {
+        "id": "f20",
+        "name": "Fira Sans",
+        "family": "'Fira Sans', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap",
+        "category": "UI/UX Sans",
+        "category_kr": "파이어폭스 표준 (영문)",
+        "pair": "Inter",
+        "note": "모질라 재단에서 특수 설계한 폰트로, 작은 픽셀 환경에서도 글자가 뭉개지지 않고 선명합니다.",
+        "note_en": "Designed by Mozilla for crisp rendering on low-res screens.",
+        "sample": "Clear, crisp, and robust in every resolution."
+    },
+    {
+        "id": "f21",
+        "name": "Quicksand",
+        "family": "'Quicksand', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap",
+        "category": "Rounded Display",
+        "category_kr": "미니멀 둥근 (영문)",
+        "pair": "Open Sans",
+        "note": "얇은 두께와 동그란 기하학적 형태가 어우러져, 카페, 뷰티, 감성 디자인에 잘 매칭됩니다.",
+        "note_en": "Thin and clean rounded font. Matches perfectly with aesthetic designs.",
+        "sample": "Slow coffee, warm tea, and fresh inspiration."
+    },
+    {
+        "id": "f22",
+        "name": "Barlow",
+        "family": "'Barlow', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;800&display=swap",
+        "category": "Condense Sans",
+        "category_kr": "좁고 곧은 형태 (영문)",
+        "pair": "PT Serif",
+        "note": "도로 표지판에서 영감을 받아 좁고 키가 큰 형태입니다. 좁은 폭에 핵심 단어를 넣을 때 씁니다.",
+        "note_en": "Slightly condensed sans-serif inspired by US road signage.",
+        "sample": "SPEED LIMIT: MAXIMIZE EFFICIENCY."
+    },
+    {
+        "id": "f23",
+        "name": "Josefin Sans",
+        "family": "'Josefin Sans', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap",
+        "category": "Vintage Geometric",
+        "category_kr": "기하학적 빈티지 (영문)",
+        "pair": "Lato",
+        "note": "1920년대 유럽 스타일의 세련되고 개성 있는 기하학적 영문 폰트로, 브랜딩 타이틀에 유니크합니다.",
+        "note_en": "Elegant geometric font with a 1920s vintage feel. Ideal for branding.",
+        "sample": "Create with passion, design with purpose."
+    },
+    {
+        "id": "f24",
+        "name": "Cabin",
+        "family": "'Cabin', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Cabin:wght@400;600;700&display=swap",
+        "category": "Humanist Sans",
+        "category_kr": "편안한 휴머니스트 (영문)",
+        "pair": "Raleway",
+        "note": "기계적이지 않고 인간의 필기 획을 닮은 비율 덕분에 친밀하고 정다운 분위기를 풍깁니다.",
+        "note_en": "Humanist sans-serif with natural handwriting proportions. Easy to read.",
+        "sample": "We design experiences that feel natural."
+    },
+    {
+        "id": "f25",
+        "name": "PT Sans",
+        "family": "'PT Sans', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap",
+        "category": "Humanist Sans",
+        "category_kr": "열린 공간감 (영문)",
+        "pair": "PT Serif",
+        "note": "자간과 내부 공간이 넉넉하게 설계되어 다소 작은 본문에서도 단어 인지가 잘 됩니다.",
+        "note_en": "Spacious humanist sans-serif. Performs well in smaller body texts.",
+        "sample": "Readability is the core value of information design."
+    },
+    {
+        "id": "f26",
+        "name": "Dosis",
+        "family": "'Dosis', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Dosis:wght@400;600;800&display=swap",
+        "category": "Rounded Display",
+        "category_kr": "둥근 제목용 (영문)",
+        "pair": "Roboto",
+        "note": "좁고 둥근 형태로 제작되어 모바일 인터페이스 타이틀이나 귀여운 테크 패키지에 잘 녹아듭니다.",
+        "note_en": "Condensed rounded design. Perfect for tech and playful labels.",
+        "sample": "Let us build something wonderful today."
+    },
+    {
+        "id": "f27",
+        "name": "Anton",
+        "family": "'Anton', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Anton&display=swap",
+        "category": "Heavy Display",
+        "category_kr": "두껍고 파워풀한 제목 (영문)",
+        "pair": "Open Sans",
+        "note": "두껍고 꽉 막힌 듯한 강렬한 산세리프. 유튜브 썸네일이나 스포츠 헤드라인에 강력합니다.",
+        "note_en": "Extremely bold display sans-serif. Ideal for heavy titles and thumbnails.",
+        "sample": "CHAMPIONS NEVER STOP."
+    },
+    {
+        "id": "f28",
+        "name": "Pacifico",
+        "family": "'Pacifico', cursive",
+        "url": "https://fonts.googleapis.com/css2?family=Pacifico&display=swap",
+        "category": "Brush Cursive",
+        "category_kr": "아날로그 필기체 (영문)",
+        "pair": "Roboto",
+        "note": "1950년대 미국 서핑 포스터 감성의 자유롭고 감성적인 아날로그 브러쉬 폰트입니다.",
+        "note_en": "Retro brush cursive, bringing 1950s surf culture vibes.",
+        "sample": "Aloha! Sweet vacation and design vibes."
+    },
+    {
+        "id": "f29",
+        "name": "Nanum Baru Gothic",
+        "family": "'NanumBarunGothic', sans-serif",
+        "url": "https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumBarunGothic.woff",
+        "category": "Clean Sans",
+        "category_kr": "왜곡 없는 고딕 (한글)",
+        "pair": "Roboto",
+        "note": "가장 군더더기 없는 기본 뼈대를 가진 폰트입니다. 보고서나 매뉴얼 등 정보 문서에 최고입니다.",
+        "note_en": "Clean, basic structure Korean font. Ideal for information manuals.",
+        "sample": "가장 객관적이고 정확하게 정보를 관람자에게 전달합니다."
+    },
+    {
+        "id": "f30",
+        "name": "KoPub World Dotum",
+        "family": "'KoPubWorldDotum', sans-serif",
+        "url": "https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/KoPubWorldDotum.woff",
+        "category": "E-Book Sans",
+        "category_kr": "전자책용 가독성 (한글)",
+        "pair": "Inter",
+        "note": "한국출판인회의 공식 폰트. 전자책이나 장문의 웹소설, 긴 칼럼 글에서도 눈이 전혀 아프지 않습니다.",
+        "note_en": "Official publisher font. Perfect for e-books, columns, and long blogs.",
+        "sample": "한 호흡에 끝까지 읽히는 완벽한 줄 정렬과 비례."
     }
 ];
 
@@ -537,37 +2337,7 @@ const designStories = [
     }
 ];
 
-// ─── 30+ New Fonts ─────────────────────────────────────────────────────────────
-const additionalFonts = [
-    { id: 'f08', name: 'Montserrat', family: "'Montserrat', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap', category: 'Modern Geometric', category_kr: '모던 지오메트릭', pair: 'Open Sans', note: '깔끔하고 현대적인 기하학적 형태. 제목용으로 강력 추천합니다.', note_en: 'Clean, modern geometric shape. Highly recommended for headings.', sample: '디자인은 단순함에서 완성된다.' },
-    { id: 'f09', name: 'Roboto', family: "'Roboto', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap', category: 'UI/UX Base', category_kr: 'UI 기본 폰트', pair: 'Roboto Slab', note: '구글의 머티리얼 디자인 표준. 안드로이드와 웹 어디서든 완벽한 가독성.', note_en: 'Google Material Design standard. Perfect legibility everywhere.', sample: '가장 익숙하면서 완벽한 형태.' },
-    { id: 'f10', name: 'Playfair Display', family: "'Playfair Display', serif", url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap', category: 'Elegant Serif', category_kr: '우아한 세리프', pair: 'Source Sans Pro', note: '패션, 뷰티, 럭셔리 브랜드에 어울리는 우아하고 클래식한 폰트.', note_en: 'Elegant classic font perfect for fashion and luxury brands.', sample: '시대를 초월한 아름다움.' },
-    { id: 'f11', name: 'Lato', family: "'Lato', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap', category: 'Friendly Modern', category_kr: '친근한 모던', pair: 'Merriweather', note: '둥글고 부드러운 느낌과 단단한 구조가 만나 따뜻한 분위기를 줍니다.', note_en: 'Rounded and warm yet solid structure.', sample: '친근하게 다가가는 디자인.' },
-    { id: 'f12', name: 'Poppins', family: "'Poppins', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap', category: 'Playful Geometric', category_kr: '부드러운 지오메트릭', pair: 'Lora', note: '둥글둥글한 기하학적 서체로, 트렌디한 스타트업 UI에 가장 많이 쓰입니다.', note_en: 'Trendy geometric font, highly used in modern startup UIs.', sample: '트렌드를 앞서가는 둥근 곡선.' },
-    { id: 'f13', name: 'Noto Sans KR', family: "'Noto Sans KR', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap', category: 'Korean Base', category_kr: '한글 기본', pair: 'Roboto', note: '구글과 어도비가 만든 가장 대중적인 한글 웹 폰트.', note_en: 'The most popular Korean web font by Google & Adobe.', sample: '세상의 모든 언어를 담다.' },
-    { id: 'f14', name: 'Merriweather', family: "'Merriweather', serif", url: 'https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap', category: 'Readable Serif', category_kr: '가독성 높은 세리프', pair: 'Open Sans', note: '디지털 화면에서 긴 글을 읽기에 아주 편안하게 디자인되었습니다.', note_en: 'Designed to be highly readable on screens for long texts.', sample: '화면 속에서도 종이처럼 편안하게.' },
-    { id: 'f15', name: 'Raleway', family: "'Raleway', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&display=swap', category: 'Elegant Sans', category_kr: '우아한 산스', pair: 'Roboto', note: 'W가 겹치는 독특한 형태가 매력적인 얇고 우아한 폰트.', note_en: 'Thin and elegant with a unique crossing W.', sample: '여백이 만들어내는 세련됨.' },
-    { id: 'f16', name: 'Ubuntu', family: "'Ubuntu', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap', category: 'Tech Grotesque', category_kr: '테크 감성', pair: 'Open Sans', note: '우분투 OS의 시그니처 폰트. 둥글면서도 미래지향적인 느낌.', note_en: 'Signature font of Ubuntu OS. Rounded and futuristic.', sample: '기술과 사람을 연결하는 선.' },
-    { id: 'f17', name: 'Oswald', family: "'Oswald', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap', category: 'Impact Display', category_kr: '강렬한 제목용', pair: 'Roboto', note: '폭이 좁고 키가 커서 한눈에 들어오는 강렬한 타이틀에 적합합니다.', note_en: 'Tall and narrow, perfect for impactful headlines.', sample: '강렬하게 시선을 사로잡다.' },
-    { id: 'f18', name: 'Nunito', family: "'Nunito', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap', category: 'Rounded Sans', category_kr: '둥근 산스', pair: 'Lora', note: '모든 끝이 둥글게 처리되어 매우 귀엽고 다정한 느낌을 줍니다.', note_en: 'Rounded terminals give a very cute and friendly vibe.', sample: '동글동글 친근한 목소리.' },
-    { id: 'f19', name: 'Rubik', family: "'Rubik', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap', category: 'Chunky Modern', category_kr: '묵직한 모던', pair: 'Karla', note: '단단하고 묵직한 두께감 덕분에 게임이나 테크 UI에 잘 어울립니다.', note_en: 'Solid and chunky, fits well with game or tech UI.', sample: '단단하게 기초를 다지다.' },
-    { id: 'f20', name: 'Work Sans', family: "'Work Sans', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;800&display=swap', category: 'Grotesque Base', category_kr: '그로테스크 기본', pair: 'Space Mono', note: '초기 그로테스크 폰트를 현대적으로 재해석하여 깔끔한 화면을 구성합니다.', note_en: 'Modern interpretation of early grotesque fonts.', sample: '일과 예술의 경계.' },
-    { id: 'f21', name: 'Fira Sans', family: "'Fira Sans', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap', category: 'Legibility Tech', category_kr: '테크 가독성', pair: 'Fira Code', note: '모질라 파이어폭스를 위해 만들어진 가독성 최강의 폰트.', note_en: 'Created for Mozilla Firefox, boasts superb legibility.', sample: '작은 화면에서도 뚜렷하게.' },
-    { id: 'f22', name: 'Quicksand', family: "'Quicksand', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap', category: 'Rounded Display', category_kr: '얇고 둥근 산스', pair: 'Open Sans', note: '얇고 매우 둥근 형태로, 감성적이거나 미니멀한 디자인에 제격입니다.', note_en: 'Thin and very rounded, perfect for emotional/minimal design.', sample: '가벼운 깃털 같은 부드러움.' },
-    { id: 'f23', name: 'Barlow', family: "'Barlow', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&display=swap', category: 'Industrial Tech', category_kr: '산업 테크', pair: 'PT Serif', note: '미국의 고속도로 표지판과 자동차 번호판에서 영감을 받은 형태.', note_en: 'Inspired by US highway signs and license plates.', sample: '명확하고 직선적인 길잡이.' },
-    { id: 'f24', name: 'Josefin Sans', family: "'Josefin Sans', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap', category: 'Vintage Geometric', category_kr: '빈티지 지오메트릭', pair: 'Lato', note: '1920년대 스칸디나비아 스타일이 가미된 우아한 기하학적 폰트.', note_en: 'Elegant geometric font with a 1920s Scandinavian touch.', sample: '우아한 빈티지의 재해석.' },
-    { id: 'f25', name: 'Lora', family: "'Lora', serif", url: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap', category: 'Contemporary Serif', category_kr: '현대적인 세리프', pair: 'Open Sans', note: '디지털 화면에서의 텍스트 예술성을 극대화한 부드러운 세리프.', note_en: 'Soft serif maximizing text artistry on digital screens.', sample: '화면에 그려진 붓터치.' },
-    { id: 'f26', name: 'PT Sans', family: "'PT Sans', sans-serif", url: 'https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap', category: 'Humanist Sans', category_kr: '휴머니스트 산스', pair: 'PT Serif', note: '러시아 문자 프로젝트의 일환으로 제작된, 공간감이 탁월한 폰트.', note_en: 'Created for Public Type of Russia, excellent spatial feel.', sample: '여유로운 공간과 명확한 소통.' },
-    { id: 'f27', name: 'Inconsolata', family: "'Inconsolata', monospace", url: 'https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap', category: 'Coding Monospace', category_kr: '개발자 코딩용', pair: 'Roboto', note: '개발자들에게 사랑받는 아름답고 뚜렷한 모노스페이스 폰트.', note_en: 'Beautiful and clear monospace font loved by developers.', sample: 'print("완벽한 코드의 형태");' },
-    { id: 'f28', name: 'Source Code Pro', family: "'Source Code Pro', monospace", url: 'https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap', category: 'Coding Monospace', category_kr: '어도비 코딩용', pair: 'Source Sans Pro', note: '어도비에서 특별히 코딩 환경을 위해 설계한 눈이 편안한 폰트.', note_en: 'Designed by Adobe specifically for coding environments.', sample: '에러 없는 깔끔한 디자인.' },
-    { id: 'f29', name: 'Dosis', family: "'Dosis', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Dosis:wght@400;600;800&display=swap', category: 'Rounded Display', category_kr: '둥근 디스플레이', pair: 'Roboto', note: '둥글고 약간 넓은 비율로 독특한 개성을 지닌 귀여운 타이틀용 폰트.', note_en: 'Rounded and slightly wide, unique and cute for titles.', sample: '나만의 통통 튀는 개성.' },
-    { id: 'f30', name: 'Anton', family: "'Anton', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Anton&display=swap', category: 'Heavy Display', category_kr: '헤비 디스플레이', pair: 'Open Sans', note: '인터넷 브라우저용으로 다시 그려진 굵고 파워풀한 산세리프.', note_en: 'Bold and powerful sans-serif redrawn for web browsers.', sample: '시선을 강탈하는 두꺼운 선.' },
-    { id: 'f31', name: 'Cabin', family: "'Cabin', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,700;1,400&display=swap', category: 'Humanist Sans', category_kr: '휴머니스트 산스', pair: 'Raleway', note: '현대적인 비율에 약간의 곡선을 가미하여 부드럽고 다가가기 쉬운 폰트.', note_en: 'Modern proportions with slight curves, soft and accessible.', sample: '편안한 대화의 시작.' },
-    { id: 'f32', name: 'Pacifico', family: "'Pacifico', cursive", url: 'https://fonts.googleapis.com/css2?family=Pacifico&display=swap', category: 'Brush Cursive', category_kr: '브러쉬 필기체', pair: 'Roboto', note: '1950년대 미국의 서핑 문화에서 영감을 받은 유쾌한 필기체.', note_en: 'Fun cursive inspired by 1950s American surf culture.', sample: '자유로운 파도를 타는 느낌.' }
-];
-
-designFonts.push(...additionalFonts);
-
+// 이전에 분할했던 가이드 및 아카데미 데이터 복원하여 병합
 // ─── Logo Design Guide ────────────────────────────────────────────────────────
 const logoDesignGuide = [
     {
@@ -885,3 +2655,4 @@ const portfolioGuide = [
         나는 차분하고 꼼꼼한 사람인지, 아니면 톡톡 튀고 재미있는 아이디어가 많은 사람인지 포트폴리오 전체의 테마 컬러와 글씨체로 뿜어내야 해요. 나라는 사람 자체가 하나의 브랜드라고 생각하고 <b>'나만의 분위기'</b>를 디자인해 보세요.`
     }
 ];
+

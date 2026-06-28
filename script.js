@@ -502,20 +502,41 @@ class ColorPalette {
                 ['brand_global', trans.cat_brand_global], 
                 ['nature', trans.cat_nature], 
                 ['pastel', trans.cat_pastel], 
-                ['neon_modern', trans.cat_neon_modern]
+                ['neon_modern', trans.cat_neon_modern],
+                ['earth', trans.cat_earth],
+                ['monochrome', trans.cat_monochrome]
             ];
             chips.innerHTML = btns.map(([k,v]) => `<button class="lib-filter-chip ${filterCat===k?'active':''}" onclick="app.buildColorLibrary('${k}')">${v}</button>`).join('');
         }
         let html = '';
         for (const [key, colors] of Object.entries(designerColors)) {
-            if (filterCat !== 'all' && filterCat !== key && !(filterCat==='nature' && key==='earth') && !(filterCat==='neon_modern' && key==='monochrome')) continue;
+            if (filterCat !== 'all' && filterCat !== key) continue;
             const [icon, label] = meta[key] || ['🎨', key];
-            html += `<div class="color-category-section"><h3 class="color-category-title"><span>${icon}</span> ${label}</h3><div class="color-category-grid">
-                ${colors.map(c => {
-                    const displayName = (this.lang === 'en' && c.name_en) ? c.name_en : c.name;
-                    return `<div class="color-library-item" onclick="app.openColorDetail('${displayName}','${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(displayName)}</div></div>`;
-                }).join('')}
-            </div></div>`;
+            
+            // 'all' 보기 상태에서는 상위 8개 색상만 노출하고 우측에 '전체보기 >' 표시
+            const isAllMode = filterCat === 'all';
+            const displayColors = isAllMode ? colors.slice(0, 8) : colors;
+            
+            const viewAllBtn = isAllMode 
+                ? `<span class="view-all-link" style="font-size:12px; font-weight:700; color:var(--accent-color); cursor:pointer; display:flex; align-items:center; gap:4px; user-select:none;" onclick="app.buildColorLibrary('${key}')">${this.lang === 'kr' ? '전체보기' : 'View All'} &gt;</span>` 
+                : '';
+                
+            html += `
+                <div class="color-category-section" style="margin-bottom:30px; border-bottom:1px solid var(--border-color); padding-bottom:20px;">
+                    <div class="color-category-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                        <h3 class="color-category-title" style="margin-bottom:0; display:flex; align-items:center; gap:8px;">
+                            <span>${icon}</span> ${label}
+                        </h3>
+                        ${viewAllBtn}
+                    </div>
+                    <div class="color-category-grid">
+                        ${displayColors.map(c => {
+                            const displayName = (this.lang === 'en' && c.name_en) ? c.name_en : c.name;
+                            return `<div class="color-library-item" onclick="app.openColorDetail('${displayName}','${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(displayName)}</div></div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
         }
         this.colorLibrary.innerHTML = html || '<div style="padding:40px;text-align:center;color:#999;">결과가 없습니다.</div>';
     }

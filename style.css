@@ -42,10 +42,10 @@ body {
 
 /* ─── Navbar ─────────────────────────────────── */
 .navbar {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--navbar-bg);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid var(--border-color);
     padding: 0 32px;
     display: flex;
     align-items: center;
@@ -61,7 +61,7 @@ body {
 .nav-brand {
     font-size: 18px;
     font-weight: 700;
-    color: #111;
+    color: var(--text-color);
     letter-spacing: -0.5px;
     white-space: nowrap;
 }
@@ -76,7 +76,7 @@ body {
     border: 1px solid transparent;
     font-size: 13px;
     font-weight: 600;
-    color: #999;
+    color: var(--tab-inactive);
     cursor: pointer;
     padding: 7px 14px;
     border-radius: 8px;
@@ -85,8 +85,8 @@ body {
     touch-action: manipulation;
 }
 
-.nav-tab:hover   { color: #111; background: rgba(0,0,0,0.04); }
-.nav-tab.active  { color: #111; background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.1); }
+.nav-tab:hover   { color: var(--text-color); background: var(--tab-hover-bg); }
+.nav-tab.active  { color: var(--text-color); background: var(--tab-active-bg); border-color: var(--tab-active-border); }
 
 /* ─── Tab Content ─────────────────────────────── */
 .tab-content {
