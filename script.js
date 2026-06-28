@@ -586,7 +586,7 @@ class ColorPalette {
         const toHex = (hue) => { const c = this.hslToRgb(hue, s, l); return this.rgbToHex(c.r, c.g, c.b); };
         const renderHarm = (id, hues) => {
             const el = document.getElementById(id);
-            if(el) el.innerHTML = hues.map(hue => `<div style="flex:1; background:${toHex(hue)}; cursor:pointer" title="${toHex(hue)}" onclick="app.openColorDetail('Harmony Color', '${toHex(hue)}')"></div>`).join('');
+            if(el) el.innerHTML = hues.map(hue => `<div style="flex:1; background:${toHex(hue)}; cursor:pointer" title="${toHex(hue)} (클릭 시 피킹)" onclick="app.setColorFromHex('${toHex(hue)}'); app.switchTab('picker'); app.showToast(app.lang === 'kr' ? '배색 피킹 완료!' : 'Color Picked!')"></div>`).join('');
         };
         renderHarm('harmonyComp', [h, (h + 180) % 360]);
         renderHarm('harmonyAna', [(h + 330) % 360, h, (h + 30) % 360]);
@@ -605,9 +605,19 @@ class ColorPalette {
         const similarGrid = document.getElementById('detailSimilarGrid');
         if (typeof findSimilarColors !== 'undefined') {
             const similar = findSimilarColors(rgb.r, rgb.g, rgb.b, 8);
-            similarGrid.innerHTML = similar.map(c => `<div class="mini-swatch" style="background-color: ${c.hex}" title="${c.name}" onclick="app.openColorDetail('${c.name}', '${c.hex}')"></div>`).join('');
+            similarGrid.innerHTML = similar.map(c => `<div class="mini-swatch" style="background-color: ${c.hex}" title="${c.name}" onclick="app.setColorFromHex('${c.hex}'); app.switchTab('picker'); app.showToast('${c.name} 피킹 완료!')"></div>`).join('');
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    
+    pickDetailColor() {
+        const hex = document.getElementById('detailHexLabel')?.textContent;
+        if (hex) {
+            this.setColorFromHex(hex);
+            this.switchTab('picker');
+            this.showToast(this.lang === 'kr' ? '색상이 피커에 세팅되었습니다!' : 'Color loaded in Picker!');
+        }
     }
 
     closeColorDetail() { window.location.hash = ''; this.switchTab('colors'); }
