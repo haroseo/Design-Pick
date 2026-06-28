@@ -950,6 +950,8 @@ class ColorPalette {
 
 let app;
 window.addEventListener('DOMContentLoaded', () => {
+    try {
+
     app = new ColorPalette();
     document.querySelectorAll('.nav-tab').forEach(btn => btn.addEventListener('click', function () { app.switchTab(this.getAttribute('data-tab')); }));
     
@@ -979,6 +981,14 @@ window.addEventListener('DOMContentLoaded', () => {
         if (typeof portfolioGuide !== 'undefined') renderGrid('portfolioContent', portfolioGuide);
     }
     renderAcademyGuides();
+
+    } catch(err) {
+        const errDiv = document.createElement('div');
+        errDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:red;color:white;padding:20px;z-index:99999;font-weight:bold;font-size:16px;word-break:break-all;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.5);';
+        errDiv.innerHTML = '🚨 브라우저 초기화 런타임 에러: ' + err.message + '<br>Stack: ' + err.stack;
+        document.body.appendChild(errDiv);
+        console.error(err);
+    }
 });
 
 
