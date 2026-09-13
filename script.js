@@ -288,6 +288,10 @@ class ColorPalette {
 
     updateColor() {
         const hex = this.rgbToHex(this.r, this.g, this.b);
+        // Real-time logo color sync
+        document.querySelectorAll('.dynamic-logo').forEach(el => {
+            el.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
+        });
         if (this.colorDisplay) this.colorDisplay.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
         if (this.hexValue) this.hexValue.textContent = hex;
         if (this.rValue) this.rValue.textContent = this.r;
@@ -867,6 +871,36 @@ class ColorPalette {
     adjustColor(step) { const clamp = v => Math.max(0, Math.min(255, v)); if (this.selectedChannel) this[this.selectedChannel] = clamp(this[this.selectedChannel] + step); else { if (this.r + step >= 0 && this.r + step <= 255) this.r = clamp(this.r + step); else if (this.g + step >= 0 && this.g + step <= 255) this.g = clamp(this.g + step); else if (this.b + step >= 0 && this.b + step <= 255) this.b = clamp(this.b + step); } this.updateColor(); }
     mobileAdjust(step) { if (!this.selectedChannel || this.isRouletting) return; this[this.selectedChannel] = Math.max(0, Math.min(255, this[this.selectedChannel] + step)); this.updateColor(); }
     setSelectedChannel(channel) { this.selectedChannel = this.selectedChannel === channel ? null : channel; [['r', this.rItem], ['g', this.gItem], ['b', this.bItem]].forEach(([ch, el]) => el?.classList.toggle('channel-selected', this.selectedChannel === ch)); if (this.mobileAdjLabel) this.mobileAdjLabel.textContent = this.selectedChannel ? { r: 'R 채널', g: 'G 채널', b: 'B 채널' }[this.selectedChannel] : '채널 선택'; }
+
+    handleKeyPress(e) {
+        const tag = document.activeElement?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+        const isInspoTab = document.getElementById('today')?.classList.contains('active');
+        const isInspTab = document.getElementById('inspiration')?.classList.contains('active');
+
+        if (e.code === 'Space') {
+            e.preventDefault();
+            if (isInspoTab) {
+                this.inspoNext();
+            } else if (isInspTab) {
+                if (this.reelRunning || this.reelDecelerating) { this.stopInspirationReel(); }
+                else { this.startInspirationReel(); }
+            } else {
+                this.startRoulette();
+            }
+        } else if (e.code === 'Tab') {
+            e.preventDefault();
+            if (isInspoTab) {
+                this.inspoPrev();
+            }
+        } else if (e.code === 'ArrowUp') {
+            e.preventDefault(); this.adjustColor(1);
+        } else if (e.code === 'ArrowDown') {
+            e.preventDefault(); this.adjustColor(-1);
+        }
+    }
+
     showToast(message) { if(!this.toast) return; this.toast.textContent = message; this.toast.classList.add('show'); clearTimeout(this._toastTimer); this._toastTimer = setTimeout(() => this.toast.classList.remove('show'), 2200); }
 
     initFeedbackUI() {
@@ -1151,64 +1185,5 @@ function findSimilarColors(r, g, b, count = 8) {
 }
 
 
-// Dynamic Logo update
-function updateDynamicLogoColors(rgbString) {
-    if(!rgbString) return;
-    const m = rgbString.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-    if(!m) return;
-    const r = parseInt(m[1]), g = parseInt(m[2]), b = parseInt(m[3]);
-    
-    // Generate 8 variations of the color
-    for(let i = 1; i <= 8; i++) {
-        // Shift hue roughly by i * 45 degrees
-        // A simple hue shift estimation (not perfect HSL, but good enough for visual variation)
-        const shift = i * 45;
-        // Simple faux-hue shift:
-        const angle = shift * Math.PI / 180;
-        const matrix = [
-            0.213 + 0.787*Math.cos(angle) - 0.213*Math.sin(angle),
-            0.715 - 0.715*Math.cos(angle) - 0.715*Math.sin(angle),
-            0.072 - 0.072*Math.cos(angle) + 0.928*Math.sin(angle),
-            0.213 - 0.213*Math.cos(angle) + 0.143*Math.sin(angle),
-            0.715 + 0.285*Math.cos(angle) + 0.140*Math.sin(angle),
-            0.072 - 0.072*Math.cos(angle) - 0.283*Math.sin(angle),
-            0.213 - 0.213*Math.cos(angle) - 0.787*Math.sin(angle),
-            0.715 - 0.715*Math.cos(angle) + 0.715*Math.sin(angle),
-            0.072 + 0.928*Math.cos(angle) + 0.072*Math.sin(angle)
-        ];
-        
-        let nr = r*matrix[0] + g*matrix[1] + b*matrix[2];
-        let ng = r*matrix[3] + g*matrix[4] + b*matrix[5];
-        let nb = r*matrix[6] + g*matrix[7] + b*matrix[8];
-        
-        nr = Math.max(0, Math.min(255, Math.round(nr)));
-        ng = Math.max(0, Math.min(255, Math.round(ng)));
-        nb = Math.max(0, Math.min(255, Math.round(nb)));
-        
-        document.documentElement.style.setProperty(`--logo-c${i}`, `rgb(${nr}, ${ng}, ${nb})`);
-    }
-}
 
-// Observe the main color box or style changes to automatically trigger logo updates
-const observer = new MutationObserver((mutations) => {
-    for (let mutation of mutations) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-            const primaryColor = document.documentElement.style.getPropertyValue('--primary-color');
-            if(primaryColor) {
-                // If it's HEX, we need to convert, if it's RGB, parse it
-                let rgbStr = primaryColor;
-                if(primaryColor.trim().startsWith('#')) {
-                    const hex = primaryColor.trim().substring(1);
-                    const bigint = parseInt(hex, 16);
-                    const r = (bigint >> 16) & 255;
-                    const g = (bigint >> 8) & 255;
-                    const b = bigint & 255;
-                    rgbStr = `rgb(${r}, ${g}, ${b})`;
-                }
-                updateDynamicLogoColors(rgbStr);
-            }
-        }
-    }
-});
-observer.observe(document.documentElement, { attributes: true });
 

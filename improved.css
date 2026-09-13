@@ -1444,33 +1444,6 @@ svg { width: 24px !important; height: 24px !important; max-width: 24px; max-heig
     }
 }
 
-/* ==========================================================================
-   Dynamic Logo
-   ========================================================================== */
-.dynamic-logo {
-    background-color: var(--primary-color, #FF2D6B);
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='none' stroke='black' stroke-width='16' stroke-linejoin='round' /%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='none' stroke='black' stroke-width='16' stroke-linejoin='round' /%3E%3C/svg%3E");
-    mask-size: contain;
-    -webkit-mask-size: contain;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    transition: background 0.5s ease;
-}
-
-.nav-logo {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-}
-
-.footer-logo-icon {
-    width: 32px;
-    height: 32px;
-    background-color: transparent !important;
-    border-radius: 0 !important;
-    display: inline-block;
-}
 
 
 /* Font and Icon Alignment Fixes */
@@ -1500,4 +1473,33 @@ body, button, input, .navbar, .tab-btn {
 
 .footer-logo-text {
     font-family: 'Pretendard', sans-serif !important;
+}
+
+/* === Dynamic Logo: Real-time Picker Sync === */
+.dynamic-logo {
+    background-color: #FF2D6B;
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='black'/%3E%3C/svg%3E");
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    transition: background-color 0.1s ease;
+    border-radius: 0 !important;
+    background-image: none !important;
+}
+
+.nav-logo {
+    width: 32px !important;
+    height: 32px !important;
+    flex-shrink: 0;
+    display: block !important;
+}
+
+.footer-logo-icon {
+    width: 32px !important;
+    height: 32px !important;
+    display: block !important;
 }
