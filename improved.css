@@ -1448,16 +1448,7 @@ svg { width: 24px !important; height: 24px !important; max-width: 24px; max-heig
    Dynamic Logo
    ========================================================================== */
 .dynamic-logo {
-    background: conic-gradient(
-        var(--logo-c1, #FF2D6B) 0deg 45deg, 
-        var(--logo-c2, #FF6B35) 45deg 90deg, 
-        var(--logo-c3, #FFCC00) 90deg 135deg, 
-        var(--logo-c4, #34C759) 135deg 180deg, 
-        var(--logo-c5, #32ADE6) 180deg 225deg, 
-        var(--logo-c6, #007AFF) 225deg 270deg, 
-        var(--logo-c7, #AF52DE) 270deg 315deg, 
-        var(--logo-c8, #FF2D55) 315deg 360deg
-    );
+    background-color: var(--primary-color, #FF2D6B);
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='none' stroke='black' stroke-width='16' stroke-linejoin='round' /%3E%3C/svg%3E");
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='none' stroke='black' stroke-width='16' stroke-linejoin='round' /%3E%3C/svg%3E");
     mask-size: contain;
@@ -1479,4 +1470,34 @@ svg { width: 24px !important; height: 24px !important; max-width: 24px; max-heig
     background-color: transparent !important;
     border-radius: 0 !important;
     display: inline-block;
+}
+
+
+/* Font and Icon Alignment Fixes */
+body, button, input, .navbar, .tab-btn {
+    font-family: 'Pretendard', 'Inter', sans-serif !important;
+}
+
+.tab-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+.tab-icon {
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0;
+    margin: 0 !important;
+}
+
+.nav-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.footer-logo-text {
+    font-family: 'Pretendard', sans-serif !important;
 }

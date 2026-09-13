@@ -191,6 +191,7 @@ class ColorPalette {
 
         document.getElementById('langKrBtn')?.classList.toggle('active', this.lang === 'kr');
         document.getElementById('langEnBtn')?.classList.toggle('active', this.lang === 'en');
+        if (this.todayIndex !== undefined) { this.showInspoCard(this.todayIndex); }
     }
 
     setSelectedFamily(family) {
