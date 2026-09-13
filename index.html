@@ -189,9 +189,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-brand" style="display: flex; align-items: center; gap: 10px;">
-            <div id="navLogoWrap" style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF2D6B, #FF6B35); flex-shrink: 0; box-shadow: 0 2px 8px rgba(255,45,107,0.35); font-family: 'Inter', sans-serif;">
-                <span style="color: white; font-size: 16px; font-weight: 900;">D</span>
-            </div>
+            <div class="dynamic-logo nav-logo" id="navLogoWrap"></div>
             <span style="font-weight: 800; font-size: 15px; letter-spacing: -0.3px; color: var(--text-color);">Design Pick</span>
             <button class="btn-icon" id="updateLogBtn" onclick="document.getElementById('updateLogModal').classList.add('show')" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); font-size: 11px; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600;">업데이트 내역</button>
         </div>
@@ -221,8 +219,7 @@
                 <svg width="20" height="20" fill="currentColor" id="themeIconSun"><path d="M10 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-15V0m0 20v-2M4.34 4.34L2.93 2.93m14.14 14.14l-1.41-1.41M0 10h2m16 0h2M4.34 15.66l-1.41 1.41m14.14-14.14l-1.41 1.41"/></svg>
                 <svg width="20" height="20" fill="currentColor" id="themeIconMoon" style="display:none;"><path d="M10 2a8 8 0 1 0 10 10A8 8 0 0 1 10 2z"/></svg>
             </button>
-            <button id="helpBtn" onclick="document.getElementById('supportModal').style.display='flex'" style="background:none;border:1.5px solid #ddd;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;font-weight:700;color:#555;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:visible;position:static;">?</button>
-            <div class="lang-selector">
+                        <div class="lang-selector">
                 <button class="lang-btn" id="langKrBtn">KR</button>
                 <button class="lang-btn" id="langEnBtn">EN</button>
             </div>
@@ -984,15 +981,53 @@
         </div>
     </div>
 
-    <!-- Support Modal -->
-    <div id="supportModal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9999;align-items:center;justify-content:center;">
-        <div style="background:#fff;border-radius:20px;padding:36px;width:90%;max-width:380px;text-align:center;">
-            <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:10px;">Design Pick 지원센터</h3>
-            <p style="color:#666;font-size:0.9rem;line-height:1.6;margin-bottom:24px;">버그 제보, 기능 건의, 디자인 소통은<br>공식 디스코드에서 도와드립니다.</p>
-            <a href="https://discord.gg/THYbuNGnw5" target="_blank" style="display:block;background:#5865F2;color:#fff;padding:14px;border-radius:12px;text-decoration:none;font-weight:700;margin-bottom:12px;">디스코드 서버 참여하기</a>
-            <button onclick="document.getElementById('supportModal').style.display='none'" style="width:100%;padding:12px;border:1px solid #eee;border-radius:12px;background:#fff;cursor:pointer;font-weight:600;color:#555;">닫기</button>
+    
+    
+    <!-- Footer -->
+    <footer class="premium-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="dynamic-logo footer-logo-icon"></div>
+                    <span class="footer-logo-text">Design Pick</span>
+                </div>
+                <p class="footer-desc">브랜드 디자인, 마케팅 전략, 웹 개발을 하나로 연결하는 크리에이터입니다.</p>
+                <div class="footer-socials">
+                    <a href="#" class="social-link"><svg style="width:16px;height:16px" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> FIGMA</a>
+                    <a href="mailto:contact@example.com" class="social-link"><svg style="width:16px;height:16px" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> EMAIL</a>
+                </div>
+            </div>
+            
+            <div class="footer-links-group">
+                <div class="footer-links-col">
+                    <h4>사이트</h4>
+                    <a href="#">소개</a>
+                    <a href="#">포트폴리오</a>
+                    <a href="#">문의</a>
+                    <a href="#">Sitemap <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                </div>
+                <div class="footer-links-col">
+                    <h4>커뮤니티</h4>
+                    <a href="#">브랜드 리소스센터 <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                </div>
+            </div>
         </div>
-    </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-top">
+                <div class="footer-license">
+                    <span>오픈소스 라이선스 <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                </div>
+            </div>
+            <div class="footer-bottom-bottom">
+                <p class="footer-copyright">© 2026 DESIGN PICK. All rights reserved.</p>
+                <div class="footer-legal">
+                    이 웹사이트에 게재된 모든 텍스트, 이미지, 디자인, 코드 등의 콘텐츠는 DESIGN PICK의 지적 재산으로서, 사전 서면 동의 없이 무단으로 복제, 배포, 수정, 상업적으로 이용하는 것을 금지합니다.<br>
+                    이 사이트의 콘텐츠는 정보 제공 목적으로만 제공되며, 명시되지 않은 사항에 대해서는 어떠한 보증도 하지 않습니다.
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="data.js?v=30"></script>

@@ -1266,3 +1266,217 @@ svg { width: 24px !important; height: 24px !important; max-width: 24px; max-heig
     }
 
 }
+
+/* ==========================================================================
+   Premium Footer (Cokform Style)
+   ========================================================================== */
+.premium-footer {
+    background: #060606;
+    color: #ffffff;
+    padding: 80px 40px 40px;
+    font-family: 'Inter', sans-serif;
+    margin-top: 100px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 40px;
+}
+
+.footer-brand {
+    max-width: 400px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.footer-logo-icon {
+    width: 32px;
+    height: 32px;
+    background: #ffffff;
+    color: #000000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+}
+
+.footer-logo-text {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.footer-desc {
+    color: #777777;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 20px;
+}
+
+.social-link {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.social-link:hover {
+    opacity: 1;
+}
+
+.footer-links-group {
+    display: flex;
+    gap: 100px;
+}
+
+.footer-links-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.footer-links-col h4 {
+    font-size: 12px;
+    color: #555555;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.footer-links-col a {
+    color: #999999;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-links-col a:hover {
+    color: #ffffff;
+}
+
+.ext-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 30px;
+}
+
+.footer-bottom-top {
+    margin-bottom: 20px;
+}
+
+.footer-license {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #777777;
+    cursor: pointer;
+}
+
+.footer-bottom-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-copyright {
+    color: #555555;
+    font-size: 12px;
+    font-family: 'Inter', monospace;
+    font-weight: 600;
+}
+
+.footer-legal {
+    color: #444444;
+    font-size: 11px;
+    line-height: 1.5;
+    max-width: 600px;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+    }
+    .footer-links-group {
+        flex-direction: column;
+        gap: 40px;
+    }
+    .footer-bottom-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .footer-legal {
+        text-align: left;
+    }
+}
+
+/* ==========================================================================
+   Dynamic Logo
+   ========================================================================== */
+.dynamic-logo {
+    background: conic-gradient(
+        var(--logo-c1, #FF2D6B) 0deg 45deg, 
+        var(--logo-c2, #FF6B35) 45deg 90deg, 
+        var(--logo-c3, #FFCC00) 90deg 135deg, 
+        var(--logo-c4, #34C759) 135deg 180deg, 
+        var(--logo-c5, #32ADE6) 180deg 225deg, 
+        var(--logo-c6, #007AFF) 225deg 270deg, 
+        var(--logo-c7, #AF52DE) 270deg 315deg, 
+        var(--logo-c8, #FF2D55) 315deg 360deg
+    );
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='none' stroke='black' stroke-width='16' stroke-linejoin='round' /%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='none' stroke='black' stroke-width='16' stroke-linejoin='round' /%3E%3C/svg%3E");
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    transition: background 0.5s ease;
+}
+
+.nav-logo {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.footer-logo-icon {
+    width: 32px;
+    height: 32px;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    display: inline-block;
+}

@@ -357,7 +357,7 @@ const uiTranslations = {
         cat_neon_modern: '?ㅼ삩/紐⑤뜕',
         cat_earth: '?댁뒪 ??,
         cat_monochrome: '紐⑤끂?щ＼',
-        footer_copy: '짤 2024 RGBdom. ?붿옄?몄쓣 ?꾪븳 紐⑤뱺 ?됱긽.'
+        footer_copy: '짤 2024 Design Pick. ?붿옄?몄쓣 ?꾪븳 紐⑤뱺 ?됱긽.'
     },
     en: {
         nav_picker: 'Picker',
@@ -395,6 +395,6 @@ const uiTranslations = {
         cat_neon_modern: 'Neon/Modern',
         cat_earth: 'Earth Tone',
         cat_monochrome: 'Monochrome',
-        footer_copy: '짤 2024 RGBdom. All colors for design.'
+        footer_copy: '짤 2024 Design Pick. All colors for design.'
     }
 };

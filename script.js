@@ -1148,3 +1148,66 @@ function findSimilarColors(r, g, b, count = 8) {
     
     return distances.sort((a, b) => a.distance - b.distance).slice(0, count);
 }
+
+
+// Dynamic Logo update
+function updateDynamicLogoColors(rgbString) {
+    if(!rgbString) return;
+    const m = rgbString.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+    if(!m) return;
+    const r = parseInt(m[1]), g = parseInt(m[2]), b = parseInt(m[3]);
+    
+    // Generate 8 variations of the color
+    for(let i = 1; i <= 8; i++) {
+        // Shift hue roughly by i * 45 degrees
+        // A simple hue shift estimation (not perfect HSL, but good enough for visual variation)
+        const shift = i * 45;
+        // Simple faux-hue shift:
+        const angle = shift * Math.PI / 180;
+        const matrix = [
+            0.213 + 0.787*Math.cos(angle) - 0.213*Math.sin(angle),
+            0.715 - 0.715*Math.cos(angle) - 0.715*Math.sin(angle),
+            0.072 - 0.072*Math.cos(angle) + 0.928*Math.sin(angle),
+            0.213 - 0.213*Math.cos(angle) + 0.143*Math.sin(angle),
+            0.715 + 0.285*Math.cos(angle) + 0.140*Math.sin(angle),
+            0.072 - 0.072*Math.cos(angle) - 0.283*Math.sin(angle),
+            0.213 - 0.213*Math.cos(angle) - 0.787*Math.sin(angle),
+            0.715 - 0.715*Math.cos(angle) + 0.715*Math.sin(angle),
+            0.072 + 0.928*Math.cos(angle) + 0.072*Math.sin(angle)
+        ];
+        
+        let nr = r*matrix[0] + g*matrix[1] + b*matrix[2];
+        let ng = r*matrix[3] + g*matrix[4] + b*matrix[5];
+        let nb = r*matrix[6] + g*matrix[7] + b*matrix[8];
+        
+        nr = Math.max(0, Math.min(255, Math.round(nr)));
+        ng = Math.max(0, Math.min(255, Math.round(ng)));
+        nb = Math.max(0, Math.min(255, Math.round(nb)));
+        
+        document.documentElement.style.setProperty(`--logo-c${i}`, `rgb(${nr}, ${ng}, ${nb})`);
+    }
+}
+
+// Observe the main color box or style changes to automatically trigger logo updates
+const observer = new MutationObserver((mutations) => {
+    for (let mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+            const primaryColor = document.documentElement.style.getPropertyValue('--primary-color');
+            if(primaryColor) {
+                // If it's HEX, we need to convert, if it's RGB, parse it
+                let rgbStr = primaryColor;
+                if(primaryColor.trim().startsWith('#')) {
+                    const hex = primaryColor.trim().substring(1);
+                    const bigint = parseInt(hex, 16);
+                    const r = (bigint >> 16) & 255;
+                    const g = (bigint >> 8) & 255;
+                    const b = bigint & 255;
+                    rgbStr = `rgb(${r}, ${g}, ${b})`;
+                }
+                updateDynamicLogoColors(rgbStr);
+            }
+        }
+    }
+});
+observer.observe(document.documentElement, { attributes: true });
+
