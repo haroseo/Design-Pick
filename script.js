@@ -102,6 +102,13 @@ class ColorPalette {
 
         document.getElementById('inspoPrev')?.addEventListener('click', () => this.inspoPrev());
         document.getElementById('inspoNext')?.addEventListener('click', () => this.inspoNext());
+        document.getElementById('reelWrapper')?.addEventListener('click', () => {
+            if (this.reelRunning || this.reelDecelerating) {
+                this.stopInspirationReel();
+            } else {
+                this.startInspirationReel();
+            }
+        });
         document.getElementById('langKrBtn')?.addEventListener('click', () => { this.setLanguage('kr'); this.renderFonts(); });
         document.getElementById('langEnBtn')?.addEventListener('click', () => { this.setLanguage('en'); this.renderFonts(); });
 
@@ -270,8 +277,15 @@ class ColorPalette {
                 if (val % 7 === 0) try { this.playTickSound(); } catch(e) {}
                 el.textContent = val;
                 this[channel] = val;
-                this.colorDisplay.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
-                this.hexValue.textContent = this.rgbToHex(this.r, this.g, this.b);
+                const curRgb = `rgb(${this.r}, ${this.g}, ${this.b})`;
+                const curHex = this.rgbToHex(this.r, this.g, this.b);
+                if (this.colorDisplay) this.colorDisplay.style.backgroundColor = curRgb;
+                if (this.hexValue) this.hexValue.textContent = curHex;
+                // Real-time dynamic logo & CSS variable update during spin
+                document.querySelectorAll('.dynamic-logo').forEach(l => {
+                    l.style.backgroundColor = curRgb;
+                });
+                document.documentElement.style.setProperty('--primary-color', curHex);
             }
             if (speed > 0.5) requestAnimationFrame(tick);
             else {
@@ -288,6 +302,7 @@ class ColorPalette {
 
     updateColor() {
         const hex = this.rgbToHex(this.r, this.g, this.b);
+        document.documentElement.style.setProperty('--primary-color', hex);
         // Real-time logo color sync
         document.querySelectorAll('.dynamic-logo').forEach(el => {
             el.style.backgroundColor = `rgb(${this.r}, ${this.g}, ${this.b})`;
@@ -364,31 +379,45 @@ class ColorPalette {
     }
 
     stopInspirationReel() {
-        if (!this.reelRunning) return;
+        if (!this.reelRunning && !this.reelDecelerating) return;
+        if (this.reelDecelerating) {
+            this.forceStopInspirationReel();
+            return;
+        }
         this.reelRunning = false; this.reelDecelerating = true; cancelAnimationFrame(this.reelRAF);
         if (this.spaceHint) this.spaceHint.textContent = '◼ 멈추는 중...';
         const maxOffset = this.reelItemHeight * this.totalDesigns;
         let speed = this.reelCurrentSpeed;
         const decelerate = () => {
             if (!this.reelDecelerating) return;
-            speed *= 0.88; this.reelOffset = (this.reelOffset + speed) % maxOffset;
+            speed *= 0.86; this.reelOffset = (this.reelOffset + speed) % maxOffset;
             this.inspirationReel.style.transform = `translateY(-${this.reelOffset}px)`;
-            if (speed < 0.8) {
-                this.reelDecelerating = false;
-                const rawIndex = Math.round(this.reelOffset / this.reelItemHeight);
-                this.currentDesignIdx = rawIndex % this.totalDesigns;
-                const snapOffset = (rawIndex * this.reelItemHeight) % maxOffset;
-                this.reelOffset = snapOffset;
-                this.inspirationReel.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
-                this.inspirationReel.style.transform = `translateY(-${snapOffset}px)`;
-                setTimeout(() => {
-                    this.inspirationReel.style.transition = ''; this.inspirationStopped = true;
-                    this.showInspirationPalette(this.currentDesignIdx);
-                    if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE / 탭으로 다시 돌리기';
-                }, 330);
-            } else this.reelRAF = requestAnimationFrame(decelerate);
+            if (speed < 1.0) {
+                this.forceStopInspirationReel();
+            } else {
+                this.reelRAF = requestAnimationFrame(decelerate);
+            }
         };
         this.reelRAF = requestAnimationFrame(decelerate);
+    }
+
+    forceStopInspirationReel() {
+        this.reelRunning = false;
+        this.reelDecelerating = false;
+        cancelAnimationFrame(this.reelRAF);
+        const maxOffset = this.reelItemHeight * this.totalDesigns;
+        const rawIndex = Math.round(this.reelOffset / this.reelItemHeight);
+        this.currentDesignIdx = rawIndex % this.totalDesigns;
+        const snapOffset = (rawIndex * this.reelItemHeight) % maxOffset;
+        this.reelOffset = snapOffset;
+        this.inspirationReel.style.transition = 'transform 0.25s cubic-bezier(0.4,0,0.2,1)';
+        this.inspirationReel.style.transform = `translateY(-${snapOffset}px)`;
+        setTimeout(() => {
+            this.inspirationReel.style.transition = '';
+            this.inspirationStopped = true;
+            this.showInspirationPalette(this.currentDesignIdx);
+            if (this.spaceHint) this.spaceHint.textContent = '▶ SPACE / 탭 / 클릭으로 다시 돌리기';
+        }, 260);
     }
 
     showInspirationPalette(index) {
@@ -879,20 +908,19 @@ class ColorPalette {
         const isInspoTab = document.getElementById('today')?.classList.contains('active');
         const isInspTab = document.getElementById('inspiration')?.classList.contains('active');
 
-        if (e.code === 'Space') {
+        if (e.code === 'Space' || e.code === 'Tab') {
             e.preventDefault();
-            if (isInspoTab) {
-                this.inspoNext();
-            } else if (isInspTab) {
-                if (this.reelRunning || this.reelDecelerating) { this.stopInspirationReel(); }
-                else { this.startInspirationReel(); }
-            } else {
+            if (isInspTab) {
+                if (this.reelRunning || this.reelDecelerating) {
+                    this.stopInspirationReel();
+                } else {
+                    this.startInspirationReel();
+                }
+            } else if (isInspoTab) {
+                if (e.code === 'Space') this.inspoNext();
+                else this.inspoPrev();
+            } else if (e.code === 'Space') {
                 this.startRoulette();
-            }
-        } else if (e.code === 'Tab') {
-            e.preventDefault();
-            if (isInspoTab) {
-                this.inspoPrev();
             }
         } else if (e.code === 'ArrowUp') {
             e.preventDefault(); this.adjustColor(1);
@@ -928,6 +956,7 @@ class ColorPalette {
         });
     }
     openFeedbackModal() { document.getElementById('feedbackModal')?.classList.add('show'); }
+    openBrandResourceModal() { document.getElementById('brandResourceModal')?.classList.add('show'); }
 
     initFonts() { const playground = document.getElementById('fontPlayground'); if (playground) playground.addEventListener('input', (e) => { const text = e.target.value; document.querySelectorAll('.font-preview-text').forEach(el => el.textContent = text || el.dataset.original); }); }
     renderFonts() {

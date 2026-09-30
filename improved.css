@@ -1475,18 +1475,18 @@ body, button, input, .navbar, .tab-btn {
     font-family: 'Pretendard', sans-serif !important;
 }
 
-/* === Dynamic Logo: Real-time Picker Sync === */
+/* === Dynamic Logo: Real-time Picker Sync (Hollow Center, Edges Only) === */
 .dynamic-logo {
-    background-color: #FF2D6B;
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='black'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 35 15 L 65 15 A 10 10 0 0 1 75 19 L 85 29 A 10 10 0 0 1 89 39 L 89 69 A 10 10 0 0 1 85 79 L 75 89 A 10 10 0 0 1 65 93 L 30 93 L 15 99 L 21 80 A 10 10 0 0 1 15 71 L 15 39 A 10 10 0 0 1 19 29 L 29 19 A 10 10 0 0 1 35 15 Z' fill='black'/%3E%3C/svg%3E");
+    background-color: var(--primary-color, #4F46E5);
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M36 12C22.7452 12 12 22.7452 12 36V64C12 77.2548 22.7452 88 36 88H64C77.2548 88 88 77.2548 88 64V36C88 22.7452 77.2548 12 64 12H36ZM34 26C25.1634 26 18 33.1634 18 42V58C18 66.8366 25.1634 74 34 74H66C74.8366 74 82 66.8366 82 58V42C82 33.1634 74.8366 26 66 26H34Z' fill='black'/%3E%3Ccircle cx='68' cy='32' r='5' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M36 12C22.7452 12 12 22.7452 12 36V64C12 77.2548 22.7452 88 36 88H64C77.2548 88 88 77.2548 88 64V36C88 22.7452 77.2548 12 64 12H36ZM34 26C25.1634 26 18 33.1634 18 42V58C18 66.8366 25.1634 74 34 74H66C74.8366 74 82 66.8366 82 58V42C82 33.1634 74.8366 26 66 26H34Z' fill='black'/%3E%3Ccircle cx='68' cy='32' r='5' fill='black'/%3E%3C/svg%3E");
     mask-size: contain;
     -webkit-mask-size: contain;
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-position: center;
-    transition: background-color 0.1s ease;
+    transition: background-color 0.05s ease;
     border-radius: 0 !important;
     background-image: none !important;
 }
@@ -1503,3 +1503,137 @@ body, button, input, .navbar, .tab-btn {
     height: 32px !important;
     display: block !important;
 }
+
+/* === Cokform-inspired Footer & Brand Resource Modal Styles === */
+.footer-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(79, 70, 229, 0.12);
+    color: #4F46E5;
+    letter-spacing: 0.2px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.license-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-text);
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.license-btn:hover {
+    color: var(--text-color);
+    background: var(--hover-bg);
+}
+
+.brand-modal-card {
+    max-width: 620px !important;
+    width: 92% !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18) !important;
+}
+
+.brand-logo-preview-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    background: var(--hover-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+}
+
+.brand-preview-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.brand-download-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-brand-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-brand-download:hover {
+    border-color: #4F46E5;
+    color: #4F46E5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+}
+
+.brand-colors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+}
+
+.brand-color-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.brand-color-card:hover {
+    border-color: #4F46E5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.brand-color-swatch {
+    height: 48px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.brand-color-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.brand-color-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.brand-color-code {
+    font-family: 'Monaco', monospace;
+    font-size: 11px;
+    color: var(--secondary-text);
+}
+

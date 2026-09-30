@@ -2535,6 +2535,60 @@ designerColors['retro_vintage'] = [
 uiTranslations.kr.cat_retro_vintage = '레트로/빈티지';
 uiTranslations.en.cat_retro_vintage = 'Retro/Vintage';
 
+Object.assign(uiTranslations.kr, {
+    footer_desc: '색상 영감과 정밀한 RGB 추출, 디자인 시스템을 하나로 잇는 현대적 웹 컬러 플랫폼입니다.',
+    footer_feedback: '피드백',
+    footer_brand_center: '브랜드 자산',
+    footer_col_brand: '브랜드 자산',
+    footer_brand_resources: '브랜드 리소스 센터',
+    footer_download_svg: '공식 로고 (SVG)',
+    footer_download_png: '공식 로고 (PNG)',
+    footer_col_features: '도구 탐색',
+    footer_col_legal: '오픈소스 & 라이선스',
+    footer_mit_license: 'MIT License',
+    footer_changelog: '업데이트 내역',
+    footer_license_notice: '오픈소스 라이선스 규정 안내',
+    footer_legal_text: 'RGBdom은 직관적인 색상 제어와 디자인 영감을 위해 제작된 오픈소스 프로젝트입니다. 본 플랫폼의 공식 로고 및 브랜드 리소스는 브랜드 가이드라인 준수 하에 자유롭게 활용할 수 있습니다.',
+    brand_modal_title: 'RGBdom 브랜드 리소스 센터',
+    brand_logo_title: '1. 공식 로고 (Official Logo)',
+    brand_logo_desc: 'RGBdom의 로고는 중앙이 비워져 있고(Hollow Center), 외곽 변에만 색상이 적용되는 현대적 기하학 링 심볼입니다. 배경의 어떤 색조와도 자연스럽게 어우러집니다.',
+    brand_colors_title: '2. 브랜드 공식 컬러 (Official Brand Colors)',
+    brand_colors_desc: '카드를 클릭하면 색상 코드가 클립보드에 복사됩니다.',
+    brand_rules_title: '3. 사용 원칙 (Guidelines)',
+    brand_rule_1: '로고 중심부는 항상 투명하게 유지하며, 내부를 채우지 않습니다.',
+    brand_rule_2: '색상은 외곽 변(Edges)에 적용되며, 단색 또는 컬러 피커 테마에 유연하게 반응합니다.',
+    brand_rule_3: '로고 주변에 최소 로고 크기의 25% 이상의 안전 여백을 확보해 주시기 바랍니다.',
+    modal_confirm: '확인',
+    modal_close: '닫기'
+});
+
+Object.assign(uiTranslations.en, {
+    footer_desc: 'A modern web color platform connecting color inspiration, precise RGB extraction, and design systems.',
+    footer_feedback: 'FEEDBACK',
+    footer_brand_center: 'BRAND ASSETS',
+    footer_col_brand: 'Brand Assets',
+    footer_brand_resources: 'Brand Resource Center',
+    footer_download_svg: 'Official Logo (SVG)',
+    footer_download_png: 'Official Logo (PNG)',
+    footer_col_features: 'Explore Tools',
+    footer_col_legal: 'Open Source & Legal',
+    footer_mit_license: 'MIT License',
+    footer_changelog: 'Changelog',
+    footer_license_notice: 'Open Source License Policy',
+    footer_legal_text: 'RGBdom is an open-source project created for intuitive color control and design inspiration. Official logos and brand assets may be freely used under our brand guidelines.',
+    brand_modal_title: 'RGBdom Brand Resource Center',
+    brand_logo_title: '1. Official Logo',
+    brand_logo_desc: 'The RGBdom logo is a modern geometric ring symbol with a hollow center and color applied only along its outer edges, harmonizing seamlessly with any background.',
+    brand_colors_title: '2. Official Brand Colors',
+    brand_colors_desc: 'Click on any card to copy its color code to your clipboard.',
+    brand_rules_title: '3. Usage Guidelines',
+    brand_rule_1: 'Keep the center hollow and transparent at all times without filling.',
+    brand_rule_2: 'Color is applied exclusively to the edges, reacting dynamically to single tones or theme pickers.',
+    brand_rule_3: 'Ensure a clear safety margin of at least 25% of the logo height around the mark.',
+    modal_confirm: 'OK',
+    modal_close: 'Close'
+});
+
 // ─── Update: Branding Masterclass Guide ──────────────────────────────────
 const brandingGuide = [
     {
