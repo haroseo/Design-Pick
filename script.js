@@ -557,9 +557,9 @@ class ColorPalette {
                 : '';
                 
             html += `
-                <div class="color-category-section" style="margin-bottom:30px; border-bottom:1px solid var(--border-color); padding-bottom:20px;">
-                    <div class="color-category-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                        <h3 class="color-category-title" style="margin-bottom:0; display:flex; align-items:center; gap:8px;">
+                <div class="color-category-section">
+                    <div class="color-category-header">
+                        <h3 class="color-category-title">
                             <span>${icon}</span> ${label}
                         </h3>
                         ${viewAllBtn}
@@ -567,7 +567,7 @@ class ColorPalette {
                     <div class="color-category-grid">
                         ${displayColors.map(c => {
                             const displayName = (this.lang === 'en' && c.name_en) ? c.name_en : c.name;
-                            return `<div class="color-library-item" onclick="app.openColorDetail('${displayName}','${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div>Click for Details</div></div></div><div class="color-library-name">${this.sanitizeInput(displayName)}</div></div>`;
+                            return `<div class="color-library-item" onclick="app.openColorDetail('${displayName}','${c.hex}')"><div class="color-library-box" style="background-color:${c.hex}"><div class="color-library-info-popup"><div class="color-library-hex">${c.hex}</div><div class="color-library-popup-label">Details →</div></div></div><div class="color-library-name">${this.sanitizeInput(displayName)}</div></div>`;
                         }).join('')}
                     </div>
                 </div>

@@ -194,7 +194,6 @@
         <div class="nav-brand" style="display: flex; align-items: center; gap: 10px;">
             <div class="dynamic-logo nav-logo" id="navLogoWrap"></div>
             <span style="font-weight: 800; font-size: 16px; letter-spacing: -0.4px; color: var(--text-color); font-family: 'Pretendard', sans-serif;">RGBdom</span>
-            <button class="btn-icon" id="updateLogBtn" onclick="document.getElementById('updateLogModal').classList.add('show')" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); font-size: 11px; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600;">업데이트 내역</button>
         </div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="picker">
@@ -624,11 +623,16 @@
     <div id="colors" class="tab-content">
         <div class="wrapper">
             <div class="colors-wrapper">
-                <h2 data-i18n="nav_library">더 많은 색 보기</h2>
-                <p class="colors-subtitle" data-i18n="library_subtitle">용도별로 분류된 컬러 라이브러리</p>
+                <!-- Header -->
+                <div class="colors-header-block">
+                    <h2 data-i18n="nav_library">컬러 라이브러리</h2>
+                    <p class="colors-subtitle" data-i18n="library_subtitle">용도별로 엄선한 프리미엄 색상 컬렉션</p>
+                </div>
+                <!-- Filter Chips -->
                 <div class="lib-filter-chips" id="libFilterChips">
                     <!-- JS에서 동적 렌더링 -->
                 </div>
+                <!-- Color Grid -->
                 <div class="color-library-container">
                     <div class="color-library" id="colorLibrary"></div>
                 </div>
@@ -902,64 +906,6 @@
         </div>
     </div>
 
-    <!-- Update Log Modal -->
-    <div id="updateLogModal" class="modal-overlay">
-        <div class="modal-content" style="width: 100%; max-width: 680px; height: 600px; max-height: 85vh; padding: 40px; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h2 style="font-size: 24px; font-weight: 800;">🚀 사이트 업데이트 노트</h2>
-                <button class="btn-icon" onclick="document.getElementById('updateLogModal').classList.remove('show')" style="border:none; background:none; font-size:28px; cursor:pointer; color:var(--text-color);">&times;</button>
-            </div>
-            
-            <div style="margin-bottom: 24px; display: flex; justify-content: flex-end;">
-                <select id="updateLogSort" onchange="const c = document.getElementById('updateLogContainer'); const items = Array.from(c.children); items.sort((a,b) => (this.value === 'newest' ? -1 : 1) * (a.dataset.time < b.dataset.time ? -1 : 1)); items.forEach(i => c.appendChild(i));" style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; font-weight: 600;">
-                    <option value="newest">최근 등록순</option>
-                    <option value="oldest">오래된 순</option>
-                </select>
-            </div>
-
-            <div id="updateLogContainer">
-                <div class="update-log-item" data-time="20260510" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <div class="update-log-summary" onclick="(function(el){ const wrapper = el.nextElementSibling; const arrow = el.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)'; })(this);" style="padding: 20px 24px; font-size: 16px; font-weight: 700; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-color, #ff007f); background: rgba(0,0,0,0.02);">
-                        <span>[2026.05.10 업데이트 내용]</span>
-                        <span class="arrow" style="font-size: 14px; opacity: 0.5; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(180deg); display: inline-block;">▼</span>
-                    </div>
-                    <div class="update-log-content-wrapper" style="display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
-                        <div style="overflow: hidden;">
-                            <div style="padding: 16px 24px 24px 24px;">
-                                <ul style="font-size: 15px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
-                                    <li><b>아카데미 탭 신설</b>: 흩어져 있던 디자인 자료를 하나의 대시보드로 통합</li>
-                                    <li><b>브랜딩 실무 가이드 추가</b>: 전문 지식과 쉬운 예시를 결합한 브랜드 정체성 구축 가이드</li>
-                                    <li><b>컬러 디테일 뷰 고도화</b>: 색상 코드 변환기(CMYK 등) 및 컬러 조화 팔레트 기능 제공</li>
-                                    <li><b>폰트 라이브러 추가</b>: 실무에서 가장 많이 쓰이는 폰트 30여 종 대량 업데이트</li>
-                                    <li><b>컬러 스토리 업데이트</b>: 애플, 파타고니아 등 최신 글로벌 브랜드 이야기 13종 추가</li>
-                                    <li><b>SEO 및 구조 개선</b>: 페이지 구조 개선 및 UI 가독성 향상</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="update-log-item" data-time="20260418" style="margin-bottom: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <div class="update-log-summary" onclick="(function(el){ const wrapper = el.nextElementSibling; const arrow = el.querySelector('.arrow'); const isOpen = wrapper.style.gridTemplateRows === '1fr'; wrapper.style.gridTemplateRows = isOpen ? '0fr' : '1fr'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)'; })(this);" style="padding: 20px 24px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #888; background: rgba(0,0,0,0.02); opacity: 0.9;">
-                        <span>[2026.04.18 업데이트 내용]</span>
-                        <span class="arrow" style="font-size: 14px; opacity: 0.5; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(0deg); display: inline-block;">▼</span>
-                    </div>
-                    <div class="update-log-content-wrapper" style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
-                        <div style="overflow: hidden;">
-                            <div style="padding: 16px 24px 24px 24px;">
-                                <ul style="font-size: 14px; line-height: 1.8; color: var(--secondary-text); padding-left: 20px; list-style-type: disc; margin: 0;">
-                                    <li>다크/라이트 모드 테마 적용 (V30 롤백)</li>
-                                    <li>실시간 룰렛 컬러 피커 기능 추가</li>
-                                    <li>사용자 피드백 시스템 도입</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="adminAuthModal">
         <div class="modal-content admin-modal" style="max-width:320px; padding:32px">
             <h3 class="modal-title" style="font-size:20px">보안 인증</h3>
@@ -1029,7 +975,6 @@
                 <div class="footer-links-col">
                     <h4 data-i18n="footer_col_legal">오픈소스 & 라이선스</h4>
                     <a href="javascript:void(0)" onclick="document.getElementById('licenseModal').classList.add('show')" data-i18n="footer_mit_license">MIT License</a>
-                    <a href="javascript:void(0)" onclick="document.getElementById('updateLogModal').classList.add('show')" data-i18n="footer_changelog">Changelog</a>
                     <a href="https://github.com/haroseo/Design-Pick" target="_blank" rel="noopener noreferrer">GitHub <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
                 </div>
             </div>

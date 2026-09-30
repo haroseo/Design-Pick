@@ -41,9 +41,9 @@ input:focus-visible {
     outline-offset: 2px;
 }
 
-/* ─── h2 — 흰/검 테마에 맞게 ─── */
+/* ─── h2 — 다크/라이트 테마 공통 ─── */
 h2 {
-    color: #111;
+    color: var(--text-color);
 }
 
 /* ─── Tab active animation ─── */
@@ -1475,11 +1475,11 @@ body, button, input, .navbar, .tab-btn {
     font-family: 'Pretendard', sans-serif !important;
 }
 
-/* === Dynamic Logo: Real-time Picker Sync (Hollow Center, Edges Only) === */
+/* === Dynamic Logo: Real-time Picker Sync (Hollow Geometric Ring) === */
 .dynamic-logo {
     background-color: var(--primary-color, #4F46E5);
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M36 12C22.7452 12 12 22.7452 12 36V64C12 77.2548 22.7452 88 36 88H64C77.2548 88 88 77.2548 88 64V36C88 22.7452 77.2548 12 64 12H36ZM34 26C25.1634 26 18 33.1634 18 42V58C18 66.8366 25.1634 74 34 74H66C74.8366 74 82 66.8366 82 58V42C82 33.1634 74.8366 26 66 26H34Z' fill='black'/%3E%3Ccircle cx='68' cy='32' r='5' fill='black'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M36 12C22.7452 12 12 22.7452 12 36V64C12 77.2548 22.7452 88 36 88H64C77.2548 88 88 77.2548 88 64V36C88 22.7452 77.2548 12 64 12H36ZM34 26C25.1634 26 18 33.1634 18 42V58C18 66.8366 25.1634 74 34 74H66C74.8366 74 82 66.8366 82 58V42C82 33.1634 74.8366 26 66 26H34Z' fill='black'/%3E%3Ccircle cx='68' cy='32' r='5' fill='black'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M 50 8 L 86.37 29 L 86.37 71 L 50 92 L 13.63 71 L 13.63 29 Z M 50 24 L 72.52 37 L 72.52 63 L 50 76 L 27.48 63 L 27.48 37 Z' fill='black'/%3E%3Ccircle cx='50' cy='24' r='4' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M 50 8 L 86.37 29 L 86.37 71 L 50 92 L 13.63 71 L 13.63 29 Z M 50 24 L 72.52 37 L 72.52 63 L 50 76 L 27.48 63 L 27.48 37 Z' fill='black'/%3E%3Ccircle cx='50' cy='24' r='4' fill='black'/%3E%3C/svg%3E");
     mask-size: contain;
     -webkit-mask-size: contain;
     mask-repeat: no-repeat;
