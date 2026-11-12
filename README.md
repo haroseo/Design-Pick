@@ -1,25 +1,23 @@
-# RGBdom (v2.5)
+# 디자인픽 (Design Pick)
 
 <p align="center">
-  <img src="logo.svg" alt="RGBdom Logo" width="128" height="128">
+  <img src="logo.svg" alt="Design Pick Logo" width="128" height="128">
 </p>
 
 <p align="center">
-  <strong>디자이너와 개발자를 위한 인터랙티브 컬러 시스템 & 디자인 도구</strong><br>
+  <strong>디자이너와 개발자를 위한 무료 컬러 피커 & 배색 가이드 플랫폼</strong><br>
   Interactive Color System & Design Intelligence Platform
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-v2.5-4F46E5?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/badge/License-MIT-06B6D4?style=flat-square" alt="License">
-  <img src="https://img.shields.io/badge/Font-Pretendard-black?style=flat-square" alt="Font">
+  <a href="https://designs.kro.kr/"><strong>공식 웹사이트 바로가기: designs.kro.kr</strong></a>
 </p>
 
 ---
 
-## 🎨 About RGBdom
+## 🎨 About 디자인픽 (Design Pick)
 
-**RGBdom**은 직관적인 색상 탐색, 실시간 RGB/HEX 채널 제어, 디자인 시스템 가이드 및 영감 팔레트를 하나의 인터페이스에서 제공하는 현대적 웹 플랫폼입니다.
+**디자인픽(Design Pick)**은 직관적인 색상 탐색, 실시간 RGB/HEX 채널 제어, 디자인 시스템 가이드 및 영감 팔레트를 하나의 인터페이스에서 제공하는 현대적 웹 플랫폼입니다.
 
 ---
 
