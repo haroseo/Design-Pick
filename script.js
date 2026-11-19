@@ -465,14 +465,14 @@ class ColorPalette {
     switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(t => {
             t.classList.remove('active');
-            t.style.display = 'none';
+            t.style.display = '';
         });
         document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
         
         const target = document.getElementById(tabName);
         if (target) {
             target.classList.add('active');
-            target.style.display = 'block';
+            target.style.display = '';
         }
         document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('active');
         

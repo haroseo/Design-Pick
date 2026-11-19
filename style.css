@@ -807,8 +807,6 @@ body {
 .inspo-tab {
     overflow: hidden;
     padding: 0;
-    /* 탭 자체도 flex로 꽉 채우기 */
-    display: block !important;
 }
 
 .inspo-tab.active {

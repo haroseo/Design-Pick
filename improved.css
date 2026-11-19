@@ -1475,7 +1475,7 @@ body, button, input, .navbar, .tab-btn {
     font-family: 'Pretendard', sans-serif !important;
 }
 
-/* === Dynamic Logo: Real-time Picker Sync (Hollow Geometric Ring) === */
+    /* === Dynamic Logo: Real-time Picker Sync (Hollow Center, Edges Only) === */
 .dynamic-logo {
     background-color: var(--primary-color, #4F46E5);
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M 50 8 L 86.37 29 L 86.37 71 L 50 92 L 13.63 71 L 13.63 29 Z M 50 24 L 72.52 37 L 72.52 63 L 50 76 L 27.48 63 L 27.48 37 Z' fill='black'/%3E%3Ccircle cx='50' cy='24' r='4' fill='black'/%3E%3C/svg%3E");
